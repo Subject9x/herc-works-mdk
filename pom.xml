@@ -10,7 +10,7 @@
 
   <name>herc-works</name>
   <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url></url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,10 +27,12 @@
     </dependency>
     
     <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>20</version>
-    </dependency>
+		<!-- https://github.com/patrickfav/bytes-java -->
+	    <groupId>at.favre.lib</groupId>
+	    <artifactId>bytes</artifactId>
+	    <version>1.6.1</version>
+	</dependency>
+    
   </dependencies>
 
   <build>

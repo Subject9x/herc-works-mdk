@@ -2,79 +2,78 @@ package com.mech.works.data.load;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.mech.works.data.ref.HercRefId;
-import com.mech.works.data.ref.WeaponRefId;
+
+import com.mech.works.data.ref.constants.HercDataRef;
+import com.mech.works.data.ref.constants.ItemDataRef;
+
+import at.favre.lib.bytes.Bytes;
 
 public final class GameDataRef {
     
-    public static List<HercRefId> hercIdRef;
-    public static List<WeaponRefId> wepIdRef;
+    public List<HercDataRef> hercIdRef;
+    public List<ItemDataRef> wepIdRef;
+    public List<byte[]> dtsBoneId;
 
     public GameDataRef(){
         setupHercId();
         setupWeaponId();
     }
 
+    private void setupHercId(){
+        hercIdRef = new ArrayList<HercDataRef>();
 
-
-    private static void setupHercId(){
-        hercIdRef = new ArrayList<HercRefId>();
-
-        hercIdRef.add(new HercRefId(new byte[]{0x00,0x00} , (byte)0x03, "outlaw")); //outlaw
-        hercIdRef.add(new HercRefId(new byte[]{0x01,0x00} , (byte)0x05, "raptor")); //raptor
-        hercIdRef.add(new HercRefId(new byte[]{0x02,0x00} , (byte)0x05, "tomahawk")); //tomahawk
-        hercIdRef.add(new HercRefId(new byte[]{0x03,0x00} , (byte)0x07, "samson")); //samson
-        hercIdRef.add(new HercRefId(new byte[]{0x04,0x00} , (byte)0x09, "colossus")); //colossus
-        hercIdRef.add(new HercRefId(new byte[]{0x05,0x00} , (byte)0x09, "apocalypse")); //apocalypse
-        hercIdRef.add(new HercRefId(new byte[]{0x06,0x00} , (byte)0x09, "ogre")); //ogre
-        hercIdRef.add(new HercRefId(new byte[]{0x07,0x00} , (byte)0x04, "maverick")); //maverick
-        hercIdRef.add(new HercRefId(new byte[]{0x08,0x00} , (byte)0x07, "razor")); //razor
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0000) , Bytes.allocate(1, (byte)0x03), "outlaw")); //outlaw
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0100) , Bytes.allocate(1, (byte)0x05), "raptor")); //raptor        
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0200) , Bytes.allocate(1, (byte)0x05), "tomahawk")); //tomahawk
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0300) , Bytes.allocate(1, (byte)0x07), "samson")); //samson
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0400) , Bytes.allocate(1, (byte)0x09), "colossus")); //colossus
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0500) , Bytes.allocate(1, (byte)0x09), "apocalypse")); //apocalypse
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0600) , Bytes.allocate(1, (byte)0x09), "ogre")); //ogre
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0700) , Bytes.allocate(1, (byte)0x04), "maverick")); //maverick
+        hercIdRef.add(new HercDataRef(Bytes.allocate(2, (byte)0x0800) , Bytes.allocate(1, (byte)0x07), "razor")); //razor
     }
 
-    private static void setupWeaponId(){
-        wepIdRef = new ArrayList<WeaponRefId>();
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x01, (byte)0x00}, new byte[]{(byte)0xc2, (byte)0x01}, "ATC20", "450"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x02, (byte)0x00}, new byte[]{(byte)0xa4, (byte)0x01}, "ATC35", "420"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x03, (byte)0x00}, new byte[]{(byte)0x7c, (byte)0x01}, "ATC50", "380"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x04, (byte)0x00}, new byte[]{(byte)0x4a, (byte)0x01}, "ATC75", "330"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x05, (byte)0x00}, new byte[]{(byte)0xc18, (byte)0x01}, "ATC100", "280"));
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x06, (byte)0x00}, new byte[]{(byte)0x78, (byte)0x00}, "ELF", "120"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x07, (byte)0x00}, new byte[]{(byte)0x90, (byte)0x01}, "EMP", "400"));
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x08, (byte)0x00}, new byte[]{(byte)0x40, (byte)0x01}, "LAS100", "320"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x09, (byte)0x00}, new byte[]{(byte)0x2c, (byte)0x01}, "LAS200", "300"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0A, (byte)0x00}, new byte[]{(byte)0x18, (byte)0x01}, "LAS300", "280"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0B, (byte)0x00}, new byte[]{(byte)0xfa, (byte)0x00}, "LAS400", "250"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0C, (byte)0x00}, new byte[]{(byte)0xdc, (byte)0x00}, "LAS500", "220"));
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0D, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "MSL 6", "varies"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0E, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "MSL 8", "varies"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x0F, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "MSL 10", "varies"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x10, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "MSL R", "varies"));
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x11, (byte)0x00}, new byte[]{(byte)0xf0, (byte)0x00}, "PBW", "240"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x12, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "ECM", "none"));
-
+    private void setupWeaponId(){
+        wepIdRef = new ArrayList<ItemDataRef>();
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0100), Bytes.allocate(2, (byte)0xc201), "ATC20", "450"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0200), Bytes.allocate(2, (byte)0xa401), "ATC35", "420"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0300), Bytes.allocate(2, (byte)0x7c01), "ATC50", "380"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0400), Bytes.allocate(2, (byte)0x4a01), "ATC75", "330"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0500), Bytes.allocate(2, (byte)0x1801), "ATC100", "280"));
+        
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0600), Bytes.allocate(2, (byte)0x7800), "ELF", "120"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0700), Bytes.allocate(2, (byte)0x9001), "EMP", "400"));
+        
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0800), Bytes.allocate(2, (byte)0x4001), "LAS100", "320"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0900), Bytes.allocate(2, (byte)0x2c01), "LAS200", "300"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0A00), Bytes.allocate(2, (byte)0x1801), "LAS300", "280"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0B00), Bytes.allocate(2, (byte)0xfa00), "LAS400", "250"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0C00), Bytes.allocate(2, (byte)0xdc00), "LAS500", "220"));
+        
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0D00), Bytes.allocate(2, (byte)0x0000), "MSL 6", "varies"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0E00), Bytes.allocate(2, (byte)0x0000), "MSL 8", "varies"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x0F00), Bytes.allocate(2, (byte)0x0000), "MSL 10", "varies"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1000), Bytes.allocate(2, (byte)0x0000), "MSL R", "varies"));
+        
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1100), Bytes.allocate(2, (byte)0xf000), "PBW", "240"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1200), Bytes.allocate(2, (byte)0x0000), "ECM", "none"));
+               
         //empty
         //empty
         //empty
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x16, (byte)0x00}, new byte[]{(byte)0x5a, (byte)0x00}, "ELF 2", "90"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x17, (byte)0x00}, new byte[]{(byte)0x2c, (byte)0x01}, "EMP 2", "300"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x18, (byte)0x00}, new byte[]{(byte)0xd2, (byte)0x00}, "PBW 2", "210"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x19, (byte)0x00}, new byte[]{(byte)0x78, (byte)0x00}, "PLAS", "120"));
-
+               
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1600), Bytes.allocate(2, (byte)0x5a00), "ELF 2", "90"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1700), Bytes.allocate(2, (byte)0x2c01), "EMP 2", "300"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1800), Bytes.allocate(2, (byte)0xd200), "PBW 2", "210"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1900), Bytes.allocate(2, (byte)0x7800), "PLAS", "120"));
+               
         //empty
         //empty
         //empty
-
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x1d, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "TARG", "none"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x1e, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "SHLD", "none"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x1f, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "TURB", "none"));
-        wepIdRef.add(new WeaponRefId(new byte[]{(byte)0x20, (byte)0x00}, new byte[]{(byte)0x00, (byte)0x00}, "ENRG", "none"));
-
-
+               
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1d00), Bytes.allocate(2, (byte)0x0000), "TARG", "none"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1e00), Bytes.allocate(2, (byte)0x0000), "SHLD", "none"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x1f00), Bytes.allocate(2, (byte)0x0000), "TURB", "none"));
+        wepIdRef.add(new ItemDataRef(Bytes.allocate(2, (byte)0x2000), Bytes.allocate(2, (byte)0x0000), "ENRG", "none"));
     }
 }

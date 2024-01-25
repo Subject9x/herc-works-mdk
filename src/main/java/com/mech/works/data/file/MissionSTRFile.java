@@ -1,4 +1,4 @@
-package com.mech.works.data.struct;
+package com.mech.works.data.file;
 
 /**
  * ES2\DATA\mission.str
