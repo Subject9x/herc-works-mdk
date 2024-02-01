@@ -2,6 +2,8 @@ package com.mech.works.data.ref.files;
 
 import com.mech.works.vol.data.Voln.FileType;
 
+import at.favre.lib.bytes.Bytes;
+
 /**
  * Genera abstract for all data files.
  */
@@ -12,6 +14,7 @@ public abstract class DataFile {
 	private FileType ext;
 	
 	private byte[] rawBytes;
+	private Bytes fileSize;
 	
 	public DataFile() {}
 	
@@ -50,5 +53,13 @@ public abstract class DataFile {
 
 	public void setExt(FileType ext) {
 		this.ext = ext;
+	}
+
+	public Bytes getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(Bytes fileSize) {
+		this.fileSize = fileSize;
 	}
 }
