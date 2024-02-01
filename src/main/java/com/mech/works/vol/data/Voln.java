@@ -19,6 +19,8 @@ public class Voln extends DataFile{
 	private int dirCount;
 	private int dirSize;
 	private HashMap<FileType, List<DataFile>> directory;
+	private int listCount;
+	private int listSize;
 	
 	public Voln() {}
 	
@@ -243,6 +245,7 @@ public class Voln extends DataFile{
 		PDG("pdg"),
 		RMP("rmp"),
 		SNC("snc"),
+		SOS("sos"),
 		STR("str"),
 		VUE("vue"),
 		WLD("wld");
@@ -281,5 +284,37 @@ public class Voln extends DataFile{
 
 	public void setDirSize(int dirSize) {
 		this.dirSize = dirSize;
+	}
+
+	public ExeUse getExeUse() {
+		return exeUse;
+	}
+
+	public void setExeUse(ExeUse exeUse) {
+		this.exeUse = exeUse;
+	}
+
+	public HashMap<FileType, List<DataFile>> getDirectory() {
+		return directory;
+	}
+
+	public void setDirectory(HashMap<FileType, List<DataFile>> directory) {
+		this.directory = directory;
+	}
+
+	public int getListCount() {
+		return listCount;
+	}
+
+	public void setListCount(int listCount) {
+		this.listCount = listCount;
+	}
+
+	public int getListSize() {
+		return listSize;
+	}
+
+	public void setListSize(int listSize) {
+		this.listSize = listSize;
 	}
 }
