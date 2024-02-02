@@ -1,8 +1,11 @@
 package com.mech.works.vol.data;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import com.mech.works.data.file.VolEntry;
 import com.mech.works.data.ref.files.DataFile;
 
 import at.favre.lib.bytes.Bytes;
@@ -14,11 +17,15 @@ import at.favre.lib.bytes.Bytes;
 
 public class Voln extends DataFile{
 
+	public static int fileListHeaderLen = 18;
+	
 	private String destPath;
 	private ExeUse exeUse;
 	private int dirCount;
 	private int dirSize;
-	private HashMap<FileType, List<DataFile>> directory;
+	private Set<VolEntry> filesSet = new LinkedHashSet<VolEntry>();
+	private HashMap<FileType, Set<DataFile>> directory = new HashMap<Voln.FileType, Set<DataFile>>();
+	private Set<DataFile> looseFiles = new HashSet<DataFile>();
 	private int listCount;
 	private int listSize;
 	
@@ -34,6 +41,17 @@ public class Voln extends DataFile{
 		setDirSize(b.getDirSize());
 	}
 
+	public Set<DataFile> getDirectoryByString(String name){
+		
+		if(directory != null && !directory.isEmpty()) {
+			if(directory.get(Voln.FileType.typeFromVal(name)) == null) {
+				return null;
+			}
+			return directory.get(Voln.FileType.typeFromVal(name));
+		}
+		return null;
+	}
+	
 	public static class VolnBuilder{
 		
 		private String fileName;
@@ -124,6 +142,7 @@ public class Voln extends DataFile{
 	public void setDestPath(String destPath) {
 		this.destPath = destPath;
 	}	
+	
 	
 	/**
 	 * Pre-computed byte 
@@ -259,7 +278,17 @@ public class Voln extends DataFile{
 		public String val() {
 			return this.val;
 		}
+		
+		public static Voln.FileType typeFromVal(String v) {
+			for(Voln.FileType t : Voln.FileType.values()) {
+				if(t.val().toUpperCase().equals(v.toUpperCase())) {
+					return t;
+				}
+			}
+			return null;
+		}
 	}
+	
 
 	public ExeUse getExeUse1() {
 		return exeUse;
@@ -294,11 +323,11 @@ public class Voln extends DataFile{
 		this.exeUse = exeUse;
 	}
 
-	public HashMap<FileType, List<DataFile>> getDirectory() {
+	public HashMap<FileType, Set<DataFile>> getDirectory() {
 		return directory;
 	}
 
-	public void setDirectory(HashMap<FileType, List<DataFile>> directory) {
+	public void setDirectory(HashMap<FileType, Set<DataFile>> directory) {
 		this.directory = directory;
 	}
 
@@ -317,4 +346,29 @@ public class Voln extends DataFile{
 	public void setListSize(int listSize) {
 		this.listSize = listSize;
 	}
+
+	public static int getFileListHeaderLen() {
+		return fileListHeaderLen;
+	}
+
+	public static void setFileListHeaderLen(int fileListHeaderLen) {
+		Voln.fileListHeaderLen = fileListHeaderLen;
+	}
+
+	public Set<DataFile> getLooseFiles() {
+		return looseFiles;
+	}
+
+	public void setLooseFiles(Set<DataFile> looseFiles) {
+		this.looseFiles = looseFiles;
+	}
+
+	public Set<VolEntry> getFilesSet() {
+		return filesSet;
+	}
+
+	public void setFilesSet(Set<VolEntry> filesSet) {
+		this.filesSet = filesSet;
+	}
+	
 }
