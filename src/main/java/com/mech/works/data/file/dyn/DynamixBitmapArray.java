@@ -1,4 +1,4 @@
-package com.mech.works.data.file;
+package com.mech.works.data.file.dyn;
 
 import java.nio.charset.StandardCharsets;
 
@@ -9,15 +9,11 @@ import at.favre.lib.bytes.Bytes;
 /**
  * FILE
  * 		VOL file, .DBA
- * 		Dynamix Bitmap Animation (somewhat guessed)
+ * 		Dynamix Bitmap Array (somewhat guessed)
  * 		its a bitmap with defined frames.
  */
-public class DynamixBitmapAnim extends DataFile{
+public class DynamixBitmapArray extends DataFile{
 	
 	public static Bytes header = Bytes.from("01002800", StandardCharsets.UTF_8);
-	
-	
-	
-	
 	
 }
