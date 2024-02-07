@@ -2,10 +2,11 @@ package com.mech.works.vol.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import com.mech.works.data.file.VolEntry;
 import com.mech.works.data.ref.files.DataFile;
 
 import at.favre.lib.bytes.Bytes;
@@ -19,15 +20,21 @@ public class Voln extends DataFile{
 
 	public static int fileListHeaderLen = 18;
 	
+	//Order-specific data during Vol load/parse from COMPILED vol file.
 	private String destPath;
 	private ExeUse exeUse;
-	private int dirCount;
-	private int dirSize;
-	private Set<VolEntry> filesSet = new LinkedHashSet<VolEntry>();
-	private HashMap<FileType, Set<DataFile>> directory = new HashMap<Voln.FileType, Set<DataFile>>();
-	private Set<DataFile> looseFiles = new HashSet<DataFile>();
-	private int listCount;
+	private byte volOrderFlag; //0x05 for 'first loaded', 0x0A 'load second (SHELL1.vol, SIMPATCH.vol)'
+	
+	private byte dirCount;
+	private short dirSize;
+	private VolEntry[] filesSet;
+	private short listCount;
 	private int listSize;
+	
+	//Expanded to memory for export or editing.
+	private Map<Byte, VolDir> folders = new HashMap<Byte, VolDir>();
+	private Set<DataFile> looseFiles = new HashSet<DataFile>();
+	
 	
 	public Voln() {}
 	
@@ -40,17 +47,6 @@ public class Voln extends DataFile{
 		setDirCount(b.getDirCount());
 		setDirSize(b.getDirSize());
 	}
-
-	public Set<DataFile> getDirectoryByString(String name){
-		
-		if(directory != null && !directory.isEmpty()) {
-			if(directory.get(Voln.FileType.typeFromVal(name)) == null) {
-				return null;
-			}
-			return directory.get(Voln.FileType.typeFromVal(name));
-		}
-		return null;
-	}
 	
 	public static class VolnBuilder{
 		
@@ -59,8 +55,8 @@ public class Voln extends DataFile{
 		private String destPath;
 		private byte[] rawBytes;
 		private ExeUse exeUse;
-		private int dirCount;
-		private int dirSize;
+		private byte dirCount;
+		private short dirSize;
 			
 		public VolnBuilder() {}
 		
@@ -95,12 +91,12 @@ public class Voln extends DataFile{
 			return this;
 		}
 
-		public VolnBuilder setDirCount(int dirCount) {
+		public VolnBuilder setDirCount(byte dirCount) {
 			this.dirCount = dirCount;
 			return this;
 		}
 		
-		public VolnBuilder setDirSize(int dirSize) {
+		public VolnBuilder setDirSize(short dirSize) {
 			this.dirSize = dirSize;
 			return this;
 		}
@@ -125,11 +121,11 @@ public class Voln extends DataFile{
 			return exeUse;
 		}
 
-		public int getDirCount() {
+		public byte getDirCount() {
 			return dirCount;
 		}
 
-		public int getDirSize() {
+		public short getDirSize() {
 			return dirSize;
 		}
 	}
@@ -179,19 +175,19 @@ public class Voln extends DataFile{
         	The 11th and 12th byte determine how many bytes the directory list has (little-endian). simvol0 and simpatch are the leaders in the directory count.
 		 */
 		VOLN("564F4C4E"),
-		LANG0("564F4C4E0001000005030F00"),
-		SHELL0("564F4C4E0001000005061E00"),
-		SHELL1("564F4C4E000100000A010500"),
-		SHLSOUND("564F4C4E0001000005010500"),
-		SIMLANG("564F4C4E0100000005020A00"),
-		SIMALERT("564F4C4E0100000005072300"),
-		SIMPATCH("564F4C4E010000000A29CB00"),
-		SIMSOUND("564F4C4E0100000005030F00"),
-		SIMVOICG("564F4C4E0100000005010A00"),
-		SIMVOICE("564F4C4E0100000005010A00"),
-		SIMVOICF("564F4C4E0100000005010A00"),
-		SIMVOL0("564F4C4E010000000527C100"),
-		ZONES("564F4C4E0101000005030F00");
+		LANG0("564F4C4E0001000005"),
+		SHELL0("564F4C4E0001000005"),
+		SHELL1("564F4C4E000100000A"),
+		SHLSOUND("564F4C4E0001000005"),
+		SIMLANG("564F4C4E0100000005"),
+		SIMALERT("564F4C4E0100000005"),
+		SIMPATCH("564F4C4E010000000A"),
+		SIMSOUND("564F4C4E0100000005"),
+		SIMVOICG("564F4C4E0100000005"),
+		SIMVOICE("564F4C4E0100000005"),
+		SIMVOICF("564F4C4E0100000005"),
+		SIMVOL0("564F4C4E0100000005"),
+		ZONES("564F4C4E0101000005");
 		
 		private Bytes data;
 		
@@ -215,7 +211,7 @@ public class Voln extends DataFile{
 			this.exeType = type;
 		}
 		
-		private int val() {
+		public int val() {
 			return this.exeType;
 		}
 	}
@@ -303,15 +299,15 @@ public class Voln extends DataFile{
 		return dirCount;
 	}
 
-	public void setDirCount(int dirCount) {
+	public void setDirCount(byte dirCount) {
 		this.dirCount = dirCount;
 	}
 
-	public int getDirSize() {
+	public short getDirSize() {
 		return dirSize;
 	}
 
-	public void setDirSize(int dirSize) {
+	public void setDirSize(short dirSize) {
 		this.dirSize = dirSize;
 	}
 
@@ -323,19 +319,19 @@ public class Voln extends DataFile{
 		this.exeUse = exeUse;
 	}
 
-	public HashMap<FileType, Set<DataFile>> getDirectory() {
-		return directory;
+	public Map<Byte, VolDir> getFolders() {
+		return folders;
 	}
 
-	public void setDirectory(HashMap<FileType, Set<DataFile>> directory) {
-		this.directory = directory;
+	public void setDirectory(Map<Byte, VolDir> folders) {
+		this.folders = folders;
 	}
 
 	public int getListCount() {
 		return listCount;
 	}
 
-	public void setListCount(int listCount) {
+	public void setListCount(short listCount) {
 		this.listCount = listCount;
 	}
 
@@ -363,11 +359,11 @@ public class Voln extends DataFile{
 		this.looseFiles = looseFiles;
 	}
 
-	public Set<VolEntry> getFilesSet() {
+	public VolEntry[] getFilesSet() {
 		return filesSet;
 	}
 
-	public void setFilesSet(Set<VolEntry> filesSet) {
+	public void setFilesSet(VolEntry[] filesSet) {
 		this.filesSet = filesSet;
 	}
 	

@@ -11,12 +11,12 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.mech.works.io.read.VolFileReader;
+import com.mech.works.io.write.VolFileWriter;
 import com.mech.works.vol.data.Voln;
-
-import at.favre.lib.bytes.Bytes;
 
 public class TestVolClass {
 
+	private Voln testVol;
 	
 	@Test
 	public void testVolLoad() {
@@ -44,9 +44,10 @@ public class TestVolClass {
 	@Test
 	public void testVolParse(){		
 		
-		Voln vol = null;
 		try {
-			vol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SHELL0.vol");
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SHELL0.vol");
+			
+			VolFileWriter.unpackVol(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
 			
 		} 
 		catch (FileNotFoundException e) {
@@ -57,12 +58,22 @@ public class TestVolClass {
 		}
 
 		
-		assertNotNull(vol);
+		assertNotNull(testVol);
 	}
 	
+	@Test
 	public void testVolWrite() {
+		testVolParse();
 		
-		
+		if(testVol != null) {
+			
+		}
+		try {
+			VolFileWriter.writeVolFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 		

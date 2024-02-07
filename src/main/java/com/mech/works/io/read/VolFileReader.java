@@ -7,15 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
-import com.mech.works.data.file.VolEntry;
-import com.mech.works.data.ref.files.DataFile;
+import com.mech.works.vol.data.VolDir;
+import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
-import com.mech.works.vol.data.Voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -27,7 +22,9 @@ public final class VolFileReader {
 	
 	private static int offsetVolExe2 = 5;
 	
-	private static int offsetUNKValue = 8;	//its set to 05 in every file
+	private static int offsetUNKValue = 8;	//its set to 05 in every file, UPDATE: this might actually be VOL 'type' or 'load precedence'
+		//I noted in the SHELL1.vol and SIMPATCH.vol that this value is actually 0A, which might say to load this vol 'second', much like how
+		//Quake loads .pak files in numbered order PAK001, PAK002, PAK003, etc
 	
 	private static int offsetDirCount = 9;
 	
@@ -41,7 +38,7 @@ public final class VolFileReader {
 	
 	//file size is following bytes
 	
-	public VolFileReader() {}
+	private VolFileReader() {}
 	
 	public static Voln parseVolFile(String volPath) throws Exception{
 		
@@ -59,11 +56,10 @@ public final class VolFileReader {
 					.build();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IOException(e);
 		}
 		if(volFile == null) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException("volFile not built, check path.("+f.getAbsolutePath() +")");
 		}
 		
 		Bytes volData = Bytes.from(volFile.getRawBytes());
@@ -78,10 +74,8 @@ public final class VolFileReader {
 		volFile.setDirCount(volData.byteAt(offsetDirCount));
 		System.out.println("-Dir List="+volFile.getDirCount());	//DEBUG
 		
-		volFile.setDirSize(volData.byteAt(offsetDirSize));
+		volFile.setDirSize(Bytes.from(volData.array(), offsetDirSize, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		System.out.println("-Dir Byte Size="+volFile.getDirSize());	//DEBUG
-		
-		HashMap<FileType, Set<DataFile>> directory = new HashMap<Voln.FileType, Set<DataFile>>();
 		
 		int cursor = offsetDirListStart;
 		for(int i = 0; i < volFile.getDirCount(); i++) {
@@ -91,10 +85,11 @@ public final class VolFileReader {
 			//debug
 			System.out.println(new String(dirName.toCharArray()).substring(0, 3));//DEBUG
 			
-			directory.put(Voln.FileType.typeFromVal(new String(dirName.toCharArray()).substring(0, 3)), new HashSet<DataFile>());
+			VolDir dir = new VolDir(new String(dirName.toCharArray()).substring(0, 3), Bytes.from(i).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[3]);
+			
+			volFile.getFolders().put(dir.getDirIdx(), dir);
 		}
-		volFile.setDirectory(directory);
-
+		//DOES sorting directory in-take really matter if writing a new vol won't conform to the read-in vol's format at all?
 		
 		volFile.setListCount(Bytes.from(volData.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		System.out.println("-File List="+volFile.getListCount());	//DEBUG
@@ -111,37 +106,20 @@ public final class VolFileReader {
 			System.out.println("WARN: no files! ending process");
 			return volFile;
 		}
-		
-		/*
-		 * TODO! - sort files into directories AFTER pulling their raw bytes
-		 * 	why? the file list header is contiguous, it ignores folder structure when determining the offsets
-		 */
+
 		VolFileReader.generateFileList(volFile, fileListBytes);
-		
-		VolEntry[] fileEntries = new VolEntry[volFile.getFilesSet().size()];
-		volFile.getFilesSet().toArray(fileEntries);
-		
-		for(int lf = 0; lf < fileEntries.length; lf++) {
-			if(lf < fileEntries.length - 1) {
-				
-				Bytes raw = VolFileReader.fetchFileBytes(volFile.getRawBytes(), fileEntries[lf].getVolOffset(), fileEntries[lf+1].getVolOffset());
-				fileEntries[lf].setRawBytes(raw.array());
-			}
-		}
-		
 		VolFileReader.sortHeaderFileListDirs(volFile);
 	
 		return volFile;
 	}
 	
-	/**
-	 * Given an isolated Bytes array of just the file list header, generate the list of files.
-	 * @param vol {@link Voln}
-	 * @param fileListBytes {@link Bytes}
-	 * @throws Exception
-	 */
+	
 	private static void generateFileList(Voln vol, Bytes fileListBytes) throws Exception{
 
+		vol.setFilesSet(new VolEntry[vol.getListCount()]);
+		int fileCount = 0;
+		
+		VolEntry link = null;
 		//we'll have to march the old fashioned way, using '.' as the only real concrete delimiter and guidepost.
 		for(int i = 0; i < vol.getListSize(); i++) {
 			
@@ -167,19 +145,30 @@ public final class VolFileReader {
 					String fileName = new String(Bytes.from(fileListBytes.array(), fileNameStart, fileNameEnd).array(),
 							Charset.forName("UTF-8"));
 					
-					int memOffsetStart = (fileNameStart + fileNameEnd) + (14 - fileName.length());
-					Bytes fileMemOffset = Bytes.from(fileListBytes.array(), memOffsetStart, 4).byteOrder(ByteOrder.LITTLE_ENDIAN);
+					int cursorFileOfs = (fileNameStart + fileNameEnd) + (12 - fileName.length());
+					cursorFileOfs += 1;	//unknown byte, but imo its Dir index as UINT8
+					
+					byte fileDirIdx = fileListBytes.byteAt(cursorFileOfs);
+					cursorFileOfs += 1;
+					
+					Bytes fileMemOffset = Bytes.from(fileListBytes.array(), cursorFileOfs, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse();
 					
 					System.out.println("--" + fileName +"(" + new String(fileMemOffset.array(), Charset.defaultCharset()) +")"); //DEBUG
 					
-					i = memOffsetStart + 4;
+					i = cursorFileOfs + 4;
 					
 					if(extStr.toLowerCase().equals(Voln.FileType.STR.val())) {
 						extStr = Voln.FileType.GAM.val();
 					}
 					
+					VolEntry nextEntry = VolFileReader.newFileEntry(vol, isType, fileDirIdx, fileName, fileMemOffset);
+					vol.getFilesSet()[fileCount] = nextEntry;
+					fileCount++;
+					if(link != null) {
+						link.setNextEntry(nextEntry);
+					}
+					link = nextEntry;
 					
-					VolFileReader.insertNewFileToHeaderList(vol.getFilesSet(), isType, fileName, fileMemOffset);
 					
 				}
 				if(i > vol.getListSize() - 18) {
@@ -187,66 +176,63 @@ public final class VolFileReader {
 				}
 			}
 		}
+		//File header list is fixed order, populating an array is the best choice.
+		//	WARN: file offset in file header list is from the dir-count byte, ignoring the first 8 bytes.
+		
+		Bytes bytesNoHeader = Bytes.from(vol.getRawBytes(), 9, vol.getRawBytes().length-10);
+		for(int i = 0; i < vol.getFilesSet().length; i++) {
+			VolEntry entryFile = vol.getFilesSet()[i];
+
+			int startOfs = entryFile.getVolOffset().toInt();
+			int endOfs = 0;
+			
+			Bytes fileEndOfs = null;
+			if(i < vol.getFilesSet().length - 1) {
+				fileEndOfs = vol.getFilesSet()[i+1].getVolOffset();
+				endOfs = fileEndOfs.toInt() - 10;	//acounts for 9 header byte at top of VOL file that got snipped.
+			}
+			else {
+				
+				fileEndOfs = Bytes.from(bytesNoHeader.array().length);
+				endOfs = fileEndOfs.toInt();
+			}
+			
+			Bytes raw = VolFileReader.fetchFileBytes(bytesNoHeader.array(), startOfs, endOfs);
+			entryFile.setRawBytes(raw.array());
+		}
 	}
 	
-	/**
-	 * Specifically populates the header list, which ignores actual folder structure when determining file starting offset vs next file.
-	 * @param dir
-	 * @param type
-	 * @param fileName
-	 * @param memOfs
-	 */
-	private static void insertNewFileToHeaderList(Set<VolEntry> dir, Voln.FileType type, String fileName, Bytes memOfs) {
-		if(dir == null) {
-			return;
-		}
+	private static VolEntry newFileEntry(Voln vol, Voln.FileType type, byte dirIndex, String fileName, Bytes memOfs) {
+		
 		VolEntry newRecord = new VolEntry();
 		newRecord.setExt(type);
 		newRecord.setFileName(fileName);
+		newRecord.setDirIdx(dirIndex);
 		newRecord.setVolOffset(Bytes.from(memOfs));
 		
-		dir.add(newRecord);
+		return newRecord;		
 	}
+	
 	
 	private static void sortHeaderFileListDirs(Voln vol) {
-		
-		Iterator<VolEntry> iterate = vol.getFilesSet().iterator();
-		
-		while(iterate.hasNext()) {
-			VolEntry entry = iterate.next();
-			vol.getDirectory().get(entry.getExt()).add(entry);
+		for(VolEntry file : vol.getFilesSet()) {
+			vol.getFolders().get(file.getDirIdx()).getFiles().add(file);
 		}
 	}
 	
-	/**
-	 * 
-	 * @param dir
-	 * @param type
-	 * @param fileName
-	 * @param memOfs
-	 */
-	private static void insertNewFileToDir(Set<DataFile> dir, Voln.FileType type, String fileName, Bytes memOfs) {
-		if(dir == null) {
-			return;
-		}
-		VolEntry newRecord = new VolEntry();
-		newRecord.setExt(type);
-		newRecord.setFileName(fileName);
-		newRecord.setVolOffset(Bytes.from(memOfs));
-		
-		//TODO
-		newRecord.setRawBytes(null);
-		
-		dir.add(newRecord);
-	}
 	
-	public static Bytes fetchFileBytes(byte[] volData, Bytes fileMemOfs, Bytes nextFileMemOfs) {
+	public static Bytes fetchFileBytes(byte[] volData, int fileMemOfs, int nextFileMemOfs) {
 		
-		int startOfs = fileMemOfs.byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-		int endOfs = nextFileMemOfs.byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
 		
-		Bytes file = Bytes.from(volData, startOfs, (endOfs - startOfs));
-		
-		return file;
+		Bytes fileBytes = null;
+		try {
+			
+			fileBytes = Bytes.from(volData, fileMemOfs, (nextFileMemOfs - fileMemOfs));
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+			
+		return fileBytes;
 	}
 }
