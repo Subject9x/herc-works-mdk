@@ -10,13 +10,13 @@ import java.util.Set;
 public class VolDir {
 
 	private String label;
-	private byte dirIndex;
+	private Byte dirIndex;
 	
 	private Set<VolEntry> files = new LinkedHashSet<VolEntry>();
 	
 	public VolDir() {}
 
-	public VolDir(String label, byte idx) {
+	public VolDir(String label, Byte idx) {
 		this.label = label;
 		this.dirIndex = idx;
 	}
@@ -29,11 +29,11 @@ public class VolDir {
 		this.label = label;
 	}
 
-	public byte getDirIdx() {
+	public Byte getDirIdx() {
 		return dirIndex;
 	}
 
-	public void setDirIdx(byte index) {
+	public void setDirIdx(Byte index) {
 		this.dirIndex = index;
 	}
 

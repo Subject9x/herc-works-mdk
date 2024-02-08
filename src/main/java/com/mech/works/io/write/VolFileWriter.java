@@ -8,10 +8,10 @@ import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.Set;
 
-import com.mech.works.data.ref.files.DataFile;
 import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
+import com.mech.works.vol.util.ByteOps;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -20,7 +20,7 @@ public final class VolFileWriter {
 	private VolFileWriter() {}
 
 	
-	public static void writeVolFile(Voln vol, String destPath) throws Exception{
+	public static void packVolToFile(Voln vol, String destPath) throws Exception{
 		
 		File destDir = new File(destPath);
 		if(!destDir.exists()) {
@@ -34,30 +34,86 @@ public final class VolFileWriter {
 		try (ByteArrayOutputStream bass = new ByteArrayOutputStream(vol.getRawBytes().length); FileOutputStream fout = new FileOutputStream(volOutput)){
 		
 				//HEADER with UNKNOWN
-				bass.write(Voln.ByteHeader.SHELL0.bytes().array());
+				bass.write(Voln.ByteHeader.VOLN.bytes().array());
+				
+				//Engine use flags
+				bass.write(vol.isDbsimFlag() == true ? 0x01 : 0x00);
+				bass.write(vol.isVshellFlag() == true ? 0x01 : 0x00);
+				
+				//Unknown flags
+				bass.write(0x00);
+				bass.write(0x00);
+				
+				//VOL load-order precedence flag, 05 (first), 0A (observed in SHELL1.vol)
+				bass.write(0x05);
 				
 				//Directory Count
-				bass.write(vol.getDirCount());
+				bass.write(Bytes.from(vol.getDirCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[0]);
 				
 				//Directory List Byte Size
-				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.BIG_ENDIAN).reverse().array());
+				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[0]);
+				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[1]);
 				
-				//FIXME - vol folder structure updated
-//				VolFileWriter.writeVolDirList(vol.getDirectory(), bass);
+				//Write folder list
+				VolFileWriter.writeVolDirList(vol.getDirCount(), vol.getFolders(), bass);
+				
+				//Header File List Total
+				bass.write(Bytes.from(vol.getListCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[0]);
+				bass.write(Bytes.from(vol.getListCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[1]);
+				
+				//Header File List Size in Bytes
+				bass.write(Bytes.from(vol.getListSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array());
+				
+				//Write Files list
+				VolFileWriter.writeVolFileList(vol.getDirCount(), vol.getFolders(), bass);
+				
+				//Write Unknonwn 9-byte spacer
+				//TODO
+				bass.write(Bytes.from(0x02, 0x50, 0xD9, 0x00, 0x00, 0x6A, 0x1F, 0xE3, 0x74).array());
+				
+				//Write Files
+				VolFileWriter.packFilesToVol(vol.getDirCount(), vol.getFolders(), bass);
 				
 				
 				fout.write(bass.toByteArray());
 		}
 	}
 	
-	private static void writeVolDirList(Map<VolDir, Set<DataFile>> directory, ByteArrayOutputStream bass) throws IOException {
+	private static void writeVolDirList(int totalDirs, Map<Byte, VolDir> directory, ByteArrayOutputStream bass) throws IOException {
 		
-		// Write the directories
-		for(VolDir dir : directory.keySet()) {
-			
+		for(int i = 0; i < totalDirs; i++) {
+			VolDir dir = directory.get(Bytes.from(i).reverse().array()[0]);
 			bass.write(dir.getLabel().toUpperCase().getBytes());
 			bass.write("\\".getBytes());
 			bass.write(0x00);
+			
+		}
+	}
+	
+	private static void writeVolFileList(int totalDirs, Map<Byte, VolDir> directory, ByteArrayOutputStream bass) throws IOException{
+		for(int i = 0; i < totalDirs; i++) {
+			Set<VolEntry> folder = directory.get(Bytes.from(i).reverse().array()[0]).getFiles();
+			
+			for(VolEntry entry : folder) {
+				
+				bass.write(entry.getVolListBytes().array());
+				
+				bass.write(ByteOps.int4ToByteLittleEndian(i));	//write directory index
+				
+				bass.write(entry.getVolOffset().byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array());
+			}
+		}
+	}
+	
+	private static void packFilesToVol(int totalDirs, Map<Byte, VolDir> directory, ByteArrayOutputStream bass) throws IOException{
+
+		for(int i = 0; i < totalDirs; i++) {
+			Set<VolEntry> folder = directory.get(Bytes.from(i).reverse().array()[0]).getFiles();
+			
+			for(VolEntry entry : folder) {
+				
+				bass.write(entry.getRawBytes());
+			}
 		}
 	}
 	

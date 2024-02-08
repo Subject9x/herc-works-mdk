@@ -69,7 +69,7 @@ public class TestVolClass {
 			
 		}
 		try {
-			VolFileWriter.writeVolFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
+			VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

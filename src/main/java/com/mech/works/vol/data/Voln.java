@@ -2,9 +2,7 @@ package com.mech.works.vol.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import com.mech.works.data.ref.files.DataFile;
@@ -23,6 +21,8 @@ public class Voln extends DataFile{
 	//Order-specific data during Vol load/parse from COMPILED vol file.
 	private String destPath;
 	private ExeUse exeUse;
+	private boolean dbsimFlag;
+	private boolean vshellFlag;
 	private byte volOrderFlag; //0x05 for 'first loaded', 0x0A 'load second (SHELL1.vol, SIMPATCH.vol)'
 	
 	private byte dirCount;
@@ -43,7 +43,8 @@ public class Voln extends DataFile{
 		setRawBytes(b.getRawBytes());
 		setGameDirPath(b.getGameDirPath());
 		setFileName(b.getFileName());
-		setExeUse1(b.getExeUse());
+		setDbsimFlag(b.isDbsimFlag());
+		setVshellFlag(b.isVshellFlag());
 		setDirCount(b.getDirCount());
 		setDirSize(b.getDirSize());
 	}
@@ -54,7 +55,8 @@ public class Voln extends DataFile{
 		private String gameDirPath;
 		private String destPath;
 		private byte[] rawBytes;
-		private ExeUse exeUse;
+		private boolean dbsimFlag;
+		private boolean vshellFlag;
 		private byte dirCount;
 		private short dirSize;
 			
@@ -86,8 +88,13 @@ public class Voln extends DataFile{
 		}
 		
 
-		public VolnBuilder setExeUse1(ExeUse exeUse) {
-			this.exeUse = exeUse;
+		public VolnBuilder setDbsimFlag(boolean dbsimFlag) {
+			this.dbsimFlag = dbsimFlag;
+			return this;
+		}
+
+		public VolnBuilder setVshellFlag(boolean vshellFlag) {
+			this.vshellFlag = vshellFlag;
 			return this;
 		}
 
@@ -116,9 +123,13 @@ public class Voln extends DataFile{
 		private byte[] getRawBytes() {
 			return rawBytes;
 		}
+		
+		public boolean isDbsimFlag() {
+			return dbsimFlag;
+		}
 
-		public ExeUse getExeUse() {
-			return exeUse;
+		public boolean isVshellFlag() {
+			return vshellFlag;
 		}
 
 		public byte getDirCount() {
@@ -286,11 +297,11 @@ public class Voln extends DataFile{
 	}
 	
 
-	public ExeUse getExeUse1() {
+	public ExeUse getExeType() {
 		return exeUse;
 	}
 
-	public void setExeUse1(ExeUse exeUse) {
+	public void setExeType(ExeUse exeUse) {
 		this.exeUse = exeUse;
 	}
 
@@ -366,5 +377,20 @@ public class Voln extends DataFile{
 	public void setFilesSet(VolEntry[] filesSet) {
 		this.filesSet = filesSet;
 	}
-	
+
+	public boolean isDbsimFlag() {
+		return dbsimFlag;
+	}
+
+	public void setDbsimFlag(boolean dbsimFlag) {
+		this.dbsimFlag = dbsimFlag;
+	}
+
+	public boolean isVshellFlag() {
+		return vshellFlag;
+	}
+
+	public void setVshellFlag(boolean vshellFlag) {
+		this.vshellFlag = vshellFlag;
+	}
 }
