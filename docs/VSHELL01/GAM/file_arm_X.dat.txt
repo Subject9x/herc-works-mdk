@@ -1,0 +1,62 @@
+Observations:
+	VSHELL
+		+ 1 file for every mech.
+		+ Possibly stored in array of strings as static data.
+
+	USE
+		+ guessing this holds hardpoint restrictions and total number for the hercs.
+	
+
+TEST CASE: arm_otl.dat - viewed on 16bit register
+03x00:03 = total number of hardpoints, must match other values.
+	changing this to 02?
+		all hardpoint graphics vanish, but they're still clickable in UI with weapon
+		selections.
+	more than allowed? odd wrap-around hardpoint selection behavior.
+
+03x03:02 = UNKNOWN VALUE - no visible effect.
+03x04:2D = (45) UNKNOWN VALUE - no visible effect.
+03x08:66 = (102) UNKNOWN VALUE - no visible effect.
+03x0C:2D = (45) UNKNOWN VALUE - no visible effect.
+
+04x00:66 = (102) UNKNOWN VALUE - no visible effect.
+04x04:1E = (30) UNKNOWN VALUE - no visible effect.
+04x08:03 = (3) UNKNOWN VALUE - no visible effect.
+04x0A:A6 = (UINT 166) UNKNOWN VALUE - no visible effect.
+04x0E:66 = (UINT 166) UNKNOWN VALUE - no visible effect.
+
+05x02:A6 = (UINT 166) UNKNOWN VALUE - no visible effect.
+05x06:66 = (102) UNKNOWN VALUE - no visible effect.
+05x0A:1E = (30) UNKNOWN VALUE - no visible effect.
+05x0E:04 = (4) UNKNOWN VALUE - no visible effect.
+
+06x00:6A = (106) UNKNOWN VALUE - no visible effect.
+06x04:4F = (79) UNKNOWN VALUE - no visible effect.
+06x08:6A = (106) UNKNOWN VALUE - no visible effect.
+06x0C:4F = (79) UNKNOWN VALUE - no visible effect.
+
+07x00:1E = (30) UNKNOWN VALUE - no visible effect.
+07x04:01 = (1) Hardpoint #1
+				test  val 2 disabled ATC20 on hardpoint.
+				
+07x06:03 = (3) Must match Hardpoint total?
+				test val 2 or 4 makes all hardpoint graphics disappear.
+				
+07x08:02 = (2) Ballistic options?
+				test val 3 or 4 disabled ATC20 from hardpoint.
+			
+07x0A:21 = (33) X Screen coordinate for ATC20 Weapon Graphic, right arm.
+07x0E:64 = (100) Y screen coordinate for ATC20 Weapon Graphic, right arm.
+			test val 50 - height of ATC20 graphic moved UP (closer to height 0)
+
+08x02:22 = (34) X Screen coordinate for ATC20 Weapon Graphic RED OUTLINE, right arm.
+08x06:63 = (99) Y Screen coordinate for ATC20 Weapon Graphic RED OUTLINE, right arm.
+08x0C:02 = (2) Hardpoint #2
+08x0E:03 = (3) Must match Hardpoint total?
+				test val 2 or 4 makes all hardpoint graphics disappear.
+
+09x00:A3 = (UINT 163)
+09X04:64 = (100)
+09x08:A2 = (UINT 162)
+09x0C:63 = (99)
+		

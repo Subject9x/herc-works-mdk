@@ -1,0 +1,7 @@
+Observations:
+	VSHELL
+		+ 1 file for every mech.
+		+ Possibly stored in array of strings as static data.
+
+	USE
+		+ guessing this holds initial herc data for each type of herc.

@@ -1,0 +1,21 @@
+6/2/2022
+NOTE
+
+
+DATA
+  0x00 00 // MUSIC ON / OFF - 00 off, 01 on
+  0x01 00 // SFX ON / OFF - 00 off, 01 on
+  0x02 02  // unknown value
+  0x03 02  // unknown value
+  0x04 00  // WINDOW RESOLUTION 00 HiRes 640 , 01 LowRes 320
+  0x05 00  // unknown value
+  0x06 00  // FULLSCREEN 00 off, 01 on
+  0x07 0x20,0C //HERC REPAIR enum - [00 repair all, 01 manual my herc, 02 manual all hercs]
+  0x08 0x20,0D //WEAPON BUILD - [00 auto build, 01 manual build]
+  
+  
+STATE 1 - music no, sfx no, gfx 640, auto repair herc, autobuild wep, window mode
+00 00 02 02 00 00 00 02 01 04 02 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 03 01 00 00 00 00 00 01 00 00 00 00 00 00
+
+STATE 2 - music no, sfx no, gfx 640, auto repair herc, manual wep, window mode
+00 00 02 02 00 00 01 02 01 04 02 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 03 01 00 00 00 00 00 01 00 00 00 00 00 00

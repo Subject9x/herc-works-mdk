@@ -1,0 +1,9 @@
+Observations:
+	VSHELL
+		+ 1 file for every mech.
+		+ Possibly stored in array of strings as static data.
+
+	USE
+		+ guessing this holds component repair costs for each herc.
+			+ IE how much tonnage per-component to repair item up to full.
+	

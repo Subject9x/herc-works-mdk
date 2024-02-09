@@ -1,0 +1,47 @@
+6/2/2022
+
+HERC ID TABLE
+           ID   NAME  WEP  hexId   hexStrID  wepNum
+Outlaw      0    0    3    0000     0000      0300
+Raptor II   1    1    5    0100     0100      0500
+Tomahawk    2    2    5    0200     0200      0500
+Samson      3    3    7    0300     0300      0700
+Colossus    4    4    9    0400     0400      0900
+Apocalypse  5    5    9    0500     0500      0900
+Ogre        6    6    9    0600     0600      0900
+Maverick    7    7    4    0700     0700      0400
+Razor       8    8    7    0800     0800      0700
+
+item    intID    int range    hex id  "2nd" id  hex range
+ATC20     1         450        0100    0100       C201
+ATC35     2         420        0200    0200       A401
+ATC50     3         380        0300    0300       7C01
+ATC75     4         330        0400    0400       4A01
+ATC100    5         280        0500    0500       1801
+ELF       6         120        0600    0600       78
+EMP       7         400        0700    0700       9001
+LAS100    8         320        0800    0800       4001
+LAS200    9         300        0900    0900       2C01
+LAS300    10        280        0A00    0A00       1801
+LAS400    11        250        0B00    0B00       FA
+LAS500    12        220        0C00    0C00       DC
+MSL 6     13      "varies"     0D00    0D00       none
+MSL 8     14      "varies"     0E00    0E00       none
+MSL 10    15      "varies"     0F00    0F00       none
+MSL R     16      "varies"     1000    1000       none
+PBW       17        240        1100    1100       F0
+ECM       18        none       1200    1200       none
+ERROR     19        none       1300    1300       none
+ERROR     20        none       1400    1400       none
+ERROR     21        none       1500    1500       none
+ELF 2     22        90         1600    1600       5A
+EMP 2     23        300        1700    1700       2C01
+PBW 2     24        210        1800    1800       D2
+PLAS      25        120        1900    1900       78
+ERROR     26        none       1A00    1A00       none
+ERROR     27        none       1B00    1B00       none
+ERROR     28        none       1C00    1C00       none
+TARG      29        none       1D00    1D00       none
+SHLD      30        none       1E00    1E00       none
+TURB      31        none       1F00    1F00       none
+ENRG      32        none       2000    2000       none

@@ -1,0 +1,43 @@
+6/2/2022
+NOTE
+  Strings are "\0" terminated strings
+
+FILE OVERVIEW
+  Appears to be the written table of save games and their file name.
+  
+  Game save file names have the following schema:
+    GAME_%U.SAV
+      save file name where %U is file number.
+      
+  Then the save file writes the file number and save file NAME
+    %U. <NAME>
+  
+HEX SEQUENCE
+  (00,00000000) 46 01 00 00 //leading bytes, possibly offset data.
+  
+  (04,00000000) 0C 00 0B 00 //file list prefix padding.
+  
+  (08,00000000) GAME_0.SAV
+  
+  (02,00000010) 00 00 0B 00 //list byte padding, placed between every GAME_%U entry
+  
+  //[LIST]<GAME_X.SAV> 1 to 9
+  
+  (0C,000000A0) 00 00 0C 00 0B 00 //LIST END]
+  
+  //next is PLAYER NAMES for each save file, as a list with the schema
+  (02,000000B0) 20 31 2E 20 48 41 4E 4B 55 53 00 "1. HANKUS\0"  //strings are null terminated, 
+  (0D,000000B0) 01 0B 00 //spacer bytes between list entries, NOTE: this first one is different from the following spacers?
+  (0B,000000C0) 01 0A 00 //spacer bytes between list entries.
+  
+  //[LIST]" X. <name> " 1 to 9
+  
+  (03,00000130) 00 07 00  // appears to be list terminator and spacer.
+  
+  (06,00000130) 52 45 53 55 4D 45 00 "RESUME\0" //no idea what this is used for.
+  
+  (0D,00000130) 01 09 00  //spacer
+  
+  (0D,00000130) 54 52 41 49 4E 49 4E 47 00 "TRAINING\0" //no idea what this is used for.
+  
+  (09,00000140) 01 //termination byte for file.

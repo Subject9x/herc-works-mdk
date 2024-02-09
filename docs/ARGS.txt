@@ -1,0 +1,30 @@
+Analyzing possible runtime arg entries and values.
+----------
+
+0045e73c - MAIN_RUNTIME_ARGS(int param_1, char **param_2)
+
+"-E/-F/-G" : set language global, english, french, german
+
+"-C<hercname>" : possibly sets herc name?
+
+"-D" : demo mode
+
+"-r" : restore mode? loads up player data from /DATA/ folder.
+
+"-p" : some form of 'play' mode, loads data from /DATA/ folder.
+
+"-e" : eggplant, run dbsim as standalone
+
+"-T" : unknown, converts next 2 chars to int value, and game sets it to -1 somewhere
+
+"-W" : unknown, converts next 2 chars to int value, and game sets it to -1 somewhere
+
+"-V" : unknown,  converts next 2 chars to int value, and game sets it to -1 somewhere
+
+"-c" : unknown
+
+"-Z" : prefs.cfg, set fullscreen to TRUE
+
+"-v" : set video mode to something
+
+"-X" : unknown, some integer

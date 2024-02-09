@@ -1,0 +1,149 @@
+6/2/2022
+NOTE
+  Hex is LITTLE ENDIAN, so numerical values are actually read in reverse in-engine.
+  Strings are "\0" terminated strings
+
+  pilot rank label
+    04 - Lieutenant, 05 - Captain, 06 - Major, 07 - Lt. Colonel, 08 - "REPAIR" (!?), 09 - "External", 0A - "Internal"
+    This appears to merely be a pointer to a DefinedString value
+
+FILE OVERVIEW
+  GAME_x.SAV is the immediate player save data for their inventory:
+    + Every weapon's inventory count.
+    + Pilot name and roster
+    + Herc bay and state
+      + Herc ID
+      + Herc construction state 
+      + Herc health state
+        + armor
+        + internals
+        + structure
+        + mounted weapon health
+      + Weapon mounts
+
+  PILOT DATA STRUCT(possible)
+    string name
+    bool isActive
+    
+  
+HEX SEQUENCE
+  01 00  // unknown value
+  00 01  // unknown value
+  08 00  // unknown value - DON'T CHANGE! makes engine crash
+  01 00  // unknown value
+  01 00  // unknown value - no visible change when altering
+  64 00  // unknown value - no visible change when altering 
+  64 00  // unknown value - no visible change when altering 
+  05 00  // unknown value - no visible change when altering 
+
+
+NPC PILOT DATA
+
+  <PILOT DATA BEGIN>
+  07 00     // pilot name character length including \0 null-terminator
+  [NAME 00] // tricky, this is length-dependent
+  FF FF     // herc hangar ID - <GUI/CREW> && <GUI/HANGAR> [FF FF, 01 00, 02 00, 03 00, 04 00, 05 00, 06 00, 07 00] = = unassigned, #1, #2, #3
+  00        // unknown value - tried 01, 05, 0A - no noticeable difference
+  00        // pilot rank STR Label ONLY - <GUI/CREW> [00, 01, 02, 03, (04, 05, 06, 07, 08)] (see note)
+  00        // unknown value or spacer
+  FF FF     // crew slot assignment - <GUI/CREW> [FF FF, 01 00, 02 00, 03 00] = unassigned, #1, #2, #3
+  01 00    // unknown value
+  64 00    // unknown value
+  00 00    // unknown value
+  00 00    // unknown value
+  00 00    // unknown value
+  00 00    // unknown value
+  00 00    // unknown value
+  00 00    // unknown value
+  00 00    // mission counter
+  08 00    // unknown value
+  [LIST PILOT DATA]
+  <END PILOT DATA>
+  
+PLAYER DATA
+  [NAME 00] // string - player entered name
+  FF FF     // herc hangar ID - <GUI/CREW> && <GUI/HANGAR> 
+  01
+  01 00     // pilot rank STR Label ONLY - <GUI/CREW> [00, 01, 02, 03, (04, 05, 06, 07, 08)] (see note)
+  00 00     // unknown value
+  03 00     // unknown value
+  64 00     // unknown value
+  06 00     // unknown value
+  01 00     // unknown value
+  00 00     // unknown value
+  B1 00     // unknown value
+  08 00     // unknown value
+  40 00     // unknown value
+  28 00     // unknown value
+  
+HERC DATA
+  
+  03 00   // unknown value
+  06 00   // total hercs currently in hangar
+  
+  <HERC SLOT>
+    00 00   // int - Herc Slot ID - DON'T CHANGE
+    00 00   // int - Herc <GUI/WEAPONS> - array ID. [0000 - outlaw, 0100 - Raptor II, 0200 - tomahawk, etc] 
+    00 00   // int - Herc Name <GUI/WEAPONS>- array ID. [0000 - outlaw, 0100 - Raptor II, 0200 - tomahawk, etc]
+      <HERC HEALTH>
+        64 00   // Health - External - Cockpit
+        64 00   // Health - External - Cockpit
+        64 00   // Health - External - TORSO - LEFT
+        64 00   // Health - External - TORSO - RIGHT
+        64 00   // Health - External - TORSO - LEFT (again, for some bizarre reason)
+        64 00   // Health - External - TORSO - RIGHT (again, for some bizarre reason)
+        64 00   // Health - External - Chassis
+        64 00   // Health - External - LEG - LEFT
+        64 00   // Health - External - LEG - RIGHT
+        64 00   // Health - External - LEG - LEFT
+        64 00   // Health - External - LEG - RIGHT
+        64 00   // Health - External - LEG - LEFT
+        64 00   // Health - External - LEG - RIGHT
+        
+        64 00   // Health - Internal - LEG - LEFT - Servos
+        64 00   // Health - Internal - LEG - RIGHT - Servos
+        64 00   // Health - Internal - Sensor Array
+        64 00   // Health - Internal - Targeting Computer
+        64 00   // Health - Internal - Shield Generator
+        64 00   // Health - Internal - Engine
+        64 00   // Health - Internal - Hydraulics
+        64 00   // Health - Internal - Stabilizers
+        64 00   // Health - Internal - Life Support
+        64 00   // unknown value
+        64 00   // Health - Hardpoint - #1
+        [LIST - Hardpoints]
+      <END HERC HEALTH>
+    64 00   // unknown value
+    64 00   // percent - build % when Mech under construction! causes crash so, maybe not  the ONLY build value
+    00 00   // Missions left to build
+    00 00   // HARDPOINT TOTAL
+    00 00   // unknown value
+      <HERC HARDPOINT DATA> WARN! - these data blocks are only present IF herc is COMPLETE AND there's a weapon in the slot!
+        00 00   // HARDPOINT ID
+        00 00   // HARDPOINT WEAPON ID
+        00 00   // unknown value - MATCHES WEAPON ID
+        64 00   // unknown value
+        64 00   // unknown value
+        05 00   // Missile type?
+        <next hardpoint>
+      <END HARDPOINT DATA>
+   <END HERC SLOT>
+   
+   00 00  // unknown value
+   01 00  // unknown value
+   00 00  // unknown value
+   01 00  // unknown value
+   01 00  // unknown value
+   01 00  // unknown value
+   01 00  // unknown value
+   00 00  // unknown value
+   00 00  // unknown value
+   00 00  // unknown value
+   58 92  // TOTAL SALVAGE Part 1
+   01 00  // TOTAL SALVAGE Part 2 - combined to create UINT32
+   00 00  // unknown value
+   01 00  // unknown value
+   00 00  // unknown value
+   00 00  // unknown value
+   07 00  // unknown value
+   06 00  // unknown value

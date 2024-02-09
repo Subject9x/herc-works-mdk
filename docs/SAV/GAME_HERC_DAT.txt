@@ -1,0 +1,35 @@
+DataBlock - Herc Data
+/SIM01/DAT/<herc>.dat
+
+90 01 -> 00 00
+
+NOTES:
+  Offsets are based on the extracted file's binary, NOT its location in the VOL file.
+
+00000000x00 00 00  // unknown value  600 - all units hvae this
+00000000x02 00 FF  //max reverse spee | reverse -1 * 0x02
+00000000x04 00 00  // main speed bytes
+00000000x06 00 00  // unknown value
+00000000x08 00 00  // unknown value
+00000000x0A 05 00  // Camera - which bone to be bind to!
+00000000x0C 01 00  // unknown value - default on all hercs is 01 00
+                    // 02 00 - herc won't move, only turret
+                    // 03 00 - herc won't move, only turret
+                    // 04 00 - herc won't move, only turret
+00000000x0E 02 00  // Throttle - 01 seems to disable reverse.
+                   // 00 00 - forward speed maxes out at 1/2 full speed but throttle guage shows full speed.
+00000010x00 03 00  // Sets throttle keys to fwd/reverese, test: 06 made herc turn left/right on throttle keys.
+                    //07 - plays herc fall-over animation fwd/backward
+                    //08 - DBSIM crash
+00000010x02 04 00  // Pitch somehow: test of 0500 creates an infinitly rotating 'up' pitch loop on the torso.
+                    //test of 0200 - right arrow key accelerates all around to reverse and then forward...
+                    //test of 0600 - herc auto turns left or right at 0kph
+                    //test of 0800 - right key crashes DBSIM
+00000010x02 90 01  // unknown value - Colossus has this but Samson / thawk dont
+                    
+00000020x0C 00  // something to do with animation check, using outlaw value in colossus results in colossus movings slow.
+
+
+ES1:
+speed is 5 byte-pairs into the the listing, with dat files having a 02C0 UID at the start.
+values are little endian, so any changes reverse the byte order!

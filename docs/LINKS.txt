@@ -1,0 +1,44 @@
+6/2/2022
+
+RESOURCE LINKS
+
+https://docs.microsoft.com/en-us/office/client-developer/outlook/mapi/hresult
+
+DDraw.dll
+  https://docs.microsoft.com/en-us/windows/win32/api/ddraw/nf-ddraw-directdrawcreate
+  
+USER32.DLL
+  https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
+  https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+  
+
+GDI32.DLL
+https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
+
+QUICK BITFLAG TABLE
+1     0001
+2     0002
+4     0004
+8     0008
+16    0010
+32    0020
+64    0040
+128   0080
+256   0100
+512   0200
+1024  0400
+2048  0800
+4096  1000
+8192  2000
+16384 4000
+32768 8000
+65536 00010000
+
+256 + 8
+
+
+SWP_NOCOPYBITS
+0x0100
+
+SWP_NOREDRAW
+0x0008

@@ -1,0 +1,36 @@
+ThreeSpace engine 2.0 - Video mode setup.
+
+tightly coupled to win32 HWND classes and architecture.
+
+uses tagRect, SetRect, etc for window-size management.
+
+FUN_0045e4f4 - "RENDER_VID_SET_MODE" (char* mode)
+    DAT_004d25bb = 3;
+    DAT_004d25f0 = 1;
+    DAT_004d25c2 ("GLBL_WINDOW_MAIN_W") = 0x280;      //640
+    DAT_004d25c6 ("GLBL_WINDOW_MAIN_H") = 0x1e0;      //480
+    DAT_004d25ca ("GLBL_WINDOW_OVRDRAW_W") = 0x500;   //1280
+    DAT_004d25ce ("GLBL_WINDOW_OVRDRAW_H") = 0x3c0;   //960
+    DAT_004d25d2 ("GLBL_WINDOW_UI_W") = 0x280;        //640
+    DAT_004d25d6 ("GLBL_WINDOW_UI_H") = 0x3c0;        //960
+    DAT_004d25c0 = 1;
+    DAT_004d25be = 1;
+    
+  hunches:
+    based on value-change testing:
+      + GLBL_WINDOW_MAIN_W, GLBL_WINDOW_MAIN_H are the OS-window size for the game, and this is what the player sees as the max window size.
+      + GLBL_WINDOW_UI_W,GLBL_WINDOW_UI_H - GUESS? based on re-sizing the main window, I've confirmed that the 'main' player view IN TOTAL
+        is:
+          + rect of 640x960 where the main 640x480 is the HUD AND 3D render viewport.
+          + rect of 640x320 BELOW main HUD which is the tactical Heads-down-display.
+          + both viewports are updated and painted in realtime.
+      + GLBL_WINDOW_OVRDRAW_W, GLBL_WINDOW_OVRDRAW_H
+        + unknown exactly at this time.
+
+  COMPARE - 480x320 settings
+    DAT_004d25c2 ("GLBL_WINDOW_MAIN_W") = 0x140;    //480
+    DAT_004d25c6 ("GLBL_WINDOW_MAIN_H") = 0xf0;     //320
+    DAT_004d25ca ("GLBL_WINDOW_OVRDRAW_W") = 0x280; //640
+    DAT_004d25ce ("GLBL_WINDOW_OVRDRAW_H") = 0x1e0; //480
+    DAT_004d25d2 ("GLBL_WINDOW_UI_W")= 0x140;       //480
+    DAT_004d25d6 ("GLBL_WINDOW_UI_H")= 0x1e0;       //480

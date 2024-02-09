@@ -1,0 +1,42 @@
+ThreeSpace engine 2.0 - FILE TYPES - <game>\SAV\
+
+playerX.mec| .mec files
+-----------
+  This appears to include raw herc data similiar to what is seen in the SAV.sav files.
+  
+00x00 TO 0x07 - UNKNOWN
+00x08 - HERC ID
+00x0A - HARDPOINT COUNT
+00x0C - HARDPOINT 1 - WEP ID
+00x0E - HARDPOINT 2 - WEP ID
+01x00 - HARDPOINT 3 - WEP ID
+01x02 - HARDPOINT 4 - WEP ID
+01x04 - HARDPOINT 5 - WEP ID
+01x06 - HARDPOINT 6 - WEP ID
+01x08 - HARDPOINT 7 - WEP ID
+01x0A - HARDPOINT 8 - WEP ID
+01x0C - HARDPOINT 9 - WEP ID
+
+01x0E - UNKNOWN
+02x00 - UNKNOWN
+02x02 - UNKNOWN
+02x04 - UNKNOWN
+02x06 - UNKNOWN
+02x08 - UNKNOWN
+02x0A - UNKNOWN
+02x0C - UNKNOWN
+02x0E - UNKNOWN
+
+03x00 TO 07x02 - ARMOR DATA
+07x04 - UNKNOWN
+07x06 TO 09x06 - UNKNOWN
+
+ThreeSpace engine 2.0 - FILE TYPES - <game>\DAT\
+  note: these are 'intermediate' files used by VSHELL and DBSIM to talk to each other.
+  
+ACTION: play any mission
+  1. copy the following files to <game>\DAT\
+    + missionX.str (from \SAV\ ) and rename "MISSION.str"
+    + playerX.mec (from \SAV\) and rename "player.mec"
+    + scriptX.dat (from \SAV\) and rename "script.dat"
+  2. run DBSIM -eggplant (seems to force DBSIM to run as standalone exe).
