@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.HexFormat;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,8 +52,8 @@ public final class VolFileWriter {
 				bass.write(Bytes.from(vol.getDirCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[0]);
 				
 				//Directory List Byte Size
-				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[0]);
 				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[1]);
+				bass.write(Bytes.from(vol.getDirSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).array()[0]);
 				
 				//Write folder list
 				VolFileWriter.writeVolDirList(vol.getDirCount(), vol.getFolders(), bass);
@@ -69,7 +70,9 @@ public final class VolFileWriter {
 				
 				//Write Unknonwn 9-byte spacer
 				//TODO
-				bass.write(Bytes.from(0x02, 0x50, 0xD9, 0x00, 0x00, 0x6A, 0x1F, 0xE3, 0x74).array());
+				HexFormat hexFormat = HexFormat.of();
+				byte[] hexBytes = hexFormat.parseHex("0250D900006A1FE374");
+				bass.write(Bytes.from(hexBytes).byteOrder(ByteOrder.LITTLE_ENDIAN).array());
 				
 				//Write Files
 				VolFileWriter.packFilesToVol(vol.getDirCount(), vol.getFolders(), bass);
@@ -100,7 +103,7 @@ public final class VolFileWriter {
 				
 				bass.write(ByteOps.int4ToByteLittleEndian(i));	//write directory index
 				
-				bass.write(entry.getVolOffset().byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array());
+				bass.write(entry.getVolOffset().byteOrder(ByteOrder.LITTLE_ENDIAN).array());
 			}
 		}
 	}

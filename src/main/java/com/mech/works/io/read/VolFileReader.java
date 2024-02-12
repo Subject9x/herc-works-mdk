@@ -7,6 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
@@ -75,30 +79,23 @@ public final class VolFileReader {
 		volFile.setDirSize(Bytes.from(volData.array(), offsetDirSize, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		System.out.println("-Dir Byte Size="+volFile.getDirSize());	//DEBUG
 		
+		//BUILD FOLDER LIST
 		int cursor = offsetDirListStart;
-		for(int i = 0; i < volFile.getDirCount(); i++) {
-			Bytes dirName = Bytes.from(volData.array(), cursor, dirBytesLength);
-			cursor += dirBytesLength;
-			
-			//debug
-			System.out.println(new String(dirName.toCharArray()).substring(0, 3));//DEBUG
-			
-			VolDir dir = new VolDir(new String(dirName.toCharArray()).substring(0, 3), ByteOps.int4ToByteLittleEndian(i));
-			
-			volFile.getFolders().put(dir.getDirIdx(), dir);
-		}
-		//DOES sorting directory in-take really matter if writing a new vol won't conform to the read-in vol's format at all?
+		VolFileReader.generateFolderList(volFile, volData, cursor);
 		
+		
+		//DOES sorting directory in-take really matter if writing a new vol won't conform to the read-in vol's format at all?
 		volFile.setListCount(Bytes.from(volData.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+		cursor += 2;
 		System.out.println("-File List="+volFile.getListCount());	//DEBUG
 		
-		cursor += 2;
 		volFile.setListSize(Bytes.from(volData.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+		cursor += 4;
 		System.out.println("-File Byte Size="+volFile.getListSize());	//DEBUG
 		
-		cursor += 4;
+		//FIXME - turns  out Vol files can be 2-chars long...so I had to rewire the directory list builder to march bytes, this has borked line 98 :(
 		System.out.println("Cursor byte check:" + cursor);
-		Bytes fileListBytes = Bytes.from(volFile.getRawBytes(), cursor, volFile.getListSize());
+		Bytes fileListBytes = Bytes.from(volFile.getRawBytes(), cursor, volFile.getListSize()).byteOrder(ByteOrder.LITTLE_ENDIAN);
 		
 		if(fileListBytes.array().length == 0) {
 			System.out.println("WARN: no files! ending process");
@@ -107,105 +104,117 @@ public final class VolFileReader {
 
 		VolFileReader.generateFileList(volFile, fileListBytes);
 		VolFileReader.sortHeaderFileListDirs(volFile);
-	
-		Bytes magic9 = Bytes.from(volFile.getRawBytes(), cursor + volFile.getListSize(), 9).byteOrder(ByteOrder.LITTLE_ENDIAN);
-
-		String s = "";
-		for(byte b : magic9.toList()) {
-			s += Integer.toHexString(b);
-			s += " ";
-		}
+		
+		cursor += volFile.getListSize();
+		System.out.println("Cursor byte check:" + cursor);
 		
 		
-		System.out.println("---Magic 9 bytes after file list:" + s);
+		//DEBUG - it appears every file gets a 9byte prefix of unknown(at this time) use.
+//		VolFileReader.scanVoidBytes(cursor, volFile);
+		VolFileReader.debugSortPrefix(volFile);
 		
 		return volFile;
+	}
+	
+	
+	private static void generateFolderList(Voln vol, Bytes volData, int cursor) throws Exception{
+		
+		Bytes dirList = Bytes.from(volData.array(), cursor, vol.getDirSize());
+		Bytes dirNameBytes = Bytes.allocate(0);
+		int dirCount = 0;
+		for(byte b : dirList.array()) {
+			if( b >= 0x30 && b <= 0x7A) {
+				if( b == 0x5C) {
+					//debug
+					System.out.println(new String(dirNameBytes.toCharArray()));//DEBUG
+					
+					VolDir dir = new VolDir(new String(dirNameBytes.toCharArray()), ByteOps.int4ToByteLittleEndian(dirCount));
+					
+					vol.getFolders().put(dir.getDirIdx(), dir);
+					
+					dirCount++;
+					dirNameBytes = Bytes.allocate(0);
+				}
+				else{
+					dirNameBytes = dirNameBytes.append(b);
+				}
+				
+			}
+			
+		}
 	}
 	
 	
 	private static void generateFileList(Voln vol, Bytes fileListBytes) throws Exception{
 
 		vol.setFilesSet(new VolEntry[vol.getListCount()]);
-		int fileCount = 0;
 		
+		int fileCount = 0;
+		int cursor = 0;
 		VolEntry link = null;
 		
-		//update: file list names are always 12 chars, there's some unknown bytes trailing some of the names, but they do fit.
-		for(int i = 0; i <= vol.getListSize() - 18; i+=18) {
-			
+		for(int i = 0; i < vol.getListCount(); i++) {
 			VolEntry entry = new VolEntry();
+			cursor = i * 18;
 			
-			Bytes listName = Bytes.from(fileListBytes.array(), i, 12);
+			Bytes listing = Bytes.from(fileListBytes.array(), cursor, 18).byteOrder(ByteOrder.LITTLE_ENDIAN);
+			
+			Bytes listName = Bytes.from(listing.array(), 0, 13);
 			entry.setVolListBytes(listName);
 			
-			
-			entry.setDirIdx(Bytes.from(fileListBytes.array()).byteAt(i+13));
-			
-			if(entry.getDirIdx() == 0x01) {
-				System.out.println("honk");
-			}
-			
-			entry.setVolOffset(Bytes.from(fileListBytes.array(), i+14, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
-			
+			entry.setDirIdx(Bytes.from(listing.array()).byteAt(13));
 
+			entry.setVolOffset(Bytes.from(listing.array(), 14, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			
 			String fileName = new String(listName.array(), Charset.forName("UTF-8"));
-			fileName = fileName.substring(0, (fileName.lastIndexOf('.')+4));
+			fileName = fileName.substring(0, (fileName.lastIndexOf('.') + 4));
 			entry.setFileName(fileName);
 			
-			entry.setExt(FileType.typeFromVal(fileName.substring(fileName.lastIndexOf('.')+1)));
+			entry.setExt(FileType.typeFromVal(fileName.substring(fileName.lastIndexOf('.') + 1)));
 			
 			vol.getFilesSet()[fileCount] = entry;
-			fileCount++;
 			if(link != null) {
 				link.setNextEntry(entry);
 			}
 			link = entry;
+			fileCount += 1;
 			
 		}
-		//File header list is fixed order, populating an array is the best choice.
-		//	WARN: file offset in file header list is from the dir-count byte, ignoring the first 8 bytes.
 		
-		Bytes bytesNoHeader = Bytes.from(vol.getRawBytes(), 9, vol.getRawBytes().length-10);
+		//File header list is fixed order, populating an array is the best choice.		
 		for(int i = 0; i < vol.getFilesSet().length; i++) {
 			VolEntry entryFile = vol.getFilesSet()[i];
 
+			entryFile.setVolOffset(Bytes.from(entryFile.getVolOffset().toInt()+9));	///debug for 9 byte prefix printout
 			int startOfs = entryFile.getVolOffset().toInt();
 			int endOfs = 0;
 			
 			Bytes fileEndOfs = null;
 			if(entryFile.getNextEntry() != null) {
 				fileEndOfs = vol.getFilesSet()[i+1].getVolOffset();
-				endOfs = fileEndOfs.toInt() - 10;	//acounts for 9 header byte at top of VOL file that got snipped.
+				endOfs = fileEndOfs.toInt();
 			}
 			else {
 				
-				fileEndOfs = Bytes.from(bytesNoHeader.array().length);
+				fileEndOfs = Bytes.from(vol.getRawBytes().length);
 				endOfs = fileEndOfs.toInt();
 			}
 			
-			Bytes raw = VolFileReader.fetchFileBytes(bytesNoHeader.array(), startOfs, endOfs);
+			Bytes raw = VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs);
 			entryFile.setRawBytes(raw.array());
+			
+			
+			entryFile.setMagicPrefix(Bytes.from(vol.getRawBytes(), entryFile.getVolOffset().toInt() - 10, 9));	///debug for 9 byte prefix printout);
+			
+			System.out.println(entryFile.toString() + ", endOfs=" + endOfs);	//DEBUG
 		}
 	}
-	
-//	private static VolEntry newFileEntry(Voln vol, Voln.FileType type, byte dirIndex, String fileName, Bytes memOfs) {
-//		
-//		VolEntry newRecord = new VolEntry();
-//		newRecord.setExt(type);
-//		newRecord.setFileName(fileName);
-//		newRecord.setDirIdx(dirIndex);
-//		newRecord.setVolOffset(Bytes.from(memOfs));
-//		
-//		return newRecord;		
-//	}
-	
 	
 	private static void sortHeaderFileListDirs(Voln vol) {
 		for(VolEntry file : vol.getFilesSet()) {
 			vol.getFolders().get(file.getDirIdx()).getFiles().add(file);
 		}
 	}
-	
 	
 	public static Bytes fetchFileBytes(byte[] volData, int fileMemOfs, int nextFileMemOfs) {
 		
@@ -220,5 +229,71 @@ public final class VolFileReader {
 		}
 			
 		return fileBytes;
+	}
+	
+	
+	
+	private static void debugSortPrefix(Voln vol) {
+		
+		Map<String, List<VolEntry>> uniquePrefix = new HashMap<String, List<VolEntry>>();
+		
+		
+		for(VolEntry file : vol.getFilesSet()) {
+			String prefix = file.getMagicPrefix().encodeHex();
+			prefix = prefix.substring(prefix.length()-3, prefix.length());
+			if(!uniquePrefix.keySet().contains(prefix)) {
+				List<VolEntry> newList = new ArrayList<VolEntry>();
+				uniquePrefix.put(prefix, newList);
+			}
+			uniquePrefix.get(prefix).add(file);
+		}
+		
+		for(String k : uniquePrefix.keySet()) {
+			uniquePrefix.get(k).stream().forEach(v -> System.out.println(v.getFileName() + "|" + v.getMagicPrefix().encodeHex()));
+		}
+		
+	}
+	
+	
+	/**
+	 * Deprecated - 02/11/2024 - this was used to spot that evey file entry seems to have a 9 byte prefix that DOES match the offset of the file in header list.
+	 * 
+	 * Debug tool, byte-marcher. Export tests create a SHELL0.vol that is short 1560 bytes, or roughly 9 bytes per file entry
+	 * (170 files) * 9.
+	 * This marches the entire byte array, testing if each byte falls into a defined file-bytes array range.
+	 * If outside the range, report a 'true'.
+	 * @param ofs
+	 * @param vol
+	 * @return
+	 */
+	@Deprecated
+	private static void scanVoidBytes(int cursor, Voln vol) {
+		cursor -= 1;
+		int ofs = 0;
+		int groupCount = 0;
+		String printBytes = "";
+		
+		for(byte b : vol.getRawBytes()) {
+			if(ofs > cursor) {
+				boolean loose = true;
+				for(VolEntry f : vol.getFilesSet()) {
+					if(ofs >= f.getVolOffset().toInt() && ofs <= f.getVolOffset().toInt()+f.getRawBytes().length) {
+						loose = false;
+					}
+				}
+				if(loose){
+					if(groupCount == 8) {
+						System.out.println("file prefix byte["+printBytes+"] @ (" + (ofs - 9) +")");
+						groupCount = 0;
+						printBytes = "";
+					}
+					else {
+						printBytes += Bytes.from(b).encodeHex();
+					}
+					groupCount += 1;
+				}
+			}	
+			ofs += 1;
+		}
 	}
 }

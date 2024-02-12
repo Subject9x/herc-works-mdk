@@ -20,33 +20,25 @@ public class TestVolClass {
 	
 	@Test
 	public void testVolLoad() {
-		
-		Voln v = new Voln.VolnBuilder().setDestPath("E:\\jdk14\\workspace\\src\\test\\resources\\")
-										.setFileName("SHELL0.VOL")
-										.setGameDirPath("E:\\ES2_OS\\dev\\earthsiege2\\")
-										.build();
-		
-		File volFile = new File(v.getGameDirPath()+"VOL\\"+v.getFileName());
-		
-		try(FileInputStream fizz = new FileInputStream(volFile);
-				ByteArrayInputStream bizz = new ByteArrayInputStream(fizz.readAllBytes());){
-			v.setRawBytes(bizz.readAllBytes());
+		Voln testVol = null;
+		try {
+			//testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SIMVOL0.vol");
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\ORIG_SHELL0_ORIG.vol");
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		assertNotNull(v.getRawBytes());
+		assertNotNull(testVol.getRawBytes());
 	}
 	
 	@Test
 	public void testVolParse(){		
 		
 		try {
-			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SHELL0.vol");
-			
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\ORIG_SHELL0_ORIG.vol");
+			testVol.setFileName("DBG_SHELL01.VOL");
 			VolFileWriter.unpackVol(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
 			
 		} 
@@ -66,15 +58,12 @@ public class TestVolClass {
 		testVolParse();
 		
 		if(testVol != null) {
-			
+			try {
+				VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		try {
-			VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
-		
 }
