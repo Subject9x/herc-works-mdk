@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
-import java.util.HexFormat;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,13 +66,7 @@ public final class VolFileWriter {
 				
 				//Write Files list
 				VolFileWriter.writeVolFileList(vol.getDirCount(), vol.getFolders(), bass);
-				
-				//Write Unknonwn 9-byte spacer
-				//TODO
-				HexFormat hexFormat = HexFormat.of();
-				byte[] hexBytes = hexFormat.parseHex("0250D900006A1FE374");
-				bass.write(Bytes.from(hexBytes).byteOrder(ByteOrder.LITTLE_ENDIAN).array());
-				
+					
 				//Write Files
 				VolFileWriter.packFilesToVol(vol.getDirCount(), vol.getFolders(), bass);
 				
@@ -114,7 +107,9 @@ public final class VolFileWriter {
 			Set<VolEntry> folder = directory.get(Bytes.from(i).reverse().array()[0]).getFiles();
 			
 			for(VolEntry entry : folder) {
-				
+				bass.write(entry.getFileCompressionType().reverse().array());
+				bass.write(entry.getFileSize().byteOrder(ByteOrder.BIG_ENDIAN).array());
+				bass.write(0x00000000);
 				bass.write(entry.getRawBytes());
 			}
 		}

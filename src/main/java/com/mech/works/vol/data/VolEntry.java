@@ -1,6 +1,9 @@
 package com.mech.works.vol.data;
 
+import java.nio.ByteOrder;
+
 import com.mech.works.data.ref.files.DataFile;
+import com.mech.works.vol.util.CRC16;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -24,11 +27,12 @@ public class VolEntry extends DataFile{
 	private Byte dirIdx;
 	
 	private Bytes magicPrefix;	//observed in vol.
+	private Bytes compressionType;
 	private VolEntry nextEntry;	//file mem offset in vol is bounded by volOffset + nextEntry.volOffset-1;
 	
 	@Override
 	public String toString() {
-		return "VolEntry [fileName="+getFileName()  + ", volOffset=" + getVolOffset().toInt() + ", byteSize=" + getRawBytes().length + ", magicPrefix=" + getMagicPrefix().encodeHex() +", dirIdx=" + getDirIdx() +"]";
+		return "VolEntry [fileName="+getFileName()  + ", volOffset=" + getVolOffset().toInt() + ", byteSize=" + getRawBytes().length + ", magicPrefix=" + printMagicPrefix() +", dirIdx=" + getDirIdx() +"]";
 	}
 
 	public Bytes getVolOffset() {
@@ -63,11 +67,26 @@ public class VolEntry extends DataFile{
 		this.volListBytes = volListBytes;
 	}
 
+	public void setFileCompresionType(Bytes val) {
+		this.compressionType = val;
+	}
+	
+	public Bytes getFileCompressionType() {
+		return compressionType;
+	}
+	
 	public Bytes getMagicPrefix() {
 		return magicPrefix;
 	}
-
+	
 	public void setMagicPrefix(Bytes magicPrefix) {
 		this.magicPrefix = magicPrefix;
+	}
+	
+	public String printMagicPrefix() {
+		
+		return "	[" + getFileCompressionType().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + 
+				"] [" +  getFileSize().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() +
+				"] [" + getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + "]";
 	}
 }

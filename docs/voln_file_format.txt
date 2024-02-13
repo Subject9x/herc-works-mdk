@@ -1,29 +1,45 @@
 Earthsiege 2 - VOLN file schema (as observed / tested)
 
+-----------------------------------------------------------------------------------------------------
 File Name : 4 bytes
 [56 4F 4C 4E] = "VOLN"
 
+-----------------------------------------------------------------------------------------------------
 Exe - DBSIM - 1 byte 
 [00] = (flag, does DBSIM load this vol? 00 || 01)
 
+-----------------------------------------------------------------------------------------------------
 Exe - VSHELL - 1 byte 
 [00] = (flag, does VSHELL load this vol? 00 || 01)
 
+-----------------------------------------------------------------------------------------------------
 Unknown - 3 bytes 
 [00 00 00] = (most likely vol file options)
 
+-----------------------------------------------------------------------------------------------------
 Load precedence - 1 byte
 [05] = SHELL0, ZONES, SIMVOL0 have [05], but! SHELL1, SIMPATCH have [0A]
 
+-----------------------------------------------------------------------------------------------------
 Total Directories - 1 byte
 [06] = example (6), treated as uint8.
 
+-----------------------------------------------------------------------------------------------------
 Directory List size in bytes
 [1E 00] = example (30), the number of bytes that make up the directory list in the vol file.
 
+-----------------------------------------------------------------------------------------------------
+Directory Header list - variable bytes but totals = (Directory List )
+	each directory listing could be variable length.
+	1-4 bytes for directory name.
+	a "\" character.
+	a "0x00" or null byte separator.
+
+-----------------------------------------------------------------------------------------------------
 File List Header total files - 2 bytes
 [AA 00] = example, 170 files, so 170. (UINT16)
 
+-----------------------------------------------------------------------------------------------------
 File List Header size in bytes - 4 bytes. (UINT32)
 [F4 0B 00 00] = example, 3060. 
 	NOTE: File List header entries are 18 bytes total.
@@ -35,5 +51,7 @@ File List Header size in bytes - 4 bytes. (UINT32)
 <18byte segments of file listings>
 
 + what follows then is all the file byte data.
-+ each file has a 9-byte prefix that I'm still trying to figure out what it means.
++ each file has a 10-byte prefix that I'm still trying to figure out what it means.
+	2Bytes - compression format
+	
 + File data is defined as [STARTING OFFSET + 9] to [NEXT FILE OFFSET].

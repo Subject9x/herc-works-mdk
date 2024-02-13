@@ -81,8 +81,7 @@ public final class VolFileReader {
 		
 		//BUILD FOLDER LIST
 		int cursor = offsetDirListStart;
-		VolFileReader.generateFolderList(volFile, volData, cursor);
-		
+		cursor = VolFileReader.generateFolderList(volFile, volData, cursor);
 		
 		//DOES sorting directory in-take really matter if writing a new vol won't conform to the read-in vol's format at all?
 		volFile.setListCount(Bytes.from(volData.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
@@ -117,7 +116,7 @@ public final class VolFileReader {
 	}
 	
 	
-	private static void generateFolderList(Voln vol, Bytes volData, int cursor) throws Exception{
+	private static int generateFolderList(Voln vol, Bytes volData, int cursor) throws Exception{
 		
 		Bytes dirList = Bytes.from(volData.array(), cursor, vol.getDirSize());
 		Bytes dirNameBytes = Bytes.allocate(0);
@@ -131,7 +130,9 @@ public final class VolFileReader {
 					VolDir dir = new VolDir(new String(dirNameBytes.toCharArray()), ByteOps.int4ToByteLittleEndian(dirCount));
 					
 					vol.getFolders().put(dir.getDirIdx(), dir);
-					
+
+					cursor += dirNameBytes.array().length + 2;
+							
 					dirCount++;
 					dirNameBytes = Bytes.allocate(0);
 				}
@@ -139,9 +140,9 @@ public final class VolFileReader {
 					dirNameBytes = dirNameBytes.append(b);
 				}
 				
-			}
-			
+			}	
 		}
+		return cursor;
 	}
 	
 	
@@ -151,7 +152,6 @@ public final class VolFileReader {
 		
 		int fileCount = 0;
 		int cursor = 0;
-		VolEntry link = null;
 		
 		for(int i = 0; i < vol.getListCount(); i++) {
 			VolEntry entry = new VolEntry();
@@ -172,41 +172,23 @@ public final class VolFileReader {
 			
 			entry.setExt(FileType.typeFromVal(fileName.substring(fileName.lastIndexOf('.') + 1)));
 			
+			
+			int startOfs = entry.getVolOffset().toInt() - 1;
+			
+			entry.setFileCompresionType(Bytes.from(vol.getRawBytes(), startOfs, 2).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			
+			entry.setFileSize(Bytes.from(vol.getRawBytes(), startOfs+2, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			
+			entry.setMagicPrefix(Bytes.from(vol.getRawBytes(), startOfs+7, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			
+			startOfs += 10;
+			int endOfs = startOfs + entry.getFileSize().toInt();
+			
+			entry.setRawBytes(VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs).array());
+					
 			vol.getFilesSet()[fileCount] = entry;
-			if(link != null) {
-				link.setNextEntry(entry);
-			}
-			link = entry;
 			fileCount += 1;
 			
-		}
-		
-		//File header list is fixed order, populating an array is the best choice.		
-		for(int i = 0; i < vol.getFilesSet().length; i++) {
-			VolEntry entryFile = vol.getFilesSet()[i];
-
-			entryFile.setVolOffset(Bytes.from(entryFile.getVolOffset().toInt()+9));	///debug for 9 byte prefix printout
-			int startOfs = entryFile.getVolOffset().toInt();
-			int endOfs = 0;
-			
-			Bytes fileEndOfs = null;
-			if(entryFile.getNextEntry() != null) {
-				fileEndOfs = vol.getFilesSet()[i+1].getVolOffset();
-				endOfs = fileEndOfs.toInt();
-			}
-			else {
-				
-				fileEndOfs = Bytes.from(vol.getRawBytes().length);
-				endOfs = fileEndOfs.toInt();
-			}
-			
-			Bytes raw = VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs);
-			entryFile.setRawBytes(raw.array());
-			
-			
-			entryFile.setMagicPrefix(Bytes.from(vol.getRawBytes(), entryFile.getVolOffset().toInt() - 10, 9));	///debug for 9 byte prefix printout);
-			
-			System.out.println(entryFile.toString() + ", endOfs=" + endOfs);	//DEBUG
 		}
 	}
 	
@@ -248,8 +230,8 @@ public final class VolFileReader {
 			uniquePrefix.get(prefix).add(file);
 		}
 		
-		for(String k : uniquePrefix.keySet()) {
-			uniquePrefix.get(k).stream().forEach(v -> System.out.println(v.getFileName() + "|" + v.getMagicPrefix().encodeHex()));
+		for(String k : uniquePrefix.keySet()) {			
+			uniquePrefix.get(k).stream().forEach(v -> System.out.println(v.getFileName() + "|" + v.printMagicPrefix()));
 		}
 		
 	}
