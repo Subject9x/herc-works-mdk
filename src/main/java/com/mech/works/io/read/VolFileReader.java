@@ -179,7 +179,7 @@ public final class VolFileReader {
 			
 			entry.setFileSize(Bytes.from(vol.getRawBytes(), startOfs+2, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
 			
-			entry.setMagicPrefix(Bytes.from(vol.getRawBytes(), startOfs+7, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			entry.setMagicPrefix(Bytes.from(vol.getRawBytes(), startOfs+6, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
 			
 			startOfs += 10;
 			int endOfs = startOfs + entry.getFileSize().toInt();

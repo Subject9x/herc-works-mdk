@@ -85,8 +85,17 @@ public class VolEntry extends DataFile{
 	
 	public String printMagicPrefix() {
 		
+		String listTailByte = "";
+		if(getVolListBytes().array().length != getFileName().length()) {
+			Bytes tail = Bytes.from(getVolListBytes().array(), getFileName().length() + 1, (getVolListBytes().array().length - getFileName().length() - 1))
+					.byteOrder(ByteOrder.LITTLE_ENDIAN);
+			if(tail.array().length > 1) {
+				listTailByte = "(tail=" + tail.encodeHex() + ")";	
+			}
+		}
+		
 		return "	[" + getFileCompressionType().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + 
 				"] [" +  getFileSize().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() +
-				"] [" + getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + "]";
+				"] [" + getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + "]" + listTailByte;
 	}
 }
