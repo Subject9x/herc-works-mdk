@@ -6,11 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.mech.works.data.file.dyn.DynamixBitmap;
 import com.mech.works.data.file.dyn.DynamixBitmapArray;
 import com.mech.works.data.file.dyn.DynamixPalette;
+import com.mech.works.data.ref.files.DataFile;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -38,7 +39,7 @@ public final class DynFileReader {
 				
 			if(fileBytes != null && fileBytes.array().length > 0) {
 				newDPal = new DynamixPalette();
-				newDPal.setFileName(filePath);
+				newDPal.setFileName(DataFile.makeFileName(filePath));
 				newDPal.setRawBytes(fileBytes.array());
 				
 				int cursor = 4;	//skip header
@@ -98,7 +99,7 @@ public final class DynFileReader {
 			Bytes fileBytes = Bytes.from(fizz.readAllBytes());
 			if(fileBytes != null && fileBytes.array().length > 0) {
 				newDBM = new DynamixBitmap();
-				newDBM.setFileName(filePath);
+				newDBM.setFileName(DataFile.makeFileName(filePath));
 				newDBM.setRawBytes(fileBytes.array());
 				
 				int cursor = 4;	//skip header
@@ -116,12 +117,17 @@ public final class DynFileReader {
 				cursor += 2;
 				System.out.println("Width:" + newDBM.getCols());
 
-				newDBM.setBlockSize(Bytes.from(fileBytes.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
-				cursor += 4;
+				newDBM.setBlockSize(Bytes.from(fileBytes.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+				cursor += 2;
 				
-				int row = 0;
+				cursor += 1; //null byte spacer?
 				
-				imgBytes = Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - 16).byteOrder(ByteOrder.LITTLE_ENDIAN);
+				int imgByteLen = Bytes.from(fileBytes.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
+				cursor += 4;	//size in UINT32 of image data.
+				
+				cursor += 2;	//null spacer bytes
+				
+				imgBytes = Bytes.from(fileBytes.array(), cursor, imgByteLen).byteOrder(ByteOrder.LITTLE_ENDIAN);
 				
 			}
 		}
@@ -129,7 +135,7 @@ public final class DynFileReader {
 		//debug write out
 		if(imgBytes != null) {
 			
-			File file = new File(targDBM.getPath().substring(0, targDBM.getPath().lastIndexOf('\\')) + "\\" + "out.bmp");
+			File file = new File(targDBM.getPath().substring(0, targDBM.getPath().lastIndexOf('\\')) + "\\" + newDBM.getFileName() + ".out");
 			
 			try(FileOutputStream fizz = new FileOutputStream(file);){
 				fizz.write(imgBytes.array());
@@ -141,6 +147,7 @@ public final class DynFileReader {
 		return newDBM;
 	}
 	
+	
 	public static DynamixBitmapArray loadDBA(String filePath) throws Exception{
 		
 		File targDBA = new File(filePath);
@@ -148,18 +155,19 @@ public final class DynFileReader {
 		if(!targDBA.exists()) {
 			throw new IOException("File not found:" + filePath);
 		}
+		
 		DynamixBitmapArray newDBA = null;
-
-		Bytes imgBytes = null;
 		
 		try(FileInputStream fizz = new FileInputStream(targDBA);){
 			
 			Bytes fileBytes = Bytes.from(fizz.readAllBytes());
 			if(fileBytes != null && fileBytes.array().length > 0) {
 				newDBA = new DynamixBitmapArray();
-				newDBA.setFileName(filePath);
+				
+				newDBA.setFileName(DataFile.makeFileName(filePath));
+				
 				newDBA.setRawBytes(fileBytes.array());
-				newDBA.setImages(new ArrayList<DynamixBitmap>());
+				newDBA.setImages(new HashSet<DynamixBitmap>());
 				
 				
 				int cursor = 4;	//skip header
@@ -167,38 +175,72 @@ public final class DynFileReader {
 				newDBA.setFileSize(Bytes.from(fileBytes.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
 				cursor += 4;
 				
-				cursor += 4;	//FIXME: 4-byte UINT of unknown value.
+				newDBA.setArrayRow(Bytes.from(fileBytes.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+				cursor += 2;
 				
-				int imgCount = 0;
-				for(int i=cursor; i < fileBytes.array().length-12; i+=4) {
-					Bytes chunk = Bytes.from(fileBytes.array(), i, 4);
-					if(chunk.encodeHex().equals(DynamixBitmap.header.encodeHex())) {
-						
-					}
+				newDBA.setArrayCols(Bytes.from(fileBytes.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+				cursor += 2;
+				
+				for(int i=cursor; i < fileBytes.array().length-12; i++) {
+					
+					i += 4; 	//skip DBM header.
+					DynamixBitmap dbm = new DynamixBitmap();
+					
+					dbm.setFileSize(Bytes.from(fileBytes.array(), i, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+					i += 4;
+					
+					//height loaded first
+					dbm.setRows(Bytes.from(fileBytes.array(), i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+					System.out.println("Height:" + dbm.getRows());
+					i += 2;
+					
+					//width second
+					dbm.setCols(Bytes.from(fileBytes.array(), i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+					System.out.println("Width:" + dbm.getCols());
+					i += 2;
+
+					dbm.setBlockSize(Bytes.from(fileBytes.array(), i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
+					i += 2;
+					
+					i += 1; //null byte spacer
+					
+					int imgByteLen = Bytes.from(fileBytes.array(), i, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
+					i += 4;
+					
+					i += 2; 	//null spacer.
+					
+					Bytes imgBytes = Bytes.from(fileBytes.array(), i, imgByteLen).byteOrder(ByteOrder.LITTLE_ENDIAN);
+					dbm.setRawBytes(imgBytes.array());
+					
+					i += imgByteLen;	//accounts for the 7 bytes of meta data AFTER file size in bytes.
+					
+					newDBA.getImages().add(dbm);
 					
 				}
-				
-				int row = 0;
-				
-				imgBytes = Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - 16).byteOrder(ByteOrder.LITTLE_ENDIAN);
-				
+
+				File dir = new File(targDBA.getPath().substring(0, targDBA.getPath().lastIndexOf('\\'))+ "\\" + newDBA.getFileName().substring(0, newDBA.getFileName().length()-4));
+				if(!dir.exists()) {
+					dir.mkdir();
+				}
+				int imgCount = 0;
+				for(DynamixBitmap dbm : newDBA.getImages()) {
+					if(dbm.getRawBytes() != null) {
+						
+						
+						File file = new File(dir.getAbsolutePath() 
+												+ "\\" + newDBA.getFileName()
+												+ "_" + imgCount +".bmp");
+						imgCount++;
+						try(FileOutputStream dbmFizz = new FileOutputStream(file);){
+							dbmFizz.write(dbm.getRawBytes());
+							
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		}
-		
-		//debug write out
-//		if(imgBytes != null) {
-//			
-//			File file = new File(targDBA.getPath().substring(0, targDBA.getPath().lastIndexOf('\\')) + "\\" + "dba.bmp");
-//			
-//			try(FileOutputStream fizz = new FileOutputStream(file);){
-//				fizz.write(imgBytes.array());
-//				
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
 		return newDBA;
 	}
-	
-	
 }

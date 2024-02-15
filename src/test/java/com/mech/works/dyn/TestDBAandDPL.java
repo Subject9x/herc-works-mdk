@@ -18,7 +18,7 @@ public class TestDBAandDPL {
 	public void loadAndExportDBM() {
 		
 		try {
-			DynFileReader.loadDBM("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\dbm\\BAY3.DBM");
+			DynFileReader.loadDBM("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\dbm\\MAINPIC1.DBM");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -29,7 +29,7 @@ public class TestDBAandDPL {
 	public void loadAndExportDBA() {
 		
 		try {
-			DynFileReader.loadDBM("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\dba\\APOC_BOD.DBA");
+			DynFileReader.loadDBA("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\dba\\TOM_WEP.DBA");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

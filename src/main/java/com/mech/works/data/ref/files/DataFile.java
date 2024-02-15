@@ -23,6 +23,11 @@ public abstract class DataFile {
 		setGameDirPath(dirPath);
 	}
 	
+	public static String makeFileName(String pathName) {
+		int idx = pathName.lastIndexOf('\\') + 1;
+		return pathName.substring(idx, idx + (pathName.length() - idx));
+	}
+	
 	public String getFileName() {
 		return fileName;
 	}
