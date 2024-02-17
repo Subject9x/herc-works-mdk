@@ -12,17 +12,24 @@ import at.favre.lib.bytes.Bytes;
  * 		Dynamix Bitmap
  * 		its a bitmap file, needs a matching .DPL file to really be viewed.
  * 
- *         16-bit uint row count (height)
-
-        16-bit uint col count (width)
-
-        16-bit uint blocksize length
-
-        nullbyte
-
-        32-bit payload (raw image data) length
-
-        two nullbytes
+ * 	      32-bit uint header tag
+ *     
+ *        32-bit file size value
+ * 
+ *        16-bit uint row count (height)
+ *
+ *        16-bit uint col count (width)
+ *
+ *        16-bit uint bitdepth length
+ *
+ *        nullbyte
+ *
+ *        32-bit payload (raw image data) length
+ *
+ *       2 nullbytes
+ *       
+ *       <begin data>
+ *       
  */
 public class DynamixBitmap extends DataFile{
 
@@ -30,10 +37,12 @@ public class DynamixBitmap extends DataFile{
 	
 	private int rows;
 	private int cols;
-	private int blockSize;
+	private int bitDepth;
 	
 	public DynamixBitmap() {}
 
+	private Bytes imageData;
+	
 	public int getRows() {
 		return rows;
 	}
@@ -50,11 +59,19 @@ public class DynamixBitmap extends DataFile{
 		this.cols = cols;
 	}
 
-	public int getBlockSize() {
-		return blockSize;
+	public int getBitDepth() {
+		return bitDepth;
 	}
 
-	public void setBlockSize(int blockSize) {
-		this.blockSize = blockSize;
+	public void setBitDepth(int blockSize) {
+		this.bitDepth = blockSize;
+	}
+
+	public Bytes getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(Bytes imageData) {
+		this.imageData = imageData;
 	}
 }

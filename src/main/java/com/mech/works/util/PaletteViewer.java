@@ -15,7 +15,7 @@ public class PaletteViewer extends JFrame{
 		super();
 		this.dpl = dpl;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(1280, 1024));
+		setPreferredSize(new Dimension(1680, 1050));
 		setMaximumSize(getPreferredSize());
 		setAlwaysOnTop(true);
 		setLayout(new BorderLayout());
