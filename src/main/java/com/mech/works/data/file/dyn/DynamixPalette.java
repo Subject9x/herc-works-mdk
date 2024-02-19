@@ -1,9 +1,7 @@
 package com.mech.works.data.file.dyn;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import com.mech.works.data.ref.files.DataFile;
 import com.mech.works.data.struct.ColorBytes;
@@ -22,24 +20,28 @@ public class DynamixPalette extends DataFile {
 	private int colorCount;
 	
 	private Bytes rawIndexBytes;
-	private LinkedHashMap<String, ColorBytes> colors;
+	private LinkedHashMap<Integer, ColorBytes> colors;
 	
 	public DynamixPalette() {
 		super();
-		colors = new LinkedHashMap<String, ColorBytes>();
+		colors = new LinkedHashMap<Integer, ColorBytes>();
 	}
 
+	public ColorBytes colorAt(int idx) {
+		return getColors().get(idx);
+	}
+	
 	/**
 	 * 
 	 * @return
 	 */
-	public int[] toColorMap() {
+	public int[] toIntColorMap() {
 		
 		int[] cmap = new int[256];
-		int i = 0;
-		for(String shade : getColors().keySet()) {
-			cmap[i] =  getColors().get(shade).getColor().getRGB();
-			i++;
+		int i = 255;
+		for(int shade : getColors().keySet()) {
+			cmap[shade] =  getColors().get(shade).getColor().getRGB();
+//			i--;
 		}
 //		int grayIncr = 256/(256-i);
 //		
@@ -55,7 +57,7 @@ public class DynamixPalette extends DataFile {
 	public byte[] toByteArray() {
 		Bytes index = Bytes.allocate(0);
 		
-		for(String shade : getColors().keySet()) {
+		for(int shade : getColors().keySet()) {
 			index = index.append(Bytes.from(getColors().get(shade).getArray(), 0, 3).array());
 		}
 		return index.array();
@@ -69,11 +71,11 @@ public class DynamixPalette extends DataFile {
 		this.colorCount = colorCount;
 	}
 
-	public Map<String, ColorBytes> getColors() {
+	public LinkedHashMap<Integer, ColorBytes> getColors() {
 		return colors;
 	}
 
-	public void setColors(LinkedHashMap<String, ColorBytes> colors) {
+	public void setColors(LinkedHashMap<Integer, ColorBytes> colors) {
 		this.colors = colors;
 	}
 

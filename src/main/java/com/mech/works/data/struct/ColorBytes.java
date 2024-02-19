@@ -43,13 +43,11 @@ public class ColorBytes {
 		this.color = color;
 	}
 	
-	public byte[] get24bitRGB() {
-		byte[] b = new byte[3];
-		b[0] = this.array[0];
-		b[1] = this.array[1];
-		b[2] = this.array[2];
+	
+	public int colorIntRGB() {
+		Color tone = getColor();
 		
-		return b;
+		return (tone.getRed() << 16) | (tone.getGreen() << 8) | (tone.getBlue() << 0);
 	}
 	
 	public int getIntBGR() {

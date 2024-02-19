@@ -1,20 +1,17 @@
 package com.mech.works.io.write;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
-import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import com.mech.works.data.file.dyn.DynamixBitmap;
 import com.mech.works.data.file.dyn.DynamixPalette;
-import com.mech.works.data.struct.ColorBytes;
-
-import at.favre.lib.bytes.Bytes;
 
 public final class DynFileWriter {
 
@@ -23,14 +20,14 @@ public final class DynFileWriter {
 	
 	public static void writeDBMToFile(DynamixBitmap dbm, DynamixPalette palette, String filePath) {
 		
-		IndexColorModel colorIndex = new IndexColorModel(8,
-															256,
-															palette.toColorMap(),
-															0,
-															false,
-															-1,
-															DataBuffer.TYPE_BYTE
-														);
+//		IndexColorModel colorIndex = new IndexColorModel(8,
+//															256,
+//															palette.toIntColorMap(),
+//															0,
+//															false,
+//															-1,
+//															DataBuffer.TYPE_BYTE
+//														);
 		///-------------------------
 		
 		File file = new File(filePath + dbm.getFileName() + ".bmp");
@@ -39,9 +36,7 @@ public final class DynFileWriter {
 		//XXX: TYPE_INT_ARGB - DOES NOT WORK WITH IMAGEIO on .BMP!
 		
 		try {
-			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_RGB, colorIndex);
-//			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_);
-//			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_BYTE_INDEXED, colorIndex);	
+			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_RGB);
 		}
 		catch(Exception e) {
 			// TODO Auto-generated catch block
@@ -49,35 +44,55 @@ public final class DynFileWriter {
 			System.out.println(e.getMessage());
 		}
 		
-		//write image data directly.
-//		byte[] data = ((DataBufferByte)imageOut.getRaster().getDataBuffer()).getData();	//TYPE_BYTE
-		int[] data = ((DataBufferInt)imageOut.getRaster().getDataBuffer()).getData(); //ANY TYPE_INT
+		WritableRaster rast = (WritableRaster)imageOut.getRaster();
+		int[] rasterData = new int[dbm.getCols()*dbm.getRows()*3];
 		
-		for(int i=0; i < dbm.getImageData().array().length; i++) {
-			data[i] = dbm.getImageData().array()[i];
-		}
 		
+		int i = 0;
 		for(int r=0; r < dbm.getRows(); r++) {
 			for(int c=0; c < dbm.getCols(); c++) {
 				int cell = (r * dbm.getCols()) + c;
-				String id = Bytes.from(dbm.getImageData().array()[cell]).encodeHex();
+				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
-				if(palette.getColors().get(id) != null) {
-					ColorBytes shade = palette.getColors().get(id);
-					
-					imageOut.setRGB(c, r, shade.getColor().getRGB());
+				try {
+					rasterData[i] = palette.colorAt(idx).getColor().getRGB();
+					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx); 
 				}
+				catch(NullPointerException nope) {
+					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 
+				}
+				i++;
 			}
 		}
+		rast.setDataElements(0, 0, dbm.getCols(), dbm.getRows(), rasterData);
 		
+		boolean wrote = false;
 		try {
-			ImageIO.write(imageOut, "bmp", file);
+			wrote = ImageIO.write(imageOut, "bmp", file);
+		} catch (Throwable t) {
+			// TODO Auto-generated catch block
+			t.printStackTrace();
+			System.out.println(t.getMessage());
+		}
+		System.out.println("write file" + wrote);
+	}
+	
+	
+	public static void writeDBMToFile(DynamixBitmap dbm, String filePath) {
+		File file = new File(filePath + dbm.getFileName() + ".DBM");
+		
+		try(FileOutputStream fozz = new FileOutputStream(file)){
+			fozz.write(dbm.getRawBytes());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
-
+		
 	}
 	
 	public static void writeDBMToFileNoPalette(DynamixBitmap dbm, String filePath) {

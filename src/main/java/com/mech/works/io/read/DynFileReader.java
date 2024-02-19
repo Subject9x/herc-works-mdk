@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -22,10 +22,6 @@ import at.favre.lib.bytes.Bytes;
 public final class DynFileReader {
 
 	public DynFileReader() {}
-	
-	
-	
-	
 	
 	/**
 	 * Loads a {@linkplain DynamixPalette} file into memory.
@@ -63,54 +59,55 @@ public final class DynFileReader {
 				cursor += 4;
 				
 				int colorBytes = colorCount * 4;	//assuming 4 bytes per color?
-				cursor += 4;	//there's 4 unaccounted for bytes here? probably?
 				
 				newDPal.setRawIndexBytes(Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - cursor));
-
-				
+			
 				int scalar = 4;
 				int colorIdx = 0;
+				
+				//DO NOT CHANGE - original "mostly working" 4-byte RGBA value read
 				for(int b=cursor; b < colorBytes; b += 4) {
 					
-					Bytes shadeBytes = Bytes.from(fileBytes.array(), b, 4);	
+					Bytes shadeBytes = Bytes.from(fileBytes.array(), b, 4).byteOrder(ByteOrder.BIG_ENDIAN);	
+					byte[] bytes = new byte[4];
 					
-
 					System.out.println("["+ colorIdx +"] Palette Entry RAW:" + shadeBytes.encodeHex());
+					System.out.println("["+ colorIdx +"] Palette Entry LENDIAN RAW:" + shadeBytes.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
 					
-					
-					int ir = shadeBytes.byteAt(0);
+					int ir = Byte.toUnsignedInt(shadeBytes.byteAt(0));
 					ir = (ir * scalar) > 255 ? 255 : ir * scalar;
-					shadeBytes.array()[0] = Bytes.from(ir).array()[3];
+					bytes[0] = (byte) ir;
 					
 					
-					int ig = shadeBytes.byteAt(1);
+					int ig = Byte.toUnsignedInt(shadeBytes.byteAt(1));
 					ig = (ig * scalar) > 255 ? 255 : ig * scalar;
-					shadeBytes.array()[1] = Bytes.from(ig).array()[3];
+					bytes[1] = (byte) ig;
 					
-					int ib =  shadeBytes.byteAt(2);
+					int ib =  Byte.toUnsignedInt(shadeBytes.byteAt(2));
 					ib = (ib * scalar) > 255 ? 255 : ib * scalar;
-					shadeBytes.array()[2] = Bytes.from(ib).array()[3];
+					bytes[2] = (byte) ib;
 					
 					
 					int ia = shadeBytes.byteAt(3);
 					ia = ia == 1 ? 255 : 0;
-					shadeBytes.array()[3] = Bytes.from(ia).array()[3];
+					bytes[3] = (byte) ia;
 					
 					System.out.println("		Palette Entry:" + shadeBytes.encodeHex());
 
-					ColorBytes rawColor = new ColorBytes(shadeBytes.array());
+					ColorBytes rawColor = new ColorBytes(bytes);
 					
 					rawColor.setColor(new Color(ir, ig, ib, ia));
 					
-					String palIdx = Bytes.from(colorIdx).encodeHex().substring(6, 8);
-					newDPal.getColors().put(palIdx, rawColor);
-					System.out.println("		index:" + palIdx);
+					newDPal.getColors().put(colorIdx, rawColor);
+					colorIdx++;	
+					
+					
+					
+					System.out.println("		index:" + colorIdx);
 					System.out.println("		getIntBGR:" + Bytes.from(rawColor.getIntBGR()).encodeHex());
 					System.out.println("		getIntRGB:" + Bytes.from(rawColor.getIntRGB()).encodeHex());
 					
-					colorIdx++;
 				}
-				
 			}
 		}
 
@@ -130,23 +127,6 @@ public final class DynFileReader {
 		
 		
 		return newDPal;
-	}
-	
-	private static Color bytesToColor(Bytes shadeBytes, int scalar) {
-
-		int ir = shadeBytes.byteAt(0);
-		ir = (ir * scalar) > 255 ? 255 : ir * scalar;
-		
-		int ig = shadeBytes.byteAt(1);
-		ig = (ig * scalar) > 255 ? 255 : ig * scalar;
-		
-		int ib = shadeBytes.byteAt(2);
-		ib = (ib * scalar) > 255 ? 255 : ib * scalar;
-		
-		int ia = shadeBytes.byteAt(3);
-		ia = ia == 1 ? 255 : 0;
-		
-		return new Color(ir, ig, ib, ia);
 	}
 	
 	public static DynamixBitmap parseBytesToDBM(byte[] data) throws Exception{
@@ -204,7 +184,7 @@ public final class DynFileReader {
 	
 		
 		newDBA.setRawBytes(data);
-		newDBA.setImages(new HashSet<DynamixBitmap>());
+		newDBA.setImages(new LinkedHashSet<DynamixBitmap>());
 		
 		int cursor = 4;	//skip header
 		
@@ -223,11 +203,11 @@ public final class DynFileReader {
 			int imgByteLen = Bytes.from(data, i+15, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
 			
 			int fileChunk = 21 + imgByteLen;
-			Bytes dbaItem = Bytes.from(data, i, fileChunk);
+			Bytes dbaItem = Bytes.from(data, i, fileChunk).byteOrder(ByteOrder.LITTLE_ENDIAN);
 			
 			DynamixBitmap dbm = DynFileReader.parseBytesToDBM(dbaItem.array());
 			
-			i += fileChunk;	//accounts for the 7 bytes of meta data AFTER file size in bytes.
+			i += dbm.getRawBytes().length;	//accounts for the 7 bytes of meta data AFTER file size in bytes.
 			
 			System.out.println("IMAGE:"+imgCount+"-------------");
 			System.out.println("Width:" + dbm.getCols());
@@ -277,7 +257,8 @@ public final class DynFileReader {
 		
 		try(FileInputStream fizz = new FileInputStream(targDBA);){
 			
-			Bytes fileBytes = Bytes.from(fizz.readAllBytes());
+			Bytes fileBytes = Bytes.from(fizz.readAllBytes()).byteOrder(ByteOrder.LITTLE_ENDIAN);
+			
 			if(fileBytes != null && fileBytes.array().length > 0) {
 				newDBA = DynFileReader.parseBytesToDBA(fileBytes.array());
 				newDBA.setFileName(DataFile.makeFileName(filePath));
@@ -293,7 +274,8 @@ public final class DynFileReader {
 		List<Byte> matches = new ArrayList<Byte>();
 		
 		for(byte b : dbm.getImageData()) {
-			if(!matches.contains(b)){
+			byte off = (byte)(b-8);
+			if(!matches.contains(off)){
 				matches.add(b);
 			}
 		}
@@ -305,8 +287,7 @@ public final class DynFileReader {
 		List<Byte> unknown = new ArrayList<Byte>();
 		
 		for(byte b : colors) {
-			String hex = Bytes.from(b).encodeHex();
-			if(dpl.getColors().keySet().contains(hex)) {
+			if(dpl.getColors().keySet().contains((int)b)) {
 				matches.add(b);
 			}
 			else {

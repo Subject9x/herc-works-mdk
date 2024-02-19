@@ -1,6 +1,7 @@
 package com.mech.works.data.file.dyn;
 
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.mech.works.data.ref.files.DataFile;
@@ -17,7 +18,7 @@ public class DynamixBitmapArray extends DataFile{
 	
 	public static Bytes header = Bytes.from("01002800", StandardCharsets.UTF_8);
 	
-	private Set<DynamixBitmap> images;
+	private LinkedHashSet<DynamixBitmap> images;
 	
 	private int arrayRow;
 	private int arrayCols;
@@ -31,7 +32,7 @@ public class DynamixBitmapArray extends DataFile{
 	}
 
 
-	public void setImages(Set<DynamixBitmap> images) {
+	public void setImages(LinkedHashSet<DynamixBitmap> images) {
 		this.images = images;
 	}
 
