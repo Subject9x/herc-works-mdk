@@ -9,6 +9,8 @@ import at.favre.lib.bytes.Bytes;
  */
 public abstract class DataFile {
 
+	private byte[] header;
+	
 	private String fileName;
 	private String gameDirPath;
 	private String filePath;
@@ -83,5 +85,13 @@ public abstract class DataFile {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public byte[] header() {
+		return header;
+	}
+
+	public void setHeader(byte[] header) {
+		this.header = header;
 	}
 }

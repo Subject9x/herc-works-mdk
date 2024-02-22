@@ -62,7 +62,7 @@ public final class DynFileReader {
 				
 				newDPal.setRawIndexBytes(Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - cursor));
 			
-				int scalar = 4;
+				int scalar = 1;
 				int colorIdx = 0;
 				
 				//DO NOT CHANGE - original "mostly working" 4-byte RGBA value read
@@ -319,7 +319,7 @@ public final class DynFileReader {
 		}
 		
 		if(dir != null) {
-			dir = filePath.substring(0, filePath.lastIndexOf("\\"+dir.toUpperCase()) )+ "\\";
+			dir = filePath.substring(0, filePath.lastIndexOf("\\"+dir) )+ "\\";
 		}
 		return dir;
 	}

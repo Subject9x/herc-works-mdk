@@ -84,19 +84,41 @@ public class TestDBAandDPL {
 	@Test	
 	public void loadAndExportDBA() {
 		
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\TOMA_INT.DBA";
-
+//		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\ONLINE.DBA";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\DBG_SHELL0\\DBA\\APOC_OUT.DBA";
+		
+		
 		List<String> pals = new ArrayList<String>();
-		pals.add( "PALETTE.DPL");
-		pals.add( "ESII.DPL");
+//		pals.add( "COCKPIT.DPL");
+//		pals.add( "LD_HERC1.DPL");
+//		pals.add( "LD_HERC2.DPL");
+//		pals.add( "LD_HERC3.DPL");
+//		pals.add( "LD_HERC4.DPL");
+//		pals.add( "LD_HERC5.DPL");
+//		pals.add( "WORLD0.DPL");
+//		pals.add( "WORLD1.DPL");
+//		pals.add( "WORLD2.DPL");
+//		pals.add( "WORLD3.DPL");
+//		pals.add( "WORLD4.DPL");
+//		pals.add( "WORLD5.DPL");
+//		pals.add( "WORLD6.DPL");
+//		pals.add( "WORLD7.DPL");
+//		pals.add( "WORLD8.DPL");
+//		pals.add( "WORLD9.DPL");
+//		pals.add( "PALETTE.DPL");
+//		pals.add( "ESII.DPL");
 		pals.add( "ARMING.DPL");
-		pals.add( "BAY.DPL");
+//		pals.add( "BAY.DPL");
+//		pals.add( "MAP.DPL");
+//		pals.add( "MAP_PAL1.DPL");
+//		pals.add( "MAP_PAL2.DPL");
+//		pals.add( "CAM_ER.DPL");
+//		pals.add( "CAM_MOON.DPL");
+//		pals.add( "BR_ER.DPL");
+//		pals.add( "DB_ER.DPL");
 		
 //		
 		List<DynamixPalette> dplList = new ArrayList<DynamixPalette>();
-		
-		
-		File targFile = new File(targUrl);
 		
 		DynamixBitmapArray loadedDBA = null;
 		try {
@@ -116,7 +138,6 @@ public class TestDBAandDPL {
 		
 		String volDir = DynFileReader.getVolDirOfFile(targUrl, loadedDBA.getFileName());
 		
-		DynamixPalette mainDPL = null;
 		try {
 			for(String p : pals) {
 				dplList.add( DynFileReader.loadDPL(volDir + "\\DPL\\"+p));
@@ -131,9 +152,7 @@ public class TestDBAandDPL {
 		
 		assertFalse(dplList.isEmpty());
 		
-		//normal ops
 		for(DynamixBitmap dbm : loadedDBA.getImages()) {
-			
 			
 			dbm.setFileName(loadedDBA.originNameNoExt() + dbm.getFileName());
 			dbm.assignDir(dbaExportdir.getPath()+"\\");
@@ -152,10 +171,7 @@ public class TestDBAandDPL {
 	@Test	
 	public void loadAndExportDBAtoDBM() {
 		
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\TOM_BOD.DBA";
-
-
-		File targFile = new File(targUrl);
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\ICONS2.DBA";
 		
 		DynamixBitmapArray loadedDBA = null;
 		try {
@@ -175,14 +191,12 @@ public class TestDBAandDPL {
 		
 		String volDir = DynFileReader.getVolDirOfFile(targUrl, loadedDBA.getFileName());
 		
-
 		for(DynamixBitmap dbm : loadedDBA.getImages()) {
 			
 			
 			dbm.setFileName(loadedDBA.originNameNoExt() + dbm.getFileName());
 			dbm.assignDir(dbaExportdir.getPath()+"\\");
-			String name = dbm.getFileName();
-			
+
 			DynFileWriter.writeDBMToFile(dbm, dbm.getFilePath());
 			
 		}
@@ -239,8 +253,8 @@ public class TestDBAandDPL {
 
 	public static void main(String[] args)
 	{
-		String targDpl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DPL\\BAY.DPL";
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\TOM_OUT.DBA";
+		String targDpl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0\\DBG_SIMVOL0\\DPL\\COCKPIT.DPL";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0\\DBG_SIMVOL0\\hb0\\APOCA.HB0";
 		
 		
 		TestDBAandDPL test = new TestDBAandDPL();

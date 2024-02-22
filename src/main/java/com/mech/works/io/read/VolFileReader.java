@@ -1,6 +1,7 @@
 package com.mech.works.io.read;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
@@ -38,7 +40,6 @@ public final class VolFileReader {
 	
 	private static int offsetDirListStart = 12;
 	
-	private static int dirBytesLength = 5;
 	
 	//file List comes after dir data
 	
@@ -110,7 +111,8 @@ public final class VolFileReader {
 		
 		//DEBUG - it appears every file gets a 9byte prefix of unknown(at this time) use.
 //		VolFileReader.scanVoidBytes(cursor, volFile);
-		VolFileReader.debugSortPrefix(volFile);
+//		VolFileReader.debugSortPrefix(volFile);
+		VolFileReader.debugUnsortedPrefix(volFile.getDirCount(), volFile.getFolders());
 		
 		return volFile;
 	}
@@ -120,20 +122,20 @@ public final class VolFileReader {
 		
 		Bytes dirList = Bytes.from(volData.array(), cursor, vol.getDirSize());
 		Bytes dirNameBytes = Bytes.allocate(0);
-		int dirCount = 0;
+		byte dirCount = 0;
 		for(byte b : dirList.array()) {
 			if( b >= 0x30 && b <= 0x7A) {
 				if( b == 0x5C) {
 					//debug
 					System.out.println(new String(dirNameBytes.toCharArray()));//DEBUG
 					
-					VolDir dir = new VolDir(new String(dirNameBytes.toCharArray()), ByteOps.int4ToByteLittleEndian(dirCount));
+					VolDir dir = new VolDir(new String(dirNameBytes.toCharArray()), dirCount);
 					
 					vol.getFolders().put(dir.getDirIdx(), dir);
 
 					cursor += dirNameBytes.array().length + 2;
 							
-					dirCount++;
+					dirCount = (byte)(dirCount + 1);
 					dirNameBytes = Bytes.allocate(0);
 				}
 				else{
@@ -172,20 +174,36 @@ public final class VolFileReader {
 			
 			entry.setExt(FileType.typeFromVal(fileName.substring(fileName.lastIndexOf('.') + 1)));
 			
+			int startOfs = entry.getVolOffset().toInt();
 			
-			int startOfs = entry.getVolOffset().toInt() - 1;
+			entry.setFileCompressionType(Bytes.from(vol.getRawBytes(), startOfs, 1).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			startOfs += 1;
 			
-			entry.setFileCompresionType(Bytes.from(vol.getRawBytes(), startOfs, 2).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			entry.setFileSize(Bytes.from(vol.getRawBytes(), startOfs, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			startOfs += 4;
 			
-			entry.setFileSize(Bytes.from(vol.getRawBytes(), startOfs+2, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			entry.setMagicPrefix(Bytes.from(vol.getRawBytes(), startOfs, 4));
+			startOfs += 4;
 			
-			entry.setMagicPrefix(Bytes.from(vol.getRawBytes(), startOfs+6, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
-			
-			startOfs += 10;
 			int endOfs = startOfs + entry.getFileSize().toInt();
 			
-			entry.setRawBytes(VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs).array());
-					
+			try {
+				entry.setRawBytes(VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs).array());
+			}catch(Exception e){
+				System.out.println("ERROR on [" + entry.getFileName() +"] : " + e.getMessage());
+			}
+				
+			if(entry.getFileName().contains(".DAT")) {
+				entry.setHeader(new byte[0]);
+			}
+			else {
+				entry.setHeader(Bytes.from(entry.getRawBytes(), 0, 4).byteOrder(ByteOrder.BIG_ENDIAN).array());	
+			}
+			
+			
+//			System.out.println(entry.getFileName()+":header["+Bytes.from(entry.header()).encodeHex()+"]");
+//			System.out.println(entry.getFileName()+":header?["+Bytes.from(entry.getRawBytes(),0,4).encodeHex()+"]");
+			
 			vol.getFilesSet()[fileCount] = entry;
 			fileCount += 1;
 			
@@ -213,6 +231,18 @@ public final class VolFileReader {
 		return fileBytes;
 	}
 	
+	
+	private static void debugUnsortedPrefix(int totalDirs, Map<Byte, VolDir> directory){
+		System.out.println("WRITING FILE LIST=====================================");
+		for(int i = 0; i < totalDirs; i++) {
+			Set<VolEntry> folder = directory.get((byte)i).getFiles();
+			
+			for(VolEntry entry : folder) {
+//				System.out.println(directory.get((byte)i).getLabel() +"\\" + entry.getFileName() + "|" + entry.printMagicPrefix());
+				System.out.println(entry.getFileName() + "|" + entry.printMagicPrefix() + "| rawByteSize[" + entry.getRawBytes().length +"] | ofs[" + entry.getVolOffset().toInt()+"]");
+			}
+		}
+	}
 	
 	
 	private static void debugSortPrefix(Voln vol) {

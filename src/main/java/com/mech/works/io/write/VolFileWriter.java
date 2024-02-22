@@ -31,8 +31,14 @@ public final class VolFileWriter {
 		
 		File volOutput = new File(destPath + "\\" + vol.getFileName());
 		
-		try (ByteArrayOutputStream bass = new ByteArrayOutputStream(vol.getRawBytes().length); FileOutputStream fout = new FileOutputStream(volOutput)){
-		
+		try (ByteArrayOutputStream bass = new ByteArrayOutputStream(vol.getRawBytes().length);  FileOutputStream fout = new FileOutputStream(volOutput)){
+					
+				System.out.println("-Dir List="+vol.getDirCount());	//DEBUG
+				System.out.println("-Dir Byte Size="+vol.getDirSize());	//DEBUG
+				System.out.println("-File List="+vol.getListCount());	//DEBUG
+				System.out.println("-File Byte Size="+vol.getListSize());	//DEBUG
+				
+			
 				//HEADER with UNKNOWN
 				bass.write(Voln.ByteHeader.VOLN.bytes().array());
 				
@@ -96,21 +102,32 @@ public final class VolFileWriter {
 				
 				bass.write(ByteOps.int4ToByteLittleEndian(i));	//write directory index
 				
-				bass.write(entry.getVolOffset().byteOrder(ByteOrder.LITTLE_ENDIAN).array());
+				byte[] ofs = entry.getVolOffset().byteOrder(ByteOrder.LITTLE_ENDIAN).array();
+				bass.write(ofs[0]);
+				bass.write(ofs[1]);
+				bass.write(ofs[2]);
+				bass.write(ofs[3]);
 			}
 		}
+		bass.flush();
 	}
 	
 	private static void packFilesToVol(int totalDirs, Map<Byte, VolDir> directory, ByteArrayOutputStream bass) throws IOException{
-
+		System.out.println("WRITING FILE LIST=====================================");
+		
 		for(int i = 0; i < totalDirs; i++) {
-			Set<VolEntry> folder = directory.get(Bytes.from(i).reverse().array()[0]).getFiles();
+			Set<VolEntry> folder = directory.get((byte)i).getFiles();
 			
 			for(VolEntry entry : folder) {
-				bass.write(entry.getFileCompressionType().reverse().array());
+//				System.out.println(directory.get((byte)i).getLabel() +"\\" + entry.getFileName() + "|" + entry.printMagicPrefix());
+
+				System.out.println(entry.getFileName() + "|" + entry.printMagicPrefix() + "| rawByteSize[" + entry.getRawBytes().length +"]");
+				
+				bass.write(entry.getFileCompressionType().byteAt(0));
 				bass.write(entry.getFileSize().byteOrder(ByteOrder.BIG_ENDIAN).array());
-				bass.write(0x00000000);
+				bass.write(entry.getMagicPrefix().array());
 				bass.write(entry.getRawBytes());
+				bass.write(0x00);
 			}
 		}
 	}
@@ -159,8 +176,11 @@ public final class VolFileWriter {
 		try(FileOutputStream fizz = new FileOutputStream(file);){
 			fizz.write(entry.getRawBytes());
 			
+			System.out.println("Wrote ["+file.getPath()+"]");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println(e.getMessage() + "\n file=" + entry.getFilePath() +"\\"+entry.getFileName());
 		}
 	}
 	

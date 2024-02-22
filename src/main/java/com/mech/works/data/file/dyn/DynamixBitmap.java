@@ -12,19 +12,19 @@ import at.favre.lib.bytes.Bytes;
  * 		Dynamix Bitmap
  * 		its a bitmap file, needs a matching .DPL file to really be viewed.
  * 
- * 	      32-bit uint header tag
+ * 	      UINT32 uint header tag
  *     
- *        32-bit file size value
+ *        UINT32 file size value
  * 
- *        16-bit uint row count (height)
+ *        UINT16 uint row count (height)
  *
- *        16-bit uint col count (width)
+ *        UINT16 uint col count (width)
  *
- *        16-bit uint bitdepth length
+ *        UINT16 uint bitdepth length
  *
  *        nullbyte
  *
- *        32-bit payload (raw image data) length
+ *        UINT32 payload (raw image data) length
  *
  *       2 nullbytes
  *       

@@ -67,7 +67,7 @@ public class VolEntry extends DataFile{
 		this.volListBytes = volListBytes;
 	}
 
-	public void setFileCompresionType(Bytes val) {
+	public void setFileCompressionType(Bytes val) {
 		this.compressionType = val;
 	}
 	
@@ -94,7 +94,7 @@ public class VolEntry extends DataFile{
 			}
 		}
 		
-		return "	[" + getFileCompressionType().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + 
+		return "	[" + Bytes.from(getFileCompressionType()).byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + 
 				"] [" +  getFileSize().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() +
 				"] [" + getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + "]" + listTailByte;
 	}
