@@ -43,12 +43,16 @@ public class TestGamDatFiles {
 		shell.setDestPath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 		
 		DataFile datfile = null;
+		DataFile campaignSTR = null;
 		
 		Iterator<VolEntry> fileItr = shell.getFolders().get((byte)4).getFiles().iterator();
 		while(fileItr.hasNext()) {
 			VolEntry file = fileItr.next();
 			if(file.getFileName().equals("INI_TOMA.DAT")) {
 				datfile = file;
+			}
+			else if(file.getFileName().equals("CAMPAIGN.STR")) {
+				campaignSTR = file;
 			}
 		}
 		
@@ -71,6 +75,16 @@ public class TestGamDatFiles {
 		
 		datfile.setRawBytes(edit.array());
 		
+		Bytes edits = Bytes.from(campaignSTR.getRawBytes());
+		byte[] splice1 = Bytes.from(edits.array(), 0, 8).array();
+		
+		byte[] splice2 = Bytes.from(edits.array(), 47, edits.length()-73).array();
+		
+		
+		byte[] msg = Bytes.from("HELLO AGAIN, MEGATRON. THIS is a replacement annoucement, duh...!").array();
+		
+		edits = Bytes.allocate(0).append(splice1).append(msg).append(splice2);
+		campaignSTR.setRawBytes(edits.array().clone());
 		try {
 			VolFileWriter.packVolToFile(shell, shell.getDestPath());
 		} catch (Exception e) {

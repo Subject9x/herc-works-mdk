@@ -1,9 +1,9 @@
 package com.mech.works.vol.data;
 
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
 import com.mech.works.data.ref.files.DataFile;
-import com.mech.works.vol.util.CRC16;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -28,7 +28,6 @@ public class VolEntry extends DataFile{
 	
 	private Bytes magicPrefix;	//observed in vol.
 	private Bytes compressionType;
-	private VolEntry nextEntry;	//file mem offset in vol is bounded by volOffset + nextEntry.volOffset-1;
 	
 	@Override
 	public String toString() {
@@ -49,14 +48,6 @@ public class VolEntry extends DataFile{
 
 	public void setDirIdx(Byte dirIdx) {
 		this.dirIdx = dirIdx;
-	}
-
-	public VolEntry getNextEntry() {
-		return nextEntry;
-	}
-
-	public void setNextEntry(VolEntry nextEntry) {
-		this.nextEntry = nextEntry;
 	}
 
 	public Bytes getVolListBytes() {
@@ -83,12 +74,32 @@ public class VolEntry extends DataFile{
 		this.magicPrefix = magicPrefix;
 	}
 	
+	/**
+	 * 
+	 * @param listBytes
+	 * @return String
+	 */
+	public static String nameFromListByte(byte[] listBytes) {
+		
+		String clean = "";
+		for(byte b : listBytes) {
+			if(b == 0x00) {
+				break;
+			}
+			clean = clean.concat(String.valueOf( (char)b));
+		}
+		
+		return clean;
+	}
+	
 	public String printMagicPrefix() {
 		
 		String listTailByte = "";
 		if(getVolListBytes().array().length != getFileName().length()) {
-			Bytes tail = Bytes.from(getVolListBytes().array(), getFileName().length() + 1, (getVolListBytes().array().length - getFileName().length() - 1))
-					.byteOrder(ByteOrder.LITTLE_ENDIAN);
+			Bytes tail = Bytes.from(getVolListBytes().array(), getFileName().length() + 1, 
+									(getVolListBytes().array().length - getFileName().length() - 1))
+									.byteOrder(ByteOrder.LITTLE_ENDIAN);
+			
 			if(tail.array().length > 1) {
 				listTailByte = "(tail=" + tail.encodeHex() + ")";	
 			}

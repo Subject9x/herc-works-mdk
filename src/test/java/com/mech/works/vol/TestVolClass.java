@@ -33,9 +33,9 @@ public class TestVolClass {
 	public void testVolParse(){		
 		
 		try {
-			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SHELL0.vol");
-			testVol.setFileName("DBG_SHELL0.VOL");
-			VolFileWriter.unpackVol(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG");
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SIMVOL0.vol");
+			testVol.setFileName("DBG_SIMVOL0v1.VOL");
+			VolFileWriter.unpackVol(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 			
 		} 
 		catch (FileNotFoundException e) {
@@ -55,7 +55,7 @@ public class TestVolClass {
 		
 		if(testVol != null) {
 			try {
-				VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL");
+				VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

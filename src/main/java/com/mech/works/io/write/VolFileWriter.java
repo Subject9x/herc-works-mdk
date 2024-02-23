@@ -171,12 +171,12 @@ public final class VolFileWriter {
 	}
 	
 	private static void writeVolAssetFile(String dirPath, VolEntry entry){
-		File file = new File(dirPath + "\\" + entry.getFileName());
+		File file = new File(dirPath + "\\" + entry.getFileName().strip());
 		
 		try(FileOutputStream fizz = new FileOutputStream(file);){
 			fizz.write(entry.getRawBytes());
 			
-			System.out.println("Wrote ["+file.getPath()+"]");
+//			System.out.println("Wrote ["+file.getPath()+"]");
 			
 		} catch (IOException e) {
 			e.printStackTrace();

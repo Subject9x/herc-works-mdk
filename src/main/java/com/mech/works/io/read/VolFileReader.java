@@ -111,8 +111,8 @@ public final class VolFileReader {
 		
 		//DEBUG - it appears every file gets a 9byte prefix of unknown(at this time) use.
 //		VolFileReader.scanVoidBytes(cursor, volFile);
-//		VolFileReader.debugSortPrefix(volFile);
-		VolFileReader.debugUnsortedPrefix(volFile.getDirCount(), volFile.getFolders());
+		VolFileReader.debugSortPrefix(volFile);
+//		VolFileReader.debugUnsortedPrefix(volFile.getDirCount(), volFile.getFolders());
 		
 		return volFile;
 	}
@@ -168,11 +168,9 @@ public final class VolFileReader {
 
 			entry.setVolOffset(Bytes.from(listing.array(), 14, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
 			
-			String fileName = new String(listName.array(), Charset.forName("UTF-8"));
-			fileName = fileName.substring(0, (fileName.lastIndexOf('.') + 4));
-			entry.setFileName(fileName);
+			entry.setFileName(VolEntry.nameFromListByte(listName.array()));
 			
-			entry.setExt(FileType.typeFromVal(fileName.substring(fileName.lastIndexOf('.') + 1)));
+			entry.setExt(FileType.typeFromVal(entry.getFileName().substring(entry.getFileName().lastIndexOf('.') + 1)));
 			
 			int startOfs = entry.getVolOffset().toInt();
 			
@@ -187,6 +185,7 @@ public final class VolFileReader {
 			
 			int endOfs = startOfs + entry.getFileSize().toInt();
 			
+			
 			try {
 				entry.setRawBytes(VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs).array());
 			}catch(Exception e){
@@ -197,12 +196,13 @@ public final class VolFileReader {
 				entry.setHeader(new byte[0]);
 			}
 			else {
-				entry.setHeader(Bytes.from(entry.getRawBytes(), 0, 4).byteOrder(ByteOrder.BIG_ENDIAN).array());	
+				try {
+					entry.setHeader(Bytes.from(entry.getRawBytes(), 0, 4).byteOrder(ByteOrder.BIG_ENDIAN).array());
+				}
+				catch(Exception dbgE) {
+					System.out.println("ERROR["+entry.getFileName()+"]:"+dbgE.getMessage());
+				}
 			}
-			
-			
-//			System.out.println(entry.getFileName()+":header["+Bytes.from(entry.header()).encodeHex()+"]");
-//			System.out.println(entry.getFileName()+":header?["+Bytes.from(entry.getRawBytes(),0,4).encodeHex()+"]");
 			
 			vol.getFilesSet()[fileCount] = entry;
 			fileCount += 1;
@@ -211,6 +211,7 @@ public final class VolFileReader {
 	}
 	
 	private static void sortHeaderFileListDirs(Voln vol) {
+		System.out.println("sorting file--------------------------------");
 		for(VolEntry file : vol.getFilesSet()) {
 			vol.getFolders().get(file.getDirIdx()).getFiles().add(file);
 		}
