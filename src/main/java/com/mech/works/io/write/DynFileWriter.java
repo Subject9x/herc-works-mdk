@@ -30,13 +30,13 @@ public final class DynFileWriter {
 //														);
 		///-------------------------
 		
-		File file = new File(filePath + dbm.getFileName() + ".bmp");
+		File file = new File(filePath + dbm.getFileName() + ".png");
 		BufferedImage imageOut = null;
 		//TYPE_USHORT_555_RGB almost has it
 		//XXX: TYPE_INT_ARGB - DOES NOT WORK WITH IMAGEIO on .BMP!
 		
 		try {
-			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_RGB);
+			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_ARGB);
 		}
 		catch(Exception e) {
 			// TODO Auto-generated catch block
@@ -45,7 +45,7 @@ public final class DynFileWriter {
 		}
 		
 		WritableRaster rast = (WritableRaster)imageOut.getRaster();
-		int[] rasterData = new int[dbm.getCols()*dbm.getRows()*3];
+		int[] rasterData = new int[dbm.getCols()*dbm.getRows()*4];
 		
 		
 		int i = 0;
@@ -55,8 +55,8 @@ public final class DynFileWriter {
 				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
 				try {
-					rasterData[i] = palette.colorAt(idx).getColor().getRGB();
-					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx); 
+					rasterData[i] = palette.colorAt(idx).getColor().getRGB() + palette.colorAt(idx).getColor().getTransparency();
+//					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx); 
 				}
 				catch(NullPointerException nope) {
 					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 
@@ -68,7 +68,7 @@ public final class DynFileWriter {
 		
 		boolean wrote = false;
 		try {
-			wrote = ImageIO.write(imageOut, "bmp", file);
+			wrote = ImageIO.write(imageOut, "png", file);
 		} catch (Throwable t) {
 			// TODO Auto-generated catch block
 			t.printStackTrace();

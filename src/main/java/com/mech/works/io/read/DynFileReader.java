@@ -62,7 +62,7 @@ public final class DynFileReader {
 				
 				newDPal.setRawIndexBytes(Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - cursor));
 			
-				int scalar = 1;
+				int scalar = 4;
 				int colorIdx = 0;
 				
 				//DO NOT CHANGE - original "mostly working" 4-byte RGBA value read
@@ -94,6 +94,12 @@ public final class DynFileReader {
 					
 					System.out.println("		Palette Entry:" + shadeBytes.encodeHex());
 
+					if(ir == 0 && ig == 0 && ib == 0) {
+						//I think this is their alpha color;
+						bytes[3] = (byte) 1;
+						ia = 128;
+					}
+					
 					ColorBytes rawColor = new ColorBytes(bytes);
 					
 					rawColor.setColor(new Color(ir, ig, ib, ia));

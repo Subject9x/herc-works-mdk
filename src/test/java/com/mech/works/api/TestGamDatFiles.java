@@ -2,20 +2,14 @@ package com.mech.works.api;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.nio.ByteOrder;
 import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.mech.works.data.file.dat.Ini_Herc_Dat;
-import com.mech.works.data.ref.files.DataFile;
-import com.mech.works.io.read.DatFileReader;
 import com.mech.works.io.read.VolFileReader;
 import com.mech.works.io.write.VolFileWriter;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
-
-import at.favre.lib.bytes.Bytes;
 
 public class TestGamDatFiles {
 
@@ -30,7 +24,7 @@ public class TestGamDatFiles {
 	
 		Voln shell = null;
 		try {
-			shell = getVol("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SHELL0.VOL");
+			shell = getVol("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SIMVOL0.VOL");
 //			shell = getVol("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL0v1.VOL");
 		}
 		catch(Exception e) {
@@ -39,56 +33,44 @@ public class TestGamDatFiles {
 
 		assertNotNull(shell);
 		
-		shell.setFileName("SHELL0v1.VOL");
+		shell.setFileName("SIMVOL0.VOL");
 		shell.setDestPath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 		
-		DataFile datfile = null;
-		DataFile campaignSTR = null;
+		VolEntry raptorDat = null;
 		
-		Iterator<VolEntry> fileItr = shell.getFolders().get((byte)4).getFiles().iterator();
-		while(fileItr.hasNext()) {
-			VolEntry file = fileItr.next();
-			if(file.getFileName().equals("INI_TOMA.DAT")) {
-				datfile = file;
-			}
-			else if(file.getFileName().equals("CAMPAIGN.STR")) {
-				campaignSTR = file;
+		for(VolEntry entry : shell.getFilesSet()) {
+			if(entry.getFileName().equals("RAPTOR2.DAT")) {
+				raptorDat = entry;
 			}
 		}
 		
-		Ini_Herc_Dat iniHercDat = null;
-		try {
-			iniHercDat = DatFileReader.parseIniHercDatStats(shell.getRawBytes(), datfile);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+//		raptorDat.getRawBytes()[0] = (byte) 0xB0;	//turning speed
+//		raptorDat.getRawBytes()[1] = (byte) 0x04;	//
 		
-		assertNotNull(iniHercDat);
+		raptorDat.getRawBytes()[4] = (byte) 0x2C;	//forward speed.
+		raptorDat.getRawBytes()[5] = (byte) 0x01;
 		
-		Bytes edit = Bytes.from(datfile.header()).byteOrder(ByteOrder.BIG_ENDIAN);
-		edit = edit.append(iniHercDat.getRawBytes());
+		raptorDat.getRawBytes()[6] = (byte) 0x5A;
 		
-		byte[] editData = edit.array();
-		editData[42] = (byte)9;
-		editData[44] = (byte)50;
-		editData[46] = (byte)3;
+//		raptorDat.getRawBytes()[8] = (byte) 0x19;	//turning decel
+//		raptorDat.getRawBytes()[9] = (byte) 0x00;
 		
-		datfile.setRawBytes(edit.array());
+//		raptorDat.getRawBytes()[10] = (byte) 0x0A;	//camera bone num
 		
-		Bytes edits = Bytes.from(campaignSTR.getRawBytes());
-		byte[] splice1 = Bytes.from(edits.array(), 0, 8).array();
+//		raptorDat.getRawBytes()[12] = (byte) 0x01;	//something to do with movement
+//		raptorDat.getRawBytes()[16] = (byte) 0x01;
+//		raptorDat.getRawBytes()[18] = (byte) 0x08;
 		
-		byte[] splice2 = Bytes.from(edits.array(), 47, edits.length()-73).array();
+		raptorDat.getRawBytes()[22] = (byte) 0xFA;
+		raptorDat.getRawBytes()[23] = (byte) 0x00;
 		
-		
-		byte[] msg = Bytes.from("HELLO AGAIN, MEGATRON. THIS is a replacement annoucement, duh...!").array();
-		
-		edits = Bytes.allocate(0).append(splice1).append(msg).append(splice2);
-		campaignSTR.setRawBytes(edits.array().clone());
-		try {
-			VolFileWriter.packVolToFile(shell, shell.getDestPath());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		if(shell != null) {
+			try {
+				VolFileWriter.packVolToFile(shell, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}

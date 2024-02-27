@@ -1,13 +1,11 @@
 package com.mech.works.io.read;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +16,6 @@ import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
 import com.mech.works.vol.data.Voln.FileType;
-import com.mech.works.vol.util.ByteOps;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -40,12 +37,11 @@ public final class VolFileReader {
 	
 	private static int offsetDirListStart = 12;
 	
-	
 	//file List comes after dir data
 	
 	//file size is following bytes
 	
-	private VolFileReader() {}
+	public VolFileReader() {}
 	
 	public static Voln parseVolFile(String volPath) throws Exception{
 		
@@ -54,12 +50,13 @@ public final class VolFileReader {
 		File f = new File(volPath);
 		Voln volFile = null;
 		
-		try(FileInputStream fizz = new FileInputStream(f); 
-				ByteArrayInputStream bizz = new ByteArrayInputStream(fizz.readAllBytes())){
-		
+		try(FileInputStream fizz = new FileInputStream(f);){
+			
+			byte[] data = new byte[(int)f.length()];
+			fizz.read(data);
 			volFile = new Voln.VolnBuilder()
 					.setFileName(f.getName())
-					.setRawBytes(bizz.readAllBytes())
+					.setRawBytes(data)
 					.build();
 			
 		} catch (IOException e) {
@@ -69,6 +66,8 @@ public final class VolFileReader {
 			throw new FileNotFoundException("volFile not built, check path.("+f.getAbsolutePath() +")");
 		}
 		
+		volFile.setFilePath(volPath);
+		
 		Bytes volData = Bytes.from(volFile.getRawBytes());
 		
 		volFile.setDbsimFlag(volData.byteAt(offsetDBSimFlag) == 1 ? true : false);
@@ -76,6 +75,7 @@ public final class VolFileReader {
 		
 		volFile.setDirCount(volData.byteAt(offsetDirCount));
 		System.out.println("-Dir List="+volFile.getDirCount());	//DEBUG
+		
 		
 		volFile.setDirSize(Bytes.from(volData.array(), offsetDirSize, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		System.out.println("-Dir Byte Size="+volFile.getDirSize());	//DEBUG
@@ -95,7 +95,7 @@ public final class VolFileReader {
 		
 		//FIXME - turns  out Vol files can be 2-chars long...so I had to rewire the directory list builder to march bytes, this has borked line 98 :(
 		System.out.println("Cursor byte check:" + cursor);
-		Bytes fileListBytes = Bytes.from(volFile.getRawBytes(), cursor, volFile.getListSize()).byteOrder(ByteOrder.LITTLE_ENDIAN);
+		Bytes fileListBytes = Bytes.from(volFile.getRawBytes(), cursor, volFile.getListSize());
 		
 		if(fileListBytes.array().length == 0) {
 			System.out.println("WARN: no files! ending process");
@@ -113,6 +113,7 @@ public final class VolFileReader {
 //		VolFileReader.scanVoidBytes(cursor, volFile);
 		VolFileReader.debugSortPrefix(volFile);
 //		VolFileReader.debugUnsortedPrefix(volFile.getDirCount(), volFile.getFolders());
+//		VolFileReader.debugFileByteJoins(volFile);
 		
 		return volFile;
 	}
@@ -174,7 +175,7 @@ public final class VolFileReader {
 			
 			int startOfs = entry.getVolOffset().toInt();
 			
-			entry.setFileCompressionType(Bytes.from(vol.getRawBytes(), startOfs, 1).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			entry.setFileCompressionType(Bytes.from(vol.getRawBytes(), startOfs, 1));
 			startOfs += 1;
 			
 			entry.setFileSize(Bytes.from(vol.getRawBytes(), startOfs, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
@@ -185,14 +186,13 @@ public final class VolFileReader {
 			
 			int endOfs = startOfs + entry.getFileSize().toInt();
 			
-			
 			try {
 				entry.setRawBytes(VolFileReader.fetchFileBytes(vol.getRawBytes(), startOfs, endOfs).array());
 			}catch(Exception e){
-				System.out.println("ERROR on [" + entry.getFileName() +"] : " + e.getMessage());
+				System.out.println("ERROR[" + entry.getFileName() +"](setRawBytes): " + e.getMessage());
 			}
 				
-			if(entry.getFileName().contains(".DAT")) {
+			if(Voln.filesNoHeader().contains(entry.getExt().val())) {
 				entry.setHeader(new byte[0]);
 			}
 			else {
@@ -200,8 +200,15 @@ public final class VolFileReader {
 					entry.setHeader(Bytes.from(entry.getRawBytes(), 0, 4).byteOrder(ByteOrder.BIG_ENDIAN).array());
 				}
 				catch(Exception dbgE) {
-					System.out.println("ERROR["+entry.getFileName()+"]:"+dbgE.getMessage());
+					System.out.println("ERROR["+entry.getFileName()+"](setHeader):"+dbgE.getMessage());
 				}
+			}
+			
+			if(endOfs < vol.getRawBytes().length) {
+				entry.setUnknownEoFByte(Bytes.from(vol.getRawBytes(), endOfs, 1));
+			}
+			else {
+				entry.setUnknownEoFByte(null);
 			}
 			
 			vol.getFilesSet()[fileCount] = entry;
@@ -251,6 +258,9 @@ public final class VolFileReader {
 		Map<String, List<VolEntry>> uniquePrefix = new HashMap<String, List<VolEntry>>();
 		
 		
+		File log = new File(vol.getFilePath().substring(0, vol.getFilePath().lastIndexOf('\\')+1) + "write.log");
+		
+		
 		for(VolEntry file : vol.getFilesSet()) {
 			String prefix = file.getMagicPrefix().encodeHex();
 			prefix = prefix.substring(prefix.length()-3, prefix.length());
@@ -261,12 +271,58 @@ public final class VolFileReader {
 			uniquePrefix.get(prefix).add(file);
 		}
 		
-		for(String k : uniquePrefix.keySet()) {			
-			uniquePrefix.get(k).stream().forEach(v -> System.out.println(v.getFileName() + "|" + v.printMagicPrefix()));
+		try(FileOutputStream fozz = new FileOutputStream(log);){
+			for(String k : uniquePrefix.keySet()) {			
+//				uniquePrefix.get(k).stream().forEach(v -> System.out.println(v.getFileName() + "|" + v.printMagicPrefix()));
+				
+				uniquePrefix.get(k).stream().forEach(v -> {
+					try {
+						fozz.write(new String(v.getFileName() + "|" + v.printMagicPrefix()+"\n").getBytes());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
 	
+	/**
+	 * Scans the 10? bytes between a file's end offset and before the NEXT file's starting offset.
+	 * Trying to figure out if the  byte before the 02 relates TO this 02 bytes.
+	 * @param vol
+	 */
+	private static void debugFileByteJoins(Voln vol) {
+		
+		VolEntry prev = null;
+		
+		for(VolEntry entry : vol.getFilesSet()) {
+
+			if(prev != null) {
+				int prevFileEnd = prev.getVolOffset().toInt() + prev.getFileSize().toInt();
+				int checkOfs = entry.getVolOffset().toInt() - 1;
+				int spaceBytes = entry.getVolOffset().toInt() - prevFileEnd;
+				
+				if(checkOfs > prevFileEnd) {
+					Bytes lookBack = Bytes.from(vol.getRawBytes(), checkOfs, 2);
+					Bytes prevFileSuffix4 = Bytes.from(vol.getRawBytes(), prevFileEnd-2, 14);
+					
+					System.out.println("JOIN:"+prev.getFileName() + "|" + entry.getFileName() + "|" + lookBack.encodeHex());
+					System.out.println("				# of bytes before file:" + spaceBytes);
+					System.out.println("					" +prevFileSuffix4.encodeHex());
+					System.out.println("-------------------------------------------------------------------------------------------------------------");
+				}
+			}
+			prev = entry;
+		}
+	}
 	
 	/**
 	 * Deprecated - 02/11/2024 - this was used to spot that evey file entry seems to have a 9 byte prefix that DOES match the offset of the file in header list.

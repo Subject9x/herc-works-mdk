@@ -1,7 +1,6 @@
 package com.mech.works.vol.data;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Programmatic representation of a vol (sub) directory.
@@ -12,7 +11,7 @@ public class VolDir {
 	private String label;
 	private Byte dirIndex;
 	
-	private Set<VolEntry> files = new LinkedHashSet<VolEntry>();
+	private LinkedHashSet<VolEntry> files = new LinkedHashSet<VolEntry>();
 	
 	public VolDir() {}
 
@@ -37,11 +36,11 @@ public class VolDir {
 		this.dirIndex = index;
 	}
 
-	public Set<VolEntry> getFiles() {
+	public LinkedHashSet<VolEntry> getFiles() {
 		return files;
 	}
 
-	public void setFiles(Set<VolEntry> files) {
+	public void setFiles(LinkedHashSet<VolEntry> files) {
 		this.files = files;
 	}
 	

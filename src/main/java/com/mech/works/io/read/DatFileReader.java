@@ -2,7 +2,7 @@ package com.mech.works.io.read;
 
 import java.nio.ByteOrder;
 
-import com.mech.works.data.file.dat.Ini_Herc_Dat;
+import com.mech.works.data.file.dat.shell.Ini_Herc_Dat;
 import com.mech.works.data.ref.files.DataFile;
 import com.mech.works.vol.data.VolEntry;
 

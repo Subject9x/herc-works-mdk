@@ -1,6 +1,5 @@
 package com.mech.works.vol.data;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -299,7 +298,10 @@ public class Voln extends DataFile{
 		}
 	}
 	
-
+	public static List<String> filesNoHeader(){
+		return Arrays.asList(FileType.DAT.val(), FileType.GL.val(), FileType.BND.val());
+	}
+	
 	public ExeUse getExeType() {
 		return exeUse;
 	}

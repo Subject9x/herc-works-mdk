@@ -1,7 +1,6 @@
 package com.mech.works.vol.data;
 
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
 
 import com.mech.works.data.ref.files.DataFile;
 
@@ -11,14 +10,14 @@ import at.favre.lib.bytes.Bytes;
  * Earthsiege 2 Vol entries follow schema
  * 	18 bytes total for listing.
  * 		13 for file name (and wierd trail bytes)
- * 		1 for directory index number - mapped to dir listing
- * 		4 for file's offset in vol.
+ * 		UINT8 for directory index number - mapped to dir listing
+ * 		UINT32 for file's offset in vol.
  * 
  * 
  * 	File Prefix - 9 bytes
- * 		2 bytes - UNKNOWN at this time.
- * 		4 bytes-  FILE SIZE in Bytes, little endian, probably
- * 		
+ * 		UINT8 - possibly compression type flag
+ * 		UINT32 -  FILE SIZE in Bytes, little endian, probably
+ * 		UINT32 - unknown 4-byte magic
  */
 public class VolEntry extends DataFile{
 	
@@ -26,6 +25,7 @@ public class VolEntry extends DataFile{
 	private Bytes volListBytes;	//raw bytes (with weird trailing bytes observed on some)
 	private Byte dirIdx;
 	
+	private Bytes unknownPreCompress;
 	private Bytes magicPrefix;	//observed in vol.
 	private Bytes compressionType;
 	
@@ -74,8 +74,17 @@ public class VolEntry extends DataFile{
 		this.magicPrefix = magicPrefix;
 	}
 	
+	public Bytes getUnknownEoFByte() {
+		return unknownPreCompress;
+	}
+
+	public void setUnknownEoFByte(Bytes unknownPreCompress) {
+		this.unknownPreCompress = unknownPreCompress;
+	}
+
 	/**
-	 * 
+	 * Sometimes in a vol, the file-list entry has tailing bytes after the filename string, this
+	 * method strips the tailing bytes to create a clean file name that can be written to.
 	 * @param listBytes
 	 * @return String
 	 */
@@ -101,12 +110,13 @@ public class VolEntry extends DataFile{
 									.byteOrder(ByteOrder.LITTLE_ENDIAN);
 			
 			if(tail.array().length > 1) {
-				listTailByte = "(tail=" + tail.encodeHex() + ")";	
+				listTailByte = tail.encodeHex();	
 			}
 		}
+		Bytes compress =  Bytes.from(getFileCompressionType()).byteOrder(ByteOrder.LITTLE_ENDIAN);
 		
-		return "	[" + Bytes.from(getFileCompressionType()).byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + 
-				"] [" +  getFileSize().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() +
-				"] [" + getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex() + "]" + listTailByte;
+		String msg = String.format("%s|	(%s)	[%s]	", getFileName(), getFileCompressionType().toByte(), getMagicPrefix().encodeHex());
+		
+		return msg;
 	}
 }

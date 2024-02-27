@@ -1,4 +1,4 @@
-package com.mech.works.data.file.dat;
+package com.mech.works.data.file.dat.shell;
 
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;

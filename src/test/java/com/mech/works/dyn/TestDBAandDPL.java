@@ -85,7 +85,8 @@ public class TestDBAandDPL {
 	public void loadAndExportDBA() {
 		
 //		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\ONLINE.DBA";
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\DBG_SHELL0\\DBA\\APOC_OUT.DBA";
+//		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\DBG_SHELL0\\DBA\\APOC_OUT.DBA";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0x1\\dba\\BASES.DBA";
 		
 		
 		List<String> pals = new ArrayList<String>();
@@ -95,7 +96,7 @@ public class TestDBAandDPL {
 //		pals.add( "LD_HERC3.DPL");
 //		pals.add( "LD_HERC4.DPL");
 //		pals.add( "LD_HERC5.DPL");
-//		pals.add( "WORLD0.DPL");
+		pals.add( "WORLD0.DPL");
 //		pals.add( "WORLD1.DPL");
 //		pals.add( "WORLD2.DPL");
 //		pals.add( "WORLD3.DPL");
@@ -107,7 +108,7 @@ public class TestDBAandDPL {
 //		pals.add( "WORLD9.DPL");
 //		pals.add( "PALETTE.DPL");
 //		pals.add( "ESII.DPL");
-		pals.add( "ARMING.DPL");
+//		pals.add( "ARMING.DPL");
 //		pals.add( "BAY.DPL");
 //		pals.add( "MAP.DPL");
 //		pals.add( "MAP_PAL1.DPL");
