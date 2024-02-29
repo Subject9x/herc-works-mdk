@@ -2,8 +2,6 @@ package com.mech.works.api;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Iterator;
-
 import org.junit.Test;
 
 import com.mech.works.io.read.VolFileReader;
@@ -37,32 +35,37 @@ public class TestGamDatFiles {
 		shell.setDestPath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 		
 		VolEntry raptorDat = null;
+		VolEntry tomaDat = null;
+		
+		VolEntry test = null;
 		
 		for(VolEntry entry : shell.getFilesSet()) {
 			if(entry.getFileName().equals("RAPTOR2.DAT")) {
 				raptorDat = entry;
 			}
+			else if(entry.getFileName().equals("MECHSYS.BND")) {
+				test = entry;
+			}
+			else if(entry.getFileName().equals("TOMAHAWK.DAT")) {
+				tomaDat = entry;
+			}
 		}
 		
-//		raptorDat.getRawBytes()[0] = (byte) 0xB0;	//turning speed
-//		raptorDat.getRawBytes()[1] = (byte) 0x04;	//
+//		test.getRawBytes()[20] = (byte)0xF1;
+		tomaDat.getRawBytes()[4] = (byte)0xF4;	//fwd speed
+		tomaDat.getRawBytes()[5] = (byte)0x01;
 		
-		raptorDat.getRawBytes()[4] = (byte) 0x2C;	//forward speed.
-		raptorDat.getRawBytes()[5] = (byte) 0x01;
+		raptorDat.getRawBytes()[4] = (byte)0x90;	//fwd speed
+		raptorDat.getRawBytes()[5] = (byte)0x01;
 		
-		raptorDat.getRawBytes()[6] = (byte) 0x5A;
+		tomaDat.getRawBytes()[28] = (byte)0xD0;	//TORSO TWIST SPEED
+		tomaDat.getRawBytes()[29] = (byte)0x07;
 		
-//		raptorDat.getRawBytes()[8] = (byte) 0x19;	//turning decel
-//		raptorDat.getRawBytes()[9] = (byte) 0x00;
-		
-//		raptorDat.getRawBytes()[10] = (byte) 0x0A;	//camera bone num
-		
-//		raptorDat.getRawBytes()[12] = (byte) 0x01;	//something to do with movement
-//		raptorDat.getRawBytes()[16] = (byte) 0x01;
-//		raptorDat.getRawBytes()[18] = (byte) 0x08;
-		
-		raptorDat.getRawBytes()[22] = (byte) 0xFA;
-		raptorDat.getRawBytes()[23] = (byte) 0x00;
+		tomaDat.getRawBytes()[40] = (byte)0xE0;
+		tomaDat.getRawBytes()[41] = (byte)0x2E;
+			
+		tomaDat.getRawBytes()[42] = (byte)0xD8;
+		tomaDat.getRawBytes()[43] = (byte)0xDC;
 		
 		if(shell != null) {
 			try {
@@ -75,3 +78,4 @@ public class TestGamDatFiles {
 		
 	}
 }
+

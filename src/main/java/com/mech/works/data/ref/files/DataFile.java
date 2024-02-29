@@ -21,6 +21,10 @@ public abstract class DataFile {
 	
 	public DataFile() {}
 	
+	public abstract byte[] transformToByte();
+	
+	public abstract void bytesToFile();
+	
 	public DataFile(String fileName, String dirPath) {
 		setFileName(fileName);
 		setGameDirPath(dirPath);
