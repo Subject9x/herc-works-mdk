@@ -49,33 +49,33 @@ import com.mech.works.data.ref.files.DataFile;
  *  76- UINT16 - ? - ARMOR val?
  *  78- UINT16 - Hercs have 0, Razor has 1
  *  80- UINT16 - ? - each herc has a different value - POSSIBLY HUD RELATED
- *  82- BLANK BYTE
- *  83- UINT8  - always 4
- *  84- UINT8  - sometimes 0 but mostly 1 
- *  85- BLANK BYTE
- * 
+ *  82- UINT16 - ? - different values, 1500, 1024, 800
+ *  84- UINT16  - sometimes 0 but mostly 1
+ *   
  *  86...97- STRING - UNIT\NAME
  *  
- *  98- UINT16 - ? each herc has a different value.
- *  100- UINT16 - ? each herc has a different value.
+ *  98-  UINT16 - CAMERA\Y_ADJ - fixed-point value 100 -> 1.00, 0 for cybrids, how far forward to place camera
+ *  100- UINT16 - CAMERA\X_ADJ - fixed-point value 100 -> 1.00, 0 for cybrids, how far forward to place camera
+ *  
  *  102- BLANK BYTES
- *  104- UINT16 - ? each herc has a different value, razor is 0. light herc 1400 | heavy 1600
+ *  
+ *  104- UINT16 - EXT_CAMERA\OFFSET\ORIGIN - fixedpoint value, how high the external camera focus point is from herc origin
+ *  
  *  106- BLANK BYTES
- *  108- UINT16 - a negative value, each herc has a different value
- *  110- UINT16 - all hercs this is 750
  *  
- *  112- BLANK BYTES
+ *  108- INT16 - EXT_CAMERA\ ? Always negative, with a different number
+ *  110- UINT16 - EXT_CAMERA\ ? always 750, Together these affect rendering'
  *  
- *  114- UINT16 - all units have -254
- *  116- UINT8  - all units have 255
- *  117- UINT8  - all units have 14
- *  118- UINT8  - all units have 15
- *  119- UINT8  - all units have 12
+ *  //somehow model flags work together to produce shadow effects
+ *  112- UINT16 - MODEL\FLAGS\SHADOW - 0xFFFF = no shadow, 0 = normal shadow, 512 = funky,4096= basic shadow + right foot, 32768=right foot only, 1024,2048,8192,16384- crash, 
+ *  114- UINT16 - MODEL\FLAGS\SHADOW - 0&256=big blue octagon, 0&512=both feet, normal shadow,  0&1024,0&2048=crash, 0&4096=both feet, foot pattern in center too, 0&8192, 0&16384=crash,  
  *  
- *  120- BLANK BYTES
+ *  116- UINT16  - ? - all units have 3839, Spider has 255, 
+ *  118- UINT16  - ? - all units 3087, spider has 0, Pitbull has 5647
  *  
- *  122- UINT8  - hercs have 6 | razor has 250
- *  123- UINT8  - hercs have 0 | razor has 255
+ *  120- UINT16 - ? - all hercs have 0, Pitbull has 23
+ *  122- UINT16 - MODEL\ANIM\? - all hercs have 6, Pitbull/Spider have 1
+ *  
  *  124- UINT16 - all units have 500
  *  126- UINT16 - all units have 500
  *  128- UINT16 - all units have 500
@@ -88,6 +88,7 @@ import com.mech.works.data.ref.files.DataFile;
  *  142- UINT16 - all units have 500
  *  144- UINT16 - all units have 500
  *  146- UINT16 - all units have 500
+ *  
  *  148- UINT16 - MODEL\SKIN\ID - OTL-00, 'New Hercs'-06, 'old hercs' - 02, Cybrids-03
  *  150- UINT16 - speed again?
  *  152- INT16  - seemingly negative values if bytes paired as UINT16
@@ -113,21 +114,84 @@ import com.mech.works.data.ref.files.DataFile;
  */
 public class HercInfoDat extends DataFile {
 
-	private short speedTurn;
-	private short speedReverse;
-	private short speedForward;
+	private int speedTurn;
+	private int speedReverse;
+	private int speedForward;
 	
-//	private short unk1;
+	private static short unk6_Val30 = (short)30;
 	
-	private short decelTurning;
+	private int decelTurning;
+	private int cameraBoneId;
 	
-	private short cameraBoneId;
+	private short unk12_ValFlag05;
 	
-//	private short unk2;
+	private short unk14_ValAnim1;
+	private short unk16_ValAnim2;
+	private short unk18_ValAnim3;
+	private short unk20_Val400;
+	private short unk22_Val750Razor0;
 	
-	private String name;
+	private short aiAimOffset;
 	
+	//blank bytes at 0x26
 	
+	private int torsoTwistSpeed;
+	
+	private short unk30_Val1000;
+	
+	private int torsoTwistDegreeMax;
+	private short torsoFlagsInput;
+	
+	private int torsoPitchMaxRate;
+	private int torsoPitchRate;
+	
+	private int torsoPitchMax;
+	private int torsoPitchMin;
+	
+	private short unk44_MoveAnim;
+	
+	//blank bytes at 0x45
+	
+	private static byte unk46_Val01 = (byte)0x01;
+	private static byte unk47_Val02 = (byte)0x02;
+	private static byte unk48_Val03 = (byte)0x03;
+	private static byte unk49_Val04 = (byte)0x04;
+	private static byte unk50_Val05 = (byte)0x05;
+	private static byte unk51_Val12 = (byte)0x0C;
+	private static byte unk52_Val13 = (byte)0x0D;
+	private static byte unk53_Val14 = (byte)0x0E;
+	private static byte unk54_Val15 = (byte)0x0F;
+	private static byte unk55_Val16 = (byte)0x10;
+	private static byte unk56_Val17 = (byte)0x11;
+	private static byte unk57_Val255 = (byte)0xFF;
+	
+	//blank bytes at 0x58-0x65
+	
+	private static short unk66_Val1000;
+	private static short unk68_Val7;
+	private static short unk70_Val2;
+	private static short unk72_Val2;
+	
+	//blank bytes at 0x74	
+	
+	private short unk76_Val;
+	
+	private short unk78_ValRazor1;	//hercs have 0, razor has 1
+	
+	private short unk80_ValHudId;	//possibly HUD id or even palette ID?
+	
+	private short unk82_ValUnk;	//different per herc, usually 1024, 1500, or 800
+	
+	private short unk84_ValUnk; //usually 1
+	
+	private String nameBytes; //0x86 - 0x97
+	
+	private short cameraYAxisAdj;
+	private short cameraXAxisAdj;
+	
+	//blank bytes 0x102
+	
+	private short cameraExtOrgOffset;
 	
 	
 	
