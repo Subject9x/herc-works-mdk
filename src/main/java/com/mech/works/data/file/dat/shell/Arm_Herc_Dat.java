@@ -9,7 +9,5 @@ import at.favre.lib.bytes.Bytes;
 public class Arm_Herc_Dat extends DataFile{
 
 	public static Bytes header = Bytes.from("3A20D05A", StandardCharsets.UTF_8);
-	
-	
-	
+
 }

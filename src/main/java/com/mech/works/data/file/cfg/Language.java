@@ -16,4 +16,5 @@ public class Language extends DataFile{
 	public Language() {
 		super("LANGUAGE.CFG", "DATA/");
 	}
+
 }

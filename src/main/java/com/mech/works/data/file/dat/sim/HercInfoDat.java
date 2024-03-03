@@ -26,29 +26,20 @@ import com.mech.works.data.ref.files.DataFile;
  *  38- UINT16 - TORSO\PITCH\ rate  -  deg/sec
  *  40- UINT16 - TORSO\PITCH\MAX - is 14000, or 140deg expressed as 14000
  *  42- INT16  - TORSO\PITCH\MIN - is -14000, or 140deg expressed as 14000
- *  44- UINT8  - Move Speed binding to leg animation somehow
- *  45- UINT8  - BLANK?
- *  46- UINT8  - always 1
- *  47- UINT8  - always 2
- *  48- UINT8  - always 3
- *  49- UINT8  - always 4
- *  50- UINT8  - always 5
- *  51- UINT8  - always 12
- *  52- UINT8  - always 13
- *  53- UINT8  - always 14
- *  54- UINT8  - always 15
- *  55- UINT8  - always 16
- *  56- UINT8  - always 17
- *  57- UINT8  - always 255
- *  58-65 - BLANK BYTES
+ *  44- UINT16  - Move Speed binding to leg animation somehow
+ *  
+ *  46-65 - BONE ID for LoD mesh? , 255 is used as a terminator
+ *  
  *  66- UINT16 - always 1000
- *  68- UINT16 - always 7
- *  70- UINT16 - always 2
- *  72- UINT16 - always 2
- *  74- UINT16 - EMPTY BYTES
+ *  
+ *  68- UINT16 - ? - Hercs 7, Pitbull 2, Spider 1
+ *  70- UINT16 - ?
+ *  72- UINT16 - LEGS\CRIT\FLAG1 - 0=ignore leg destruction, 1=lose 1 leg and move, 2=lose all move, 3+=crash 
+ *  74- UINT16 - MODEL\DEBRIS\FLAG1 - 0 leave debris, 1 - leave no debris
+ *  
  *  76- UINT16 - ? - ARMOR val?
- *  78- UINT16 - Hercs have 0, Razor has 1
- *  80- UINT16 - ? - each herc has a different value - POSSIBLY HUD RELATED
+ *  78- UINT16 - MOVE\FLIGHT_MODEL\FLAG - Razor has 1, all other units 0
+ *  80- UINT16 - HUD\PALETTE\ID - changing this alters the colors of the HUD DBM's
  *  82- UINT16 - ? - different values, 1500, 1024, 800
  *  84- UINT16  - sometimes 0 but mostly 1
  *   
@@ -76,6 +67,7 @@ import com.mech.works.data.ref.files.DataFile;
  *  120- UINT16 - ? - all hercs have 0, Pitbull has 23
  *  122- UINT16 - MODEL\ANIM\? - all hercs have 6, Pitbull/Spider have 1
  *  
+ *  //these values seem to have 0 effect on the game, -10000, 500000, no visible effect
  *  124- UINT16 - all units have 500
  *  126- UINT16 - all units have 500
  *  128- UINT16 - all units have 500
@@ -121,6 +113,7 @@ public class HercInfoDat extends DataFile {
 	private static short unk6_Val30 = (short)30;
 	
 	private int decelTurning;
+	
 	private int cameraBoneId;
 	
 	private short unk12_ValFlag05;
@@ -150,29 +143,19 @@ public class HercInfoDat extends DataFile {
 	
 	private short unk44_MoveAnim;
 	
-	//blank bytes at 0x45
-	
-	private static byte unk46_Val01 = (byte)0x01;
-	private static byte unk47_Val02 = (byte)0x02;
-	private static byte unk48_Val03 = (byte)0x03;
-	private static byte unk49_Val04 = (byte)0x04;
-	private static byte unk50_Val05 = (byte)0x05;
-	private static byte unk51_Val12 = (byte)0x0C;
-	private static byte unk52_Val13 = (byte)0x0D;
-	private static byte unk53_Val14 = (byte)0x0E;
-	private static byte unk54_Val15 = (byte)0x0F;
-	private static byte unk55_Val16 = (byte)0x10;
-	private static byte unk56_Val17 = (byte)0x11;
-	private static byte unk57_Val255 = (byte)0xFF;
+	private static int modelLodArrOFs = 46;
+	private byte[] modelLODId = new byte[20];
 	
 	//blank bytes at 0x58-0x65
 	
 	private static short unk66_Val1000;
-	private static short unk68_Val7;
-	private static short unk70_Val2;
-	private static short unk72_Val2;
 	
-	//blank bytes at 0x74	
+	private short unk68_AIAimVal1;
+	private short unk70_AIAimVal2;
+	private short unk72_AIAimVal3;
+	private short unk74_AIAimVal4;
+	
+	
 	
 	private short unk76_Val;
 	
@@ -199,16 +182,305 @@ public class HercInfoDat extends DataFile {
 	
 	public HercInfoDat() {}
 
-	@Override
-	public byte[] transformToByte() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getSpeedTurn() {
+		return speedTurn;
 	}
 
-	@Override
-	public void bytesToFile() {
-		// TODO Auto-generated method stub
-		
+	public int getSpeedReverse() {
+		return speedReverse;
 	}
+
+	public int getSpeedForward() {
+		return speedForward;
+	}
+
+	public int getDecelTurning() {
+		return decelTurning;
+	}
+
+	public int getCameraBoneId() {
+		return cameraBoneId;
+	}
+
+	public short getUnk12_ValFlag05() {
+		return unk12_ValFlag05;
+	}
+
+	public short getUnk14_ValAnim1() {
+		return unk14_ValAnim1;
+	}
+
+	public short getUnk16_ValAnim2() {
+		return unk16_ValAnim2;
+	}
+
+	public short getUnk18_ValAnim3() {
+		return unk18_ValAnim3;
+	}
+
+	public short getUnk20_Val400() {
+		return unk20_Val400;
+	}
+
+	public short getUnk22_Val750Razor0() {
+		return unk22_Val750Razor0;
+	}
+
+	public short getAiAimOffset() {
+		return aiAimOffset;
+	}
+
+	public int getTorsoTwistSpeed() {
+		return torsoTwistSpeed;
+	}
+
+	public short getUnk30_Val1000() {
+		return unk30_Val1000;
+	}
+
+	public int getTorsoTwistDegreeMax() {
+		return torsoTwistDegreeMax;
+	}
+
+	public short getTorsoFlagsInput() {
+		return torsoFlagsInput;
+	}
+
+	public int getTorsoPitchMaxRate() {
+		return torsoPitchMaxRate;
+	}
+
+	public int getTorsoPitchRate() {
+		return torsoPitchRate;
+	}
+
+	public int getTorsoPitchMax() {
+		return torsoPitchMax;
+	}
+
+	public int getTorsoPitchMin() {
+		return torsoPitchMin;
+	}
+
+	public short getUnk44_MoveAnim() {
+		return unk44_MoveAnim;
+	}
+	
+	public void setModelLODId(byte[] modelLODId) {
+		this.modelLODId = modelLODId;
+	}
+
+	public short getUnk76_Val() {
+		return unk76_Val;
+	}
+
+	public short getUnk78_ValRazor1() {
+		return unk78_ValRazor1;
+	}
+
+	public short getUnk80_ValHudId() {
+		return unk80_ValHudId;
+	}
+
+	public short getUnk82_ValUnk() {
+		return unk82_ValUnk;
+	}
+
+	public short getUnk84_ValUnk() {
+		return unk84_ValUnk;
+	}
+
+	public String getNameBytes() {
+		return nameBytes;
+	}
+
+	public short getCameraYAxisAdj() {
+		return cameraYAxisAdj;
+	}
+
+	public short getCameraXAxisAdj() {
+		return cameraXAxisAdj;
+	}
+
+	public short getCameraExtOrgOffset() {
+		return cameraExtOrgOffset;
+	}
+
+	public String getDebrisFile() {
+		return debrisFile;
+	}
+
+	public void setSpeedTurn(int speedTurn) {
+		this.speedTurn = speedTurn;
+	}
+
+	public void setSpeedReverse(int speedReverse) {
+		this.speedReverse = speedReverse;
+	}
+
+	public void setSpeedForward(int speedForward) {
+		this.speedForward = speedForward;
+	}
+
+	public void setDecelTurning(int decelTurning) {
+		this.decelTurning = decelTurning;
+	}
+
+	public void setCameraBoneId(int cameraBoneId) {
+		this.cameraBoneId = cameraBoneId;
+	}
+
+	public void setUnk12_ValFlag05(short unk12_ValFlag05) {
+		this.unk12_ValFlag05 = unk12_ValFlag05;
+	}
+
+	public void setUnk14_ValAnim1(short unk14_ValAnim1) {
+		this.unk14_ValAnim1 = unk14_ValAnim1;
+	}
+
+	public void setUnk16_ValAnim2(short unk16_ValAnim2) {
+		this.unk16_ValAnim2 = unk16_ValAnim2;
+	}
+
+	public void setUnk18_ValAnim3(short unk18_ValAnim3) {
+		this.unk18_ValAnim3 = unk18_ValAnim3;
+	}
+
+	public void setUnk20_Val400(short unk20_Val400) {
+		this.unk20_Val400 = unk20_Val400;
+	}
+
+	public void setUnk22_Val750Razor0(short unk22_Val750Razor0) {
+		this.unk22_Val750Razor0 = unk22_Val750Razor0;
+	}
+
+	public void setAiAimOffset(short aiAimOffset) {
+		this.aiAimOffset = aiAimOffset;
+	}
+
+	public void setTorsoTwistSpeed(int torsoTwistSpeed) {
+		this.torsoTwistSpeed = torsoTwistSpeed;
+	}
+
+	public void setUnk30_Val1000(short unk30_Val1000) {
+		this.unk30_Val1000 = unk30_Val1000;
+	}
+
+	public void setTorsoTwistDegreeMax(int torsoTwistDegreeMax) {
+		this.torsoTwistDegreeMax = torsoTwistDegreeMax;
+	}
+
+	public void setTorsoFlagsInput(short torsoFlagsInput) {
+		this.torsoFlagsInput = torsoFlagsInput;
+	}
+
+	public void setTorsoPitchMaxRate(int torsoPitchMaxRate) {
+		this.torsoPitchMaxRate = torsoPitchMaxRate;
+	}
+
+	public void setTorsoPitchRate(int torsoPitchRate) {
+		this.torsoPitchRate = torsoPitchRate;
+	}
+
+	public void setTorsoPitchMax(int torsoPitchMax) {
+		this.torsoPitchMax = torsoPitchMax;
+	}
+
+	public void setTorsoPitchMin(int torsoPitchMin) {
+		this.torsoPitchMin = torsoPitchMin;
+	}
+
+	public void setUnk44_MoveAnim(short unk44_MoveAnim) {
+		this.unk44_MoveAnim = unk44_MoveAnim;
+	}
+	
+	public void setUnk68_AIAimVal1(short unk68_AIAimVal1) {
+		this.unk68_AIAimVal1 = unk68_AIAimVal1;
+	}
+
+	public void setUnk70_AIAimVal2(short unk70_AIAimVal2) {
+		this.unk70_AIAimVal2 = unk70_AIAimVal2;
+	}
+
+	public void setUnk72_AIAimVal3(short unk72_AIAimVal3) {
+		this.unk72_AIAimVal3 = unk72_AIAimVal3;
+	}
+
+	public void setUnk74_AIAimVal4(short unk74_AIAimVal4) {
+		this.unk74_AIAimVal4 = unk74_AIAimVal4;
+	}
+
+	public void setUnk76_Val(short unk76_Val) {
+		this.unk76_Val = unk76_Val;
+	}
+
+	public void setUnk78_ValRazor1(short unk78_ValRazor1) {
+		this.unk78_ValRazor1 = unk78_ValRazor1;
+	}
+
+	public void setUnk80_ValHudId(short unk80_ValHudId) {
+		this.unk80_ValHudId = unk80_ValHudId;
+	}
+
+	public void setUnk82_ValUnk(short unk82_ValUnk) {
+		this.unk82_ValUnk = unk82_ValUnk;
+	}
+
+	public void setUnk84_ValUnk(short unk84_ValUnk) {
+		this.unk84_ValUnk = unk84_ValUnk;
+	}
+
+	public void setNameBytes(String nameBytes) {
+		this.nameBytes = nameBytes;
+	}
+
+	public void setCameraYAxisAdj(short cameraYAxisAdj) {
+		this.cameraYAxisAdj = cameraYAxisAdj;
+	}
+
+	public void setCameraXAxisAdj(short cameraXAxisAdj) {
+		this.cameraXAxisAdj = cameraXAxisAdj;
+	}
+
+	public void setCameraExtOrgOffset(short cameraExtOrgOffset) {
+		this.cameraExtOrgOffset = cameraExtOrgOffset;
+	}
+
+	public void setDebrisFile(String debrisFile) {
+		this.debrisFile = debrisFile;
+	}
+
+	public static short getUnk6_Val30() {
+		return unk6_Val30;
+	}
+
+	public static int getModelLodArrOFs() {
+		return modelLodArrOFs;
+	}
+
+	public byte[] getModelLODId() {
+		return modelLODId;
+	}
+
+	public static short getUnk66_Val1000() {
+		return unk66_Val1000;
+	}
+
+	public short getUnk68_AIAimVal1() {
+		return unk68_AIAimVal1;
+	}
+
+	public short getUnk70_AIAimVal2() {
+		return unk70_AIAimVal2;
+	}
+
+	public short getUnk72_AIAimVal3() {
+		return unk72_AIAimVal3;
+	}
+
+	public short getUnk74_AIAimVal4() {
+		return unk74_AIAimVal4;
+	}
+
 	
 }

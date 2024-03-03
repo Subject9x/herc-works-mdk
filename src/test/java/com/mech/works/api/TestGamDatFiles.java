@@ -38,6 +38,7 @@ public class TestGamDatFiles {
 		VolEntry tomaDat = null;
 		
 		VolEntry test = null;
+		VolEntry ram = null;
 		
 		for(VolEntry entry : shell.getFilesSet()) {
 			if(entry.getFileName().equals("RAPTOR2.DAT")) {
@@ -49,23 +50,38 @@ public class TestGamDatFiles {
 			else if(entry.getFileName().equals("TOMAHAWK.DAT")) {
 				tomaDat = entry;
 			}
+			else if(entry.getFileName().equals("RAMSES.DAT")) {
+				ram = entry;
+			}
+			
 		}
 		
-//		test.getRawBytes()[20] = (byte)0xF1;
-		tomaDat.getRawBytes()[4] = (byte)0xF4;	//fwd speed
-		tomaDat.getRawBytes()[5] = (byte)0x01;
+		tomaDat.getRawBytes()[4] = (byte)0x58;	//fwd speed for debug
+		tomaDat.getRawBytes()[5] = (byte)0x02;
 		
-		raptorDat.getRawBytes()[4] = (byte)0x90;	//fwd speed
-		raptorDat.getRawBytes()[5] = (byte)0x01;
+		tomaDat.getRawBytes()[10] = (byte)0x0A;	//camera bone dbg
+		tomaDat.getRawBytes()[11] = (byte)0x00;
+
+//		tomaDat.getRawBytes()[i] = (byte)0xF0;
+//		tomaDat.getRawBytes()[i+1] = (byte)0xD8;
 		
-		tomaDat.getRawBytes()[28] = (byte)0xD0;	//TORSO TWIST SPEED
-		tomaDat.getRawBytes()[29] = (byte)0x07;
+//		for(int i = 124; i < 148; i+=2) {
+//			tomaDat.getRawBytes()[i] = (byte)0xF0;
+//			tomaDat.getRawBytes()[i+1] = (byte)0xD8;
+//			
+//			ram.getRawBytes()[i] = (byte)0xF0;
+//			ram.getRawBytes()[i+1] = (byte)0xD8;
+//		}
 		
-		tomaDat.getRawBytes()[40] = (byte)0xE0;
-		tomaDat.getRawBytes()[41] = (byte)0x2E;
-			
-		tomaDat.getRawBytes()[42] = (byte)0xD8;
-		tomaDat.getRawBytes()[43] = (byte)0xDC;
+		
+		tomaDat.getRawBytes()[150] = (byte)0x00;
+		tomaDat.getRawBytes()[151] = (byte)0x00;
+		tomaDat.getRawBytes()[152] = (byte)0x00;
+		tomaDat.getRawBytes()[153] = (byte)0x00;
+		tomaDat.getRawBytes()[154] = (byte)0x00;
+		tomaDat.getRawBytes()[155] = (byte)0x00;
+		tomaDat.getRawBytes()[156] = (byte)0x00;
+		tomaDat.getRawBytes()[157] = (byte)0x00;
 		
 		if(shell != null) {
 			try {

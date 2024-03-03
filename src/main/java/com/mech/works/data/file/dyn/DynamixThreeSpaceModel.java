@@ -26,7 +26,5 @@ public class DynamixThreeSpaceModel extends DataFile {
 	public DynamixThreeSpaceModel(String fileName, String dirPath) {
 		super(fileName, dirPath);
 	}
-		
-	
 	
 }

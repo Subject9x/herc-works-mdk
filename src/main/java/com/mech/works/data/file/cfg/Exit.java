@@ -18,4 +18,5 @@ public class Exit  extends DataFile{
 	public Exit() {
 		super("EXIT.CFG", "DATA/");
 	}
+
 }

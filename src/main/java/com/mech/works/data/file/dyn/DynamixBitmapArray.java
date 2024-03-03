@@ -54,5 +54,6 @@ public class DynamixBitmapArray extends DataFile{
 
 	public void setArrayCols(int arrayCols) {
 		this.arrayCols = arrayCols;
-	}	
+	}
+
 }

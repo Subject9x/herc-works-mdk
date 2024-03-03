@@ -66,6 +66,4 @@ public class Keyjoy  extends DataFile{
 	public HashMap<KeyJoyLabel, String> getValues(){
 		return values;
 	}
-	
-	
 }
