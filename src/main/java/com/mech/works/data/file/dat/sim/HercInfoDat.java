@@ -3,7 +3,8 @@ package com.mech.works.data.file.dat.sim;
 import com.mech.works.data.ref.files.DataFile;
 
 /**
- * 	FILE - dat\\[herc].dat
+ * 	FILE
+ * 	dat\\[herc].dat
  * 	0 - UINT16 - SPEED\TURNING
  *  2 - INT16  - SPEED\REVERSE
  *  4 - UINT16 - SPEED\FORWARD
