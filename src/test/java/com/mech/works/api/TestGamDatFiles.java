@@ -57,38 +57,32 @@ public class TestGamDatFiles {
 			
 		}
 		
+		test.getRawBytes()[134] = (byte)0x01;
+		test.getRawBytes()[135] = (byte)0x00;
 		
-//		test.getRawBytes()[0] = (byte)0x78;
-//		test.getRawBytes()[1] = (byte)0x00;
-		
-		
-		//CRITICALS HEALTH 
-//		test.getRawBytes()[2] = (byte)0x01;		//SERVO\LEG\LEFT
-//		test.getRawBytes()[3] = (byte)0x00;
-		
-//		test.getRawBytes()[4] = (byte)0x01;		//SERVO\LEG\RIGHT
-//		test.getRawBytes()[5] = (byte)0x00;
+		test.getRawBytes()[136] = (byte)0x01;
+		test.getRawBytes()[137] = (byte)0x00;
 //		
-//		test.getRawBytes()[6] = (byte)0x01;		//SENSOR ARRAY
-//		test.getRawBytes()[7] = (byte)0x00;
+//		test.getRawBytes()[56] = (byte)0x00;
+//		test.getRawBytes()[57] = (byte)0x00;
 //		
-//		test.getRawBytes()[8] = (byte)0x01; 	//TARGETING COMPUTER
-//		test.getRawBytes()[9] = (byte)0x00;
+//		test.getRawBytes()[58] = (byte)0x00;
+//		test.getRawBytes()[59] = (byte)0x00;
 //		
-//		test.getRawBytes()[10] = (byte)0x01;	//SHIELD GENERATOR
-//		test.getRawBytes()[11] = (byte)0x00;
+//		test.getRawBytes()[60] = (byte)0x00;
+//		test.getRawBytes()[61] = (byte)0x00;
 //		
-//		test.getRawBytes()[12] = (byte)0x01;	//ENGINE
-//		test.getRawBytes()[13] = (byte)0x00;
+//		test.getRawBytes()[62] = (byte)0x00;
+//		test.getRawBytes()[63] = (byte)0x00;
 //		
-//		test.getRawBytes()[14] = (byte)0x01;	//HYDRAULICS
-//		test.getRawBytes()[15] = (byte)0x00;
-		
-//		test.getRawBytes()[16] = (byte)0x01;	//STABILIZERS
-//		test.getRawBytes()[17] = (byte)0x00;
+//		test.getRawBytes()[64] = (byte)0x00;
+//		test.getRawBytes()[65] = (byte)0x00;
 //		
-//		test.getRawBytes()[18] = (byte)0x01;	//LIFE SUPPORT
-//		test.getRawBytes()[19] = (byte)0x00;
+//		test.getRawBytes()[66] = (byte)0x00;
+//		test.getRawBytes()[67] = (byte)0x00;
+//		
+//		test.getRawBytes()[68] = (byte)0x00;
+//		test.getRawBytes()[69] = (byte)0x00;
 		
 		//ARMOR Values---------------------------------------
 //		test.getRawBytes()[80] = (byte)0x01;	//COCKPIT\FRONT

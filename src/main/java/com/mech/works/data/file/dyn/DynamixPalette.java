@@ -19,11 +19,16 @@ public class DynamixPalette extends DataFile {
 	
 	private int colorCount;
 	
+	private int scalar;	//no mapping to binary data, used to account for incredibly dark colors in most palettes.
+						//game binary probably scales values up too and this was a byte-saving measure.
+	
+	private int paletteSizeByte;
 	private Bytes rawIndexBytes;
 	private LinkedHashMap<Integer, ColorBytes> colors;
 	
 	public DynamixPalette() {
 		super();
+		scalar = 1;
 		colors = new LinkedHashMap<Integer, ColorBytes>();
 	}
 
@@ -85,5 +90,21 @@ public class DynamixPalette extends DataFile {
 
 	public void setRawIndexBytes(Bytes rawIndexBytes) {
 		this.rawIndexBytes = rawIndexBytes;
+	}
+
+	public int getPaletteSizeByte() {
+		return paletteSizeByte;
+	}
+
+	public void setPaletteSizeByte(int paletteSizeByte) {
+		this.paletteSizeByte = paletteSizeByte;
+	}
+
+	public int getScalar() {
+		return scalar;
+	}
+
+	public void setScalar(int scalar) {
+		this.scalar = scalar;
 	}
 }

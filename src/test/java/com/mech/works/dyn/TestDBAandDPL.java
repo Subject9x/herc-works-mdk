@@ -26,14 +26,14 @@ public class TestDBAandDPL {
 		String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBM\\MAINPIC1.DBM";
 		
 		List<String> pals = new ArrayList<String>();
-		pals.add( "ESII.DPL");
+//		pals.add( "ESII.DPL");
 		pals.add( "ARMING.DPL");
-		pals.add( "BAY.DPL");
-		pals.add( "PALETTE.DPL");
-		pals.add( "ALPHA.DPL");
-		pals.add( "MAP.DPL");
-		pals.add( "MAP_PAL1.DPL");
-		pals.add( "MAP_PAL2.DPL");
+//		pals.add( "BAY.DPL");
+//		pals.add( "PALETTE.DPL");
+//		pals.add( "ALPHA.DPL");
+//		pals.add( "MAP.DPL");
+//		pals.add( "MAP_PAL1.DPL");
+//		pals.add( "MAP_PAL2.DPL");
 		
 		List<DynamixPalette> dplList = new ArrayList<DynamixPalette>();
 		
@@ -86,17 +86,18 @@ public class TestDBAandDPL {
 		
 //		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\ONLINE.DBA";
 //		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\DBG_SHELL0\\DBA\\APOC_OUT.DBA";
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0x1\\dba\\BASES.DBA";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0x1\\hb2\\TOMAHAWK.HB2";
 		
 		
 		List<String> pals = new ArrayList<String>();
-//		pals.add( "COCKPIT.DPL");
+		pals.add( "COCKPIT.DPL");
+//		pals.add( "IMPACTCP.DPL");
 //		pals.add( "LD_HERC1.DPL");
 //		pals.add( "LD_HERC2.DPL");
 //		pals.add( "LD_HERC3.DPL");
 //		pals.add( "LD_HERC4.DPL");
 //		pals.add( "LD_HERC5.DPL");
-		pals.add( "WORLD0.DPL");
+//		pals.add( "WORLD0.DPL");
 //		pals.add( "WORLD1.DPL");
 //		pals.add( "WORLD2.DPL");
 //		pals.add( "WORLD3.DPL");
@@ -254,8 +255,8 @@ public class TestDBAandDPL {
 
 	public static void main(String[] args)
 	{
-		String targDpl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0\\DBG_SIMVOL0\\DPL\\COCKPIT.DPL";
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0\\DBG_SIMVOL0\\hb0\\APOCA.HB0";
+		String targDpl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0x1\\DPL\\COCKPIT.DPL";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SIMVOL0x1\\db0\\SAMSON.DB0";
 		
 		
 		TestDBAandDPL test = new TestDBAandDPL();

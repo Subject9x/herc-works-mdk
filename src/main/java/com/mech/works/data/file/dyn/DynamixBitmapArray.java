@@ -22,7 +22,8 @@ public class DynamixBitmapArray extends DataFile{
 	
 	private int arrayRow;
 	private int arrayCols;
-	
+
+	private DynamixPalette palette;
 	
 	public DynamixBitmapArray() {}
 
@@ -31,29 +32,31 @@ public class DynamixBitmapArray extends DataFile{
 		return images;
 	}
 
-
 	public void setImages(LinkedHashSet<DynamixBitmap> images) {
 		this.images = images;
 	}
-
 
 	public int getArrayRow() {
 		return arrayRow;
 	}
 
-
 	public void setArrayRow(int arrayRow) {
 		this.arrayRow = arrayRow;
 	}
-
 
 	public int getArrayCols() {
 		return arrayCols;
 	}
 
-
 	public void setArrayCols(int arrayCols) {
 		this.arrayCols = arrayCols;
 	}
 
+	public DynamixPalette getPalette() {
+		return palette;
+	}
+
+	public void setPalette(DynamixPalette palette) {
+		this.palette = palette;
+	}
 }
