@@ -139,7 +139,10 @@ public final class VolFileWriter {
 			write = write.append(entry.getMagicPrefix().array());
 			write = write.append(entry.getRawBytes());
 			if(tailByte.length() > 0){
-				write = write.append(entry.getUnknownEoFByte());
+				for(byte b : entry.getUnknownEoFByte().array()) {
+					write = write.append((byte)0x00);
+				}
+//				write = write.append(entry.getUnknownEoFByte());
 			}
 			bass.write(write.array());
 		}
