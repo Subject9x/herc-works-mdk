@@ -1,5 +1,6 @@
 package com.mech.works.io.transform.common;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.LinkedHashSet;
@@ -65,8 +66,31 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 
 	@Override
 	public byte[] objectToBytes(DataFile source) throws ClassCastException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(source == null) {
+			//TODO log null
+			return null;
+		}
+		
+		DynamixBitmapArray dba = (DynamixBitmapArray)source;
+		
+		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
+		
+		objectBytes.write(DynamixBitmapArray.header.array());
+		objectBytes.write(dba.getFileSize().array());
+		objectBytes.write(writeShort(dba.getArrayRow()));
+		objectBytes.write(writeShort(dba.getArrayCols()));
+		
+		DynamixBitmapTransformer dbmConvert = new DynamixBitmapTransformer();
+		for(DynamixBitmap dbm : dba.getImages()) {
+			
+			byte[] bytes = dbmConvert.objectToBytes(dbm);
+			objectBytes.write(bytes);
+			dbmConvert.resetIndex();
+		}
+		
+		
+		return objectBytes.toByteArray();
 	}
 
 }

@@ -11,15 +11,13 @@ public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
 	public TransformHercInfoDat() {}
 	
 	@Override
-	public <T extends DataFile> T bytesToObject(byte[] inputArray, T file) throws ClassCastException {
-		
-		if(!(file instanceof HercInfoDat)) {
-			throw new ClassCastException(file.getClass().toString() + "not instance of " + HercInfoDat.class.toString());
-		}
-		HercInfoDat data = (HercInfoDat)file;
-		
+	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		index = 0;
-		bytes = Bytes.from(inputArray);
+		
+		HercInfoDat data = new HercInfoDat();
+		data.setRawBytes(inputArray);
+		
+		setBytes(inputArray);
 		
 		
 		data.setSpeedTurn(indexShortLE());
@@ -60,8 +58,7 @@ public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
 		
 		
 		
-		return null;
-		
+		return data;
 	}
 
 	@Override
