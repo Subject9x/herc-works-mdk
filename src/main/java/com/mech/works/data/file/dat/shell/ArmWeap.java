@@ -28,7 +28,22 @@ public class ArmWeap extends DataFile{
 	
 	public ArmWeap() {}
 	
-	
+	public short getTotalWeapons() {
+		return totalWeapons;
+	}
+
+	public HashMap<Integer, List<RowEntry>> getEntries() {
+		return entries;
+	}
+
+	public void setTotalWeapons(short totalWeapons) {
+		this.totalWeapons = totalWeapons;
+	}
+
+	public void setEntries(HashMap<Integer, List<RowEntry>> entries) {
+		this.entries = entries;
+	}
+
 	public class RowEntry{
 		private short id;
 		private int offsetX;

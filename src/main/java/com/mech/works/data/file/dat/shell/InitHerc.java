@@ -9,19 +9,25 @@ import com.mech.works.data.ref.files.DataFile;
 import at.favre.lib.bytes.Bytes;
 
 /**
+ * 	TODO - I don't think these files are directly used in /SHELL/?
+ * 		I zeroed out INIT_OUTL hardpoints and no changes observed.
  * 	FILE
- * 	/SHELL/GAM/INI_[herc].DAT
- * 	
- * 	presume it deals with initializing herc stats for...runtime?
- * 	UINT16 - herc id
- *  UINT16 - '100' - purpose unknown atm.
- *  UINT16 - 2-byte spacer
- *	UINT16 - Hardpoint count
- *		<hardpoint schema>
- *		[01 00] [0A 00] [64 00] [05 00] - hard point data
- *		 id      unk1     unk2    unk3
+ * 		/SHELL/GAM/INI_[herc].DAT	
+ * 		presume it deals with initializing herc stats for...runtime?
+ * 
+ * 	0- UINT16 - herc id
+ *  2- UINT16 - '100' - purpose unknown atm.
+ *  
+ *  4-5 spacer bytes
+ *  
+ *  6- UINT16 - Hardpoint count
+ *  SEQ - hardpoints
+ *  	S0 - UINT16 - hardpoint id
+ *  	S2 - UINT16 - ? -
+ *      S4 - UINT16 - ? - always 100, 
+ *      S6 - UINT16 - ? - always 5
  */
-public class Ini_Herc_Dat extends DataFile{
+public class InitHerc extends DataFile{
 
 	public static Bytes header = Bytes.from("661FAF55", StandardCharsets.UTF_8);
 	private short hercId;
@@ -31,9 +37,9 @@ public class Ini_Herc_Dat extends DataFile{
 	
 	private LinkedHashSet<Hardpoint> hardpoints;
 	
-	public Ini_Herc_Dat() {}
+	public InitHerc() {}
 	
-	public Ini_Herc_Dat(String fileName, String dirPath) {
+	public InitHerc(String fileName, String dirPath) {
 		super(fileName, dirPath);
 	}
 	
