@@ -1,6 +1,7 @@
 package com.mech.works.data.file.dat.shell;
 
 import com.mech.works.data.ref.files.DataFile;
+import com.mech.works.data.struct.vshell.hercs.UiWeaponEntry;
 
 /**
  * 	FILE
@@ -8,18 +9,18 @@ import com.mech.works.data.ref.files.DataFile;
  * 
  *  0- UINT16 - total weapon list.
  *  SEQ 0
- *  	S0 - UINT16 - weapon id.
- *  	S2 - UINT16 - len of weapon name, null-terminated.
- *  	S4+ - STR - null terminated string.
- *      S4+Len - UINT16 - Salvage cost, game * 100 to convert from tons to Kgs.
- *      S4+Len+UINT16 - Byte - ? - unknown flag.
- *      S4+Len+UINT16+Byte - UINT16 - ? - unknown value
+ *  	S0_0 - UINT16 - weapon id.
+ *  	S0_2 - UINT16 - len of weapon name, null-terminated.
+ *  	S0_4+ - STR - null terminated string.
+ *      S0_4+Len - UINT16 - Salvage cost, game * 100 to convert from tons to Kgs.
+ *      S0_4+Len+UINT16 - Byte - ? - unknown flag.
+ *      S0_4+Len+UINT16+Byte - UINT16 - ? - unknown value
  *  
  *  0 + SEQ(len) - UINT16 - total campaign-start weapon inventory 
- *  SEQ 1
- *  	S0- UINT16 - weapon id.
- *      S2- UINT16 - weapon health as % in 100.
- *      S4- UINT16 - ? - unknown , always 0x05
+ *  SEQ 1 - {@linkplain UiWeaponEntry}
+ *  	S1_0- UINT16 - weapon id.
+ *      S1_2- UINT16 - weapon health as % in 100.
+ *      S1_4- UINT16 - missile enum
  */
 public class Weapons extends DataFile{
 
@@ -27,7 +28,7 @@ public class Weapons extends DataFile{
 	
 	private Entry[] data;
 	
-	private WeaponEntry[] startingWeapons;
+	private UiWeaponEntry[] startingWeapons;
 	
 	public Weapons(int total) {
 		data = new Entry[total];
@@ -52,11 +53,11 @@ public class Weapons extends DataFile{
 		this.data = data;
 	}
 
-	public WeaponEntry[] getStartingWeapons() {
+	public UiWeaponEntry[] getStartingWeapons() {
 		return startingWeapons;
 	}
 
-	public void setStartingWeapons(WeaponEntry[] startingWeapons) {
+	public void setStartingWeapons(UiWeaponEntry[] startingWeapons) {
 		this.startingWeapons = startingWeapons;
 	}
 
@@ -122,45 +123,5 @@ public class Weapons extends DataFile{
 			this.unk2 = unk2;
 		}
 	}
-	
-	/**
-	 * These might be universal to the entire engine, I've seen this pattern
-	 * all over the save file, herc arming data, etc.
-	 * TODO - maybe this becomes a universal class sometime.
-	 */
-	public class WeaponEntry{
-		private short id;
-		private short healthPercent;
-		private short unk1;
-		
-		public WeaponEntry(short id, short hp, short unk1){
-			this.id = id;
-			this.healthPercent = hp;
-			this.unk1 = unk1;
-		}
 
-		public short getId() {
-			return id;
-		}
-
-		public short getHealthPercent() {
-			return healthPercent;
-		}
-
-		public short getUnk1() {
-			return unk1;
-		}
-
-		public void setId(short id) {
-			this.id = id;
-		}
-
-		public void setHealthPercent(short healthPercent) {
-			this.healthPercent = healthPercent;
-		}
-
-		public void setUnk1(short unk1) {
-			this.unk1 = unk1;
-		}
-	}
 }

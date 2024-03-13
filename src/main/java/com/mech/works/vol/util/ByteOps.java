@@ -29,5 +29,9 @@ public final class ByteOps {
 		return Bytes.from(b).toChar();
 	}
 	
-
+	public static void shortLEToByteArr(byte[] arr, int index, short v) {
+		byte[] s = Bytes.from(v).byteOrder(ByteOrder.LITTLE_ENDIAN).array();
+		arr[index] = s[0];
+		arr[index+1] = s[1];
+	}
 }
