@@ -3,19 +3,23 @@ package com.mech.works.data.struct.vshell.hercs;
 import com.mech.works.data.file.dyn.DynamixBitmapArray;
 
 /**
- * Extension of {@link UiHardpoint}, provides
- *  data for weapon's outline graphic as pulled from
- *  `[herc]_OUT.DBA`
- *  
+ * Class based on observed data patterns in /SHELL/GAM/ARM_[herc].DAT files.
+ * Wraps a {@linkplain UiImageDBA} class with extra details
  */
-public class UiHardpointWeapon extends UiHardpoint{
+public class UiHardpointGraphic extends UiImageDBA{
 
-	private DynamixBitmapArray outlineImg;
+	private short id;
+	
+	private DynamixBitmapArray outlineImg;	//linked via shared frameId.
 	
 	private int outlineX;
 	private int outlineY;
 	
-	public UiHardpointWeapon() {}
+	public UiHardpointGraphic() {}
+
+	public short getId() {
+		return id;
+	}
 
 	public DynamixBitmapArray getOutlineImg() {
 		return outlineImg;
@@ -27,6 +31,10 @@ public class UiHardpointWeapon extends UiHardpoint{
 
 	public int getOutlineY() {
 		return outlineY;
+	}
+
+	public void setId(short id) {
+		this.id = id;
 	}
 
 	public void setOutlineImg(DynamixBitmapArray outlineImg) {

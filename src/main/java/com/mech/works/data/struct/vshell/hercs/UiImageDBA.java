@@ -1,5 +1,9 @@
 package com.mech.works.data.struct.vshell.hercs;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mech.works.data.file.dyn.DynamixBitmapArray;
 
 /**
@@ -12,7 +16,7 @@ public class UiImageDBA {
 	private int originX;
 	private int originY;
 	
-	private int frameId;
+	private short frameId;
 	private RFlag flag;
 	
 	public UiImageDBA() {}
@@ -29,7 +33,7 @@ public class UiImageDBA {
 		return originY;
 	}
 	
-	public int getFrameId() {
+	public short getFrameId() {
 		return frameId;
 	}
 
@@ -49,7 +53,7 @@ public class UiImageDBA {
 		this.originY = originY;
 	}
 
-	public void setFrameId(int frameId) {
+	public void setFrameId(short frameId) {
 		this.frameId = frameId;
 	}
 
@@ -59,19 +63,32 @@ public class UiImageDBA {
 	
 	public static enum RFlag{
 		
-		NORMAL((byte)0),
-		FLIP_XY((byte)1),
-		FLIP_X((byte)2),
-		FLIP_Y((byte)3);
+		NORMAL((short)0),
+		FLIP_XY((short)1),
+		FLIP_X((short)2),
+		FLIP_Y((short)3);
 		
-		private byte flag;
+		private short flag;
+		private static final Map<Short, RFlag> enum_map;
 		
-		private RFlag(byte fl) {
+		private RFlag(short fl) {
 			this.flag = fl;	
 		}
 		
-		public byte val() {
+		static {
+	      	Map<Short,RFlag> map = new HashMap<Short, RFlag>();
+	        for (RFlag instance : RFlag.values()) {
+	            map.put(instance.val(),instance);
+	        }
+	        enum_map = Collections.unmodifiableMap(map);
+		}
+		
+		public short val() {
 			return this.flag;
+		}
+		
+		public static RFlag get(short v) {
+			return enum_map.get(v);
 		}
 	}
 }
