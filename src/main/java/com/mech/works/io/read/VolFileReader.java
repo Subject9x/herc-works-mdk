@@ -27,7 +27,7 @@ public final class VolFileReader {
 	
 	private static int offsetVShellFlag = 5;
 	
-	private static int offsetUNKValue = 8;	//its set to 05 in every file, UPDATE: this might actually be VOL 'type' or 'load precedence'
+	private static int offsetVolOrderNum = 8;	//its set to 05 in every file, UPDATE: this might actually be VOL 'type' or 'load precedence'
 		//I noted in the SHELL1.vol and SIMPATCH.vol that this value is actually 0A, which might say to load this vol 'second', much like how
 		//Quake loads .pak files in numbered order PAK001, PAK002, PAK003, etc
 	
@@ -73,12 +73,14 @@ public final class VolFileReader {
 		volFile.setDbsimFlag(volData.byteAt(offsetDBSimFlag) == 1 ? true : false);
 		volFile.setVshellFlag(volData.byteAt(offsetVShellFlag) == 1 ? true : false);
 		
-		volFile.setDirCount(volData.byteAt(offsetDirCount));
-		System.out.println("-Dir List="+volFile.getDirCount());	//DEBUG
+		volFile.setVolOrderNum(volData.byteAt(offsetVolOrderNum));
+//		System.out.println("-Load Order="+volFile.getVolOrderNum());	//DEBUG
 		
+		volFile.setDirCount(volData.byteAt(offsetDirCount));
+//		System.out.println("-Dir List="+volFile.getDirCount());	//DEBUG
 		
 		volFile.setDirSize(Bytes.from(volData.array(), offsetDirSize, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
-		System.out.println("-Dir Byte Size="+volFile.getDirSize());	//DEBUG
+//		System.out.println("-Dir Byte Size="+volFile.getDirSize());	//DEBUG
 		
 		//BUILD FOLDER LIST
 		int cursor = offsetDirListStart;
@@ -87,14 +89,14 @@ public final class VolFileReader {
 		//DOES sorting directory in-take really matter if writing a new vol won't conform to the read-in vol's format at all?
 		volFile.setListCount(Bytes.from(volData.array(), cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		cursor += 2;
-		System.out.println("-File List="+volFile.getListCount());	//DEBUG
+//		System.out.println("-File List="+volFile.getListCount());	//DEBUG
 		
 		volFile.setListSize(Bytes.from(volData.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
 		cursor += 4;
-		System.out.println("-File Byte Size="+volFile.getListSize());	//DEBUG
+//		System.out.println("-File Byte Size="+volFile.getListSize());	//DEBUG
 		
 		//FIXME - turns  out Vol files can be 2-chars long...so I had to rewire the directory list builder to march bytes, this has borked line 98 :(
-		System.out.println("Cursor byte check:" + cursor);
+//		System.out.println("Cursor byte check:" + cursor);
 		Bytes fileListBytes = Bytes.from(volFile.getRawBytes(), cursor, volFile.getListSize());
 		
 		if(fileListBytes.array().length == 0) {
@@ -106,7 +108,7 @@ public final class VolFileReader {
 		VolFileReader.sortHeaderFileListDirs(volFile);
 		
 		cursor += volFile.getListSize();
-		System.out.println("Cursor byte check:" + cursor);
+//		System.out.println("Cursor byte check:" + cursor);
 		
 		
 		//DEBUG - it appears every file gets a 9byte prefix of unknown(at this time) use.
@@ -247,7 +249,7 @@ public final class VolFileReader {
 			
 			for(VolEntry entry : folder) {
 //				System.out.println(directory.get((byte)i).getLabel() +"\\" + entry.getFileName() + "|" + entry.printMagicPrefix());
-				System.out.println(entry.getFileName() + "|" + entry.printMagicPrefix() + "| rawByteSize[" + entry.getRawBytes().length +"] | ofs[" + entry.getVolOffset().toInt()+"]");
+//				System.out.println(entry.getFileName() + "|" + entry.printMagicPrefix() + "| rawByteSize[" + entry.getRawBytes().length +"] | ofs[" + entry.getVolOffset().toInt()+"]");
 			}
 		}
 	}
@@ -314,10 +316,10 @@ public final class VolFileReader {
 					Bytes lookBack = Bytes.from(vol.getRawBytes(), checkOfs, 2);
 					Bytes prevFileSuffix4 = Bytes.from(vol.getRawBytes(), prevFileEnd-2, 14);
 					
-					System.out.println("JOIN:"+prev.getFileName() + "|" + entry.getFileName() + "|" + lookBack.encodeHex());
-					System.out.println("				# of bytes before file:" + spaceBytes);
-					System.out.println("					" +prevFileSuffix4.encodeHex());
-					System.out.println("-------------------------------------------------------------------------------------------------------------");
+//					System.out.println("JOIN:"+prev.getFileName() + "|" + entry.getFileName() + "|" + lookBack.encodeHex());
+//					System.out.println("				# of bytes before file:" + spaceBytes);
+//					System.out.println("					" +prevFileSuffix4.encodeHex());
+//					System.out.println("-------------------------------------------------------------------------------------------------------------");
 				}
 			}
 			prev = entry;

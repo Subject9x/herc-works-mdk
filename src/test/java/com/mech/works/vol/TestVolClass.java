@@ -5,13 +5,17 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.nio.ByteOrder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import org.junit.Test;
 
 import com.mech.works.io.read.VolFileReader;
+import com.mech.works.io.write.VolFileCompiler;
 import com.mech.works.io.write.VolFileWriter;
+import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
 
@@ -22,11 +26,95 @@ public class TestVolClass {
 	private Voln testVol;
 	
 	@Test
+	public void testVolCompile() {
+		Voln testVol = null;
+		try {
+			//testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SIMVOL0.vol");
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SHELL0.VOL");
+			
+			VolEntry test = null;
+			VolEntry rap = null;
+			
+			for(VolEntry entry : testVol.getFilesSet()) {
+				if(entry.getFileName().equals("HERCS.DAT")) {
+					test = entry;
+				}
+				else if(entry.getFileName().equals("ARM_RAPT.DAT")) {
+					rap = entry;
+				}
+				
+			}
+			
+			Voln compile = new Voln();
+			compile.setFileName("SHELL2.VOL");
+			
+			compile.setFilePath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+			compile.setDbsimFlag(false);
+			compile.setVshellFlag(true);
+			compile.setVolOrderNum((byte)0x0A);
+			
+			compile.setDirCount((byte)1);
+			compile.setDirectory(null);
+			compile.setDirectory(new LinkedHashMap<Byte, VolDir>());
+			
+			VolDir testDir = new VolDir();
+			testDir.setDirIdx((byte)0x00);
+			testDir.setFiles(new LinkedHashSet<VolEntry>());
+			testDir.setLabel("GAM");
+			
+			testDir.getFiles().add(test);
+			testDir.getFiles().add(rap);
+			
+			compile.getFolders().put(testDir.getDirIdx(), testDir);
+			
+			test.setDirIdx((byte)0x00);
+			rap.setDirIdx((byte)0x00);
+			
+			byte[] magic = new byte[] {0,0,0,0};
+			System.out.println(test.getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+			System.out.println(test.getMagicPrefix().byteOrder(ByteOrder.BIG_ENDIAN).toInt());
+			
+			test.getRawBytes()[4] = (byte)0x04;
+			
+//			
+			System.out.println(rap.getMagicPrefix().byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+			System.out.println(rap.getMagicPrefix().byteOrder(ByteOrder.BIG_ENDIAN).toInt());
+//			int magicval = Bytes.from(magic).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
+//			magicval += 1; 
+//			rap.setMagicPrefix(Bytes.from(rap.getMagicPrefix().toInt() + 8).byteOrder(ByteOrder.LITTLE_ENDIAN));
+			rap.setMagicPrefix(Bytes.from(magic));
+			rap.getRawBytes()[1252] = (byte)0x06;
+			
+//			 00 00 00  00 00 00  00 00 00  00 00 00
+			rap.getRawBytes()[1254] = (byte)0x64;
+			rap.getRawBytes()[1258] = (byte)0x3D;
+			rap.getRawBytes()[1262] = (byte)0x66;
+			rap.getRawBytes()[1266] = (byte)0x40;
+			
+			
+			VolFileCompiler.compile(compile);
+			
+			
+//			VolFileWriter.packVolToFileStrict(compile, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		assertNotNull(testVol.getRawBytes());
+	}
+	
+	
+	
+	@Test
 	public void testVolLoad() {
 		Voln testVol = null;
 		try {
 			//testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SIMVOL0.vol");
-			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SHELL0.vol");
+//			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SHELL0.vol");
+			testVol = VolFileReader.parseVolFile("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\SHELL2.vol");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -58,8 +146,6 @@ public class TestVolClass {
 		for(int i=0; i < testVol.getFilesSet().length; i++) {
 			if(i + 1 < testVol.getFilesSet().length) {
 				VolEntry f1 = testVol.getFilesSet()[i];
-				
-				
 				
 				int ofs = f1.getVolOffset().toInt() + f1.getRawBytes().length + 9;
 				
@@ -141,7 +227,7 @@ public class TestVolClass {
 		
 		if(testVol != null) {
 			try {
-				VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+				VolFileWriter.packVolToFileStrict(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -166,7 +252,7 @@ public class TestVolClass {
 		
 		if(testVol != null) {
 			try {
-				VolFileWriter.packVolToFile(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+				VolFileWriter.packVolToFileStrict(testVol, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 				
 				File write = new File("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\"+testVol.getFileName());
 				FileOutputStream fozz = new FileOutputStream(write);

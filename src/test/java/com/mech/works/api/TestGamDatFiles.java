@@ -9,12 +9,66 @@ import com.mech.works.io.write.VolFileWriter;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
 
+import at.favre.lib.bytes.Bytes;
+
 public class TestGamDatFiles {
 
 	private static Voln getVol(String volDir) throws Exception {
 		
 		return VolFileReader.parseVolFile(volDir);
 	}
+	
+	
+	@Test
+	public void testEditShellDat() {
+	
+		Voln shell = null;
+		try {
+//			shell = getVol("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SIMVOL0.VOL");
+			shell = getVol("E:\\ES2_OS\\dev\\earthsiege2\\VOL\\BACKUP\\SHELL0.VOL");
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		assertNotNull(shell);
+		
+		shell.setFileName("SHELL0.VOL");
+		shell.setDestPath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+		
+		VolEntry test = null;
+		
+		for(VolEntry entry : shell.getFilesSet()) {
+			if(entry.getFileName().equals("ARM_RAPT.DAT")) {
+				test = entry;
+			}
+			
+		}
+		
+		test.getRawBytes()[2] = (byte)0x01;
+		
+		test.getRawBytes()[10] = (byte)0x32;
+		
+//		test.getRawBytes()[48] = (byte)0x05;	//0x05
+//		test.getRawBytes()[50] = (byte)0x02;	//0x02
+		
+//		test.getRawBytes()[164] = (byte)0x00;	//0x02
+		
+		
+//		test.getRawBytes()[182] = (byte)0x0A;	//ATC100 frame
+//		test.getRawBytes()[184] = (byte)0x00;	//no X-flip op
+//		test.getRawBytes()[186] = (byte)0x01;
+		if(shell != null) {
+			try {
+				VolFileWriter.packVolToFileStrict(shell, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	
 	
 	@Test
@@ -133,7 +187,7 @@ public class TestGamDatFiles {
 		
 		if(shell != null) {
 			try {
-				VolFileWriter.packVolToFile(shell, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
+				VolFileWriter.packVolToFileStrict(shell, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -25,7 +25,7 @@ public class Voln extends DataFile{
 	private ExeUse exeUse;
 	private boolean dbsimFlag;
 	private boolean vshellFlag;
-	private byte volOrderFlag; //0x05 for 'first loaded', 0x0A 'load second (SHELL1.vol, SIMPATCH.vol)'
+	private byte volOrderNum; //0x05 for 'first loaded', 0x0A 'load second (SHELL1.vol, SIMPATCH.vol)'
 	
 	private byte dirCount;
 	private short dirSize;
@@ -188,19 +188,20 @@ public class Voln extends DataFile{
         	The 11th and 12th byte determine how many bytes the directory list has (little-endian). simvol0 and simpatch are the leaders in the directory count.
 		 */
 		VOLN("564F4C4E"),
-		LANG0("564F4C4E0001000005"),
-		SHELL0("564F4C4E0001000005"),
-		SHELL1("564F4C4E000100000A"),
-		SHLSOUND("564F4C4E0001000005"),
-		SIMLANG("564F4C4E0100000005"),
-		SIMALERT("564F4C4E0100000005"),
-		SIMPATCH("564F4C4E010000000A"),
-		SIMSOUND("564F4C4E0100000005"),
-		SIMVOICG("564F4C4E0100000005"),
-		SIMVOICE("564F4C4E0100000005"),
-		SIMVOICF("564F4C4E0100000005"),
-		SIMVOL0("564F4C4E0100000005"),
-		ZONES("564F4C4E0101000005");
+		VOLN_HEADER_LEN("564F4C4E0001000000");
+//		LANG0("564F4C4E00010000"),
+//		SHELL0("564F4C4E00010000"),
+//		SHELL1("564F4C4E00010000"),
+//		SHLSOUND("564F4C4E00010000"),
+//		SIMLANG("564F4C4E01000000"),
+//		SIMALERT("564F4C4E01000000"),
+//		SIMPATCH("564F4C4E01000000"),
+//		SIMSOUND("564F4C4E01000000"),
+//		SIMVOICG("564F4C4E01000000"),
+//		SIMVOICE("564F4C4E01000000"),
+//		SIMVOICF("564F4C4E01000000"),
+//		SIMVOL0("564F4C4E01000000"),
+//		ZONES("564F4C4E01010000");
 		
 		private Bytes data;
 		
@@ -343,7 +344,7 @@ public class Voln extends DataFile{
 		this.folders = folders;
 	}
 
-	public int getListCount() {
+	public short getListCount() {
 		return listCount;
 	}
 
@@ -397,6 +398,14 @@ public class Voln extends DataFile{
 
 	public void setVshellFlag(boolean vshellFlag) {
 		this.vshellFlag = vshellFlag;
+	}
+
+	public byte getVolOrderNum() {
+		return volOrderNum;
+	}
+
+	public void setVolOrderNum(byte volOrderNum) {
+		this.volOrderNum = volOrderNum;
 	}
 
 }

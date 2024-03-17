@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.Map;
-import java.util.Set;
 
 import com.mech.works.vol.data.VolDir;
 import com.mech.works.vol.data.VolEntry;
 import com.mech.works.vol.data.Voln;
-import com.mech.works.vol.util.ByteOps;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -19,8 +17,15 @@ public final class VolFileWriter {
 
 	private VolFileWriter() {}
 
-	
-	public static void packVolToFile(Voln vol, String destPath) throws Exception{
+	/**
+	 * 'Strict' here means DO NOT calculate new dynamic sizes, instead write vol directly to a file with
+	 * all data already assembled and counted. Best case is modifying an existing vol and doing simple byte-edit
+	 * tasks.
+	 * @param vol
+	 * @param destPath
+	 * @throws Exception
+	 */
+	public static void packVolToFileStrict(Voln vol, String destPath) throws Exception{
 		
 		File destDir = new File(destPath);
 		if(!destDir.exists()) {
@@ -51,7 +56,7 @@ public final class VolFileWriter {
 				fout.write(0x00);
 				
 				//VOL load-order precedence flag, 05 (first), 0A (observed in SHELL1.vol)
-				fout.write(0x05);
+				fout.write(vol.getVolOrderNum()); // TODO
 				
 				//Directory Count
 				fout.write(Bytes.from(vol.getDirCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[0]);
@@ -63,8 +68,7 @@ public final class VolFileWriter {
 				VolFileWriter.writeVolDirList(vol.isDbsimFlag(), vol.getDirCount(), vol.getFolders(), fout);
 				
 				//Header File List Total
-				fout.write(Bytes.from(vol.getListCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[0]);
-				fout.write(Bytes.from(vol.getListCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array()[1]);
+				fout.write(Bytes.from(vol.getListCount()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array());
 				
 				//Header File List Size in Bytes
 				fout.write(Bytes.from(vol.getListSize()).byteOrder(ByteOrder.LITTLE_ENDIAN).reverse().array());
@@ -82,7 +86,10 @@ public final class VolFileWriter {
 		
 		for(int i = 0; i < totalDirs; i++) {
 			VolDir dir = directory.get((byte)i);
-			
+
+			if(dir == null) {
+				continue;
+			}
 			if(isSim) {
 				bass.write(dir.getLabel().toLowerCase().getBytes());
 			}
@@ -129,10 +136,10 @@ public final class VolFileWriter {
 		for(VolEntry entry : vol.getFilesSet()) {
 			String tailByte = entry.getUnknownEoFByte() != null ? entry.getUnknownEoFByte().encodeHex() : "";
 			int tailByteVal = entry.getUnknownEoFByte() != null ? entry.getUnknownEoFByte().toUnsignedByte() : 0;
-			System.out.println(entry.getFileName() 
-					+ "|" + entry.printMagicPrefix() 
-					+ "| rawByteSize[" + entry.getRawBytes().length +"]"
-					+ "| tail byte[" + tailByte + "]("+tailByteVal+")");
+//			System.out.println(entry.getFileName() 
+//					+ "|" + entry.printMagicPrefix() 
+//					+ "| rawByteSize[" + entry.getRawBytes().length +"]"
+//					+ "| tail byte[" + tailByte + "]("+tailByteVal+")");
 			
 			Bytes write = Bytes.from(entry.getFileCompressionType().byteAt(0));
 			write = write.append(entry.getFileSize().byteOrder(ByteOrder.BIG_ENDIAN).array());
