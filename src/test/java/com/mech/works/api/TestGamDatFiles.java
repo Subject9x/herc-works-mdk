@@ -2,6 +2,10 @@ package com.mech.works.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.mech.works.io.read.VolFileReader;
@@ -88,109 +92,88 @@ public class TestGamDatFiles {
 		shell.setFileName("SIMVOL0.VOL");
 		shell.setDestPath("E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 		
-		VolEntry raptorDat = null;
-		VolEntry tomaDat = null;
-		
 		VolEntry test = null;
-		VolEntry ram = null;
 		
 		for(VolEntry entry : shell.getFilesSet()) {
-			if(entry.getFileName().equals("OGRE.DMG")) {
-				ram = entry;
-			}
-			else 
-			if(entry.getFileName().equals("TOMAHAWK.DMG")) {
+			if(entry.getFileName().equals("BULLETS.DAT")) {
 				test = entry;
 			}
-			else if(entry.getFileName().equals("TOMAHAWK.DAT")) {
-				tomaDat = entry;
-			}
-//			else if(entry.getFileName().equals("RAMSES.DAT")) {
-//				ram = entry;
-//			}
-			
 		}
 		
-		test.getRawBytes()[134] = (byte)0x01;
-		test.getRawBytes()[135] = (byte)0x00;
+//		Object[][] table = new Object[28][19];
 		
-		test.getRawBytes()[136] = (byte)0x01;
-		test.getRawBytes()[137] = (byte)0x00;
+		
+		
+		//PROJ.DAT
+//		Object[][] table = new Object[28][36];
+//		table[0] = new String[]{"row","0-1","2-3","4-5","6-7","8-9","10-11","12-13","14-15","16-17","18-19","20-21","22-23","24-25","26-27","28-29","30-31","32-33","34-35","36-37"};
 //		
-//		test.getRawBytes()[56] = (byte)0x00;
-//		test.getRawBytes()[57] = (byte)0x00;
+//		byte[][] entries = new byte[27][];
+//		int r = 0;
+//		for(int i=2; i < test.getRawBytes().length; i += 36) {
+//			byte[] row = Bytes.from(test.getRawBytes(), i, 36).array();
+//			
+//			List<String> str = new ArrayList<String>();
+//			str.add(r+"|"+(i-2)+":");
+//			for(int b=0; b<row.length; b+=2) {
+//				str.add(String.valueOf(Bytes.from(row, b, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort()));
+//			}
+//			table[r+1] = str.toArray();
+//			
+//			if(r>8 && r<13) {
+//				test.getRawBytes()[i+4] = (byte)0x01;
+//				test.getRawBytes()[i+5] = (byte)0x00;
+//			}
+//			
 //		
-//		test.getRawBytes()[58] = (byte)0x00;
-//		test.getRawBytes()[59] = (byte)0x00;
+////			test.getRawBytes()[i+6] = (byte)0x01;
+////			test.getRawBytes()[i+7] = (byte)0x00;
+//			
+//			entries[r] = row;
+//			r++;
+//		}
 //		
-//		test.getRawBytes()[60] = (byte)0x00;
-//		test.getRawBytes()[61] = (byte)0x00;
-//		
-//		test.getRawBytes()[62] = (byte)0x00;
-//		test.getRawBytes()[63] = (byte)0x00;
-//		
-//		test.getRawBytes()[64] = (byte)0x00;
-//		test.getRawBytes()[65] = (byte)0x00;
-//		
-//		test.getRawBytes()[66] = (byte)0x00;
-//		test.getRawBytes()[67] = (byte)0x00;
-//		
-//		test.getRawBytes()[68] = (byte)0x00;
-//		test.getRawBytes()[69] = (byte)0x00;
-		
-		//ARMOR Values---------------------------------------
-//		test.getRawBytes()[80] = (byte)0x01;	//COCKPIT\FRONT
-//		test.getRawBytes()[81] = (byte)0x00;
-//		
-//		test.getRawBytes()[108] = (byte)0x01;	//COCKPIT\REAR
-//		test.getRawBytes()[109] = (byte)0x00;
-//		
-//		test.getRawBytes()[116] = (byte)0x01; 	//TORSO/BRACKET ARMOR
-//		test.getRawBytes()[117] = (byte)0x00;
-//		
-//		test.getRawBytes()[140] = (byte)0x01;	//TORSO ARMOR
-//		test.getRawBytes()[141] = (byte)0x00;
-//		
-//		test.getRawBytes()[156] = (byte)0x01;	//LEG\LEFT\UPPER
-//		test.getRawBytes()[157] = (byte)0x00;	
-		
-//		test.getRawBytes()[168] = (byte)0x01;	//LEG\RIGHT\UPPER
-//		test.getRawBytes()[169] = (byte)0x00;
-		
-//		test.getRawBytes()[180] = (byte)0x01;	//LEG\LEFT\LOWER
-//		test.getRawBytes()[181] = (byte)0x00;
-		
-//		test.getRawBytes()[192] = (byte)0x01;	//LEG\RIGHT\LOWER
-//		test.getRawBytes()[193] = (byte)0x00;
-		
-//		test.getRawBytes()[204] = (byte)0x01;	//LEG\LEFT\FOOT
-//		test.getRawBytes()[205] = (byte)0x00;
-		
-//		test.getRawBytes()[216] = (byte)0x01;	//LEG\RIGHT\FOOT
-//		test.getRawBytes()[217] = (byte)0x00;
-		
-		//speed 450
-		tomaDat.getRawBytes()[4] = (byte)0x58;
-		tomaDat.getRawBytes()[5] = (byte)0x02;
-		
-		
-		
-		//turn speed 25% bump
-		tomaDat.getRawBytes()[0] = (byte)0x20;
-		tomaDat.getRawBytes()[1] = (byte)0x03;
-		
-		
-		tomaDat.getRawBytes()[10] = (byte)0x0A;	//camera bone dbg
-		tomaDat.getRawBytes()[11] = (byte)0x00;
+//		for (final Object[] row : table) {
+//		    System.out.format("%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%10s%n", row);
+//		}
 
+		//BULLETS.DAT
+//		Object[][] table = new Object[13][14];
+//		table[0] = new String[]{"row","0-1","2-3","4-5","6-7","8-9","10-11","12-13","14-15","16-17","18-19","20-21","22-23","24-25","26-27","28-29","30-31","32-33","34-35","36-37"};
+//		
+//		byte[][] entries = new byte[13][];
+//		int r = 0;
+//		for(int i=2; i < test.getRawBytes().length; i += 14) {
+//			byte[] row = Bytes.from(test.getRawBytes(), i, 14).array();
+//			
+//			List<String> str = new ArrayList<String>();
+//			str.add(r+"|"+(i-2)+":");
+//			for(int b=0; b<row.length; b+=2) {
+//				str.add(String.valueOf(Bytes.from(row, b, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort()));
+//			}
+//			table[r+1] = str.toArray();
+//			
+////			test.getRawBytes()[i] = (byte)0x02;
+//			
+//			System.out.println("i+4=" + Bytes.from(test.getRawBytes()[i+4]).encodeHex());
+//			System.out.println("i+5=" + Bytes.from(test.getRawBytes()[i+5]).encodeHex());
+//			test.getRawBytes()[i+12] = (byte)0x01;
+//			test.getRawBytes()[i+13] = (byte)0x00;
+//			
+//			entries[r] = row;
+//			r++;
+//		}
+//		
+//		for (final Object[] row : table) {
+//		    System.out.format("%10s%10s%10s%10s%10s%10s%10s%10s%n", row);
+//		}
 		
 		
 		if(shell != null) {
 			try {
 				VolFileWriter.packVolToFileStrict(shell, "E:\\ES2_OS\\dev\\earthsiege2\\VOL");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 		
