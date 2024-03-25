@@ -5,16 +5,15 @@
 	<parent>
 		<groupId>org.hercworks</groupId>
 		<artifactId>herc-works</artifactId>
-		<version>1.0-SNAPSHOT</version>
+ 		<version>${revision}</version>
 	</parent>
-	<artifactId>ES2Excavator</artifactId>
+	<artifactId>ES2UnVol</artifactId>
 	<name>ES2Excavator</name>
 	<description>command-line tool for unpacking ES2 archive formats; vol, dba,
 		dat, etc.</description>
 	<packaging>jar</packaging>
 
 	<dependencies>
-		
 		<dependency>
 			<!-- https://github.com/patrickfav/bytes-java -->
 		    <groupId>at.favre.lib</groupId>
@@ -25,7 +24,7 @@
 		
 		<dependency>
 			<groupId>org.hercworks</groupId>
-			<artifactId>ES2Vol</artifactId>
+			<artifactId>Core</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 			<exclusions>
@@ -36,6 +35,11 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20240303</version>
+		</dependency>
 	</dependencies>
 
 

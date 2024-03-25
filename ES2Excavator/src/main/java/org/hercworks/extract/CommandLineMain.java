@@ -37,12 +37,14 @@ public class CommandLineMain {
 				if(fileQueue.get(path).equals(FileType.VOL)) {
 					processVolFile(path);
 				}
-				
+				else if(fileQueue.get(path).equals(FileType.DBA)) {
+					processDBAFile(path);
+				}
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.console(e.getMessage());
+			System.exit(1);
 		}
 		
 		System.exit(0);
@@ -51,9 +53,8 @@ public class CommandLineMain {
 	private static void processVolFile(String volName) {
 		
 		try {
-			System.out.println("VOL detected! beginning unpack.-----------------------------------");
+			System.out.println("--------------------------VOL detected! beginning unpack.-----------------------------------");
 			String decodedPath = URLDecoder.decode( CommandLineMain.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-			
 			String root = decodedPath.substring(0, decodedPath.lastIndexOf("/") + 1);
 			
 			log.consoleDebug("info - root=" + root);
@@ -69,7 +70,6 @@ public class CommandLineMain {
 			if(!targDir.exists()) {
 				if(!targDir.mkdir()) {
 					log.consoleDebug("Error - cannot make target directory.");
-					System.exit(1);
 					return;
 				}
 			}
@@ -80,8 +80,38 @@ public class CommandLineMain {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
+	}
+	
+	private static void processDBAFile(String dbaName) {
 		
-		
-		
+		try {
+			System.out.println("--------------------------DBA detected! beginning unpack.-----------------------------------");
+			String decodedPath = URLDecoder.decode( CommandLineMain.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+			String root = decodedPath.substring(0, decodedPath.lastIndexOf("/") + 1);
+			
+			log.consoleDebug("info - root=" + root);
+			
+			File dbaFile = new File(root + "//" + dbaName);
+			if(!dbaFile.exists() || !dbaFile.isFile()) {
+				log.consoleDebug("Error - [" + dbaName + "] was not found or not a file.");
+				return;
+			}
+			
+			File targDir = new File(root + "//" + dbaName.substring(0, dbaName.lastIndexOf('.')) + "//");
+			log.consoleDebug("info - targDir=" + targDir);
+			
+			if(!targDir.exists()) {
+				if(!targDir.mkdir()) {
+					log.consoleDebug("Error - cannot make target directory.");
+					return;
+				}
+			}
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 	}
 }
