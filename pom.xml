@@ -24,6 +24,7 @@
 		<module>ES2Vol</module>
 		<module>Core</module>
 		<module>ES2Excavator</module>
+		<module>HercWorksUI</module>
 	</modules>
 
 
