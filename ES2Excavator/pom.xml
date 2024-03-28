@@ -15,6 +15,12 @@
 
 	<dependencies>
 		<dependency>
+		  <groupId>commons-cli</groupId>
+		  <artifactId>commons-cli</artifactId>
+		  <version>1.6.0</version>
+		</dependency>
+		
+		<dependency>
 			<!-- https://github.com/patrickfav/bytes-java -->
 		    <groupId>at.favre.lib</groupId>
 		    <artifactId>bytes</artifactId>
@@ -24,8 +30,8 @@
 		
 		<dependency>
 			<groupId>org.hercworks</groupId>
-			<artifactId>Core</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<artifactId>ES2Vol</artifactId>
+			<version>0.0.1</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -34,6 +40,25 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.hercworks</groupId>
+			<artifactId>Core</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>at.favre.lib</groupId>
+					<artifactId>bytes</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hercworks</groupId>
+					<artifactId>ES2Vol</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		
 
 		<dependency>
 		    <groupId>org.json</groupId>
