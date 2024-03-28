@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteOrder;
 
+import org.hercworks.voln.DataFile;
 import org.hercworks.voln.VolDir;
 import org.hercworks.voln.VolEntry;
 import org.hercworks.voln.Voln;
@@ -49,7 +50,7 @@ public final class VolFileReader {
 			byte[] data = new byte[(int)f.length()];
 			fizz.read(data);
 			volFile = new Voln.VolnBuilder()
-					.setFileName(f.getName())
+					.setFileName(DataFile.makeFileName(f.getName()))
 					.setRawBytes(data)
 					.build();
 			

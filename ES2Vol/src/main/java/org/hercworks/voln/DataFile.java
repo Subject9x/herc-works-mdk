@@ -28,6 +28,9 @@ public abstract class DataFile {
 	
 	public static String makeFileName(String pathName) {
 		int idx = pathName.lastIndexOf('\\') + 1;
+		if(idx == 0) {
+			idx = pathName.lastIndexOf('/') + 1;
+		}
 		return pathName.substring(idx, idx + (pathName.length() - idx));
 	}
 	

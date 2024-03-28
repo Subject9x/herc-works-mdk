@@ -19,7 +19,13 @@ import at.favre.lib.bytes.Bytes;
  */
 public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 
+	private int colorScalar = 4;
+	
 	public DynamixPaletteTransformer() {}
+	
+	public DynamixPaletteTransformer(int scalar) {
+		this.colorScalar = scalar;
+	}
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
@@ -28,6 +34,8 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 			return null;
 		}
 		setBytes(inputArray);
+		
+		resetIndex();
 		
 		DynamixPalette dpl = new DynamixPalette();
 		dpl.setRawBytes(Bytes.from(inputArray).array());	//clone array
@@ -42,7 +50,7 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		
 		int colorIdx = 0;
 		
-		dpl.setScalar(4);
+		dpl.setScalar(this.colorScalar);
 		//DO NOT CHANGE - original "mostly working" 4-byte RGBA value read
 		for(int clr = 0; clr < dpl.getColorCount(); clr++) {
 			
@@ -86,8 +94,8 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 	private ColorBytes toColorBytes(byte[] dynamixColor, int scalar, int idx) {
 
 		byte[] bytes = new byte[4];
-		System.out.println("["+ idx +"] Palette Entry RAW:" + Bytes.from(dynamixColor).encodeHex());
-		System.out.println("["+ idx +"] Palette Entry LENDIAN RAW:" + Bytes.from(dynamixColor).byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
+//		System.out.println("["+ idx +"] Palette Entry RAW:" + Bytes.from(dynamixColor).encodeHex());
+//		System.out.println("["+ idx +"] Palette Entry LENDIAN RAW:" + Bytes.from(dynamixColor).byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
 		
 		int ir = Byte.toUnsignedInt(dynamixColor[0]);
 		ir = (ir * scalar) > 255 ? 255 : ir * scalar;
@@ -107,7 +115,7 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		ia = ia == 1 ? 255 : 0;
 		bytes[3] = (byte) ia;
 		
-		System.out.println("		Palette Entry:" + Bytes.from(dynamixColor).encodeHex());
+//		System.out.println("		Palette Entry:" + Bytes.from(dynamixColor).encodeHex());
 
 		if(ir == 0 && ig == 0 && ib == 0) {
 			//I think this is their alpha color;
@@ -119,9 +127,9 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		
 		rawColor.setColor(new Color(ir, ig, ib, ia));
 		
-		System.out.println("		index:" + idx);
-		System.out.println("		getIntBGR:" + Bytes.from(rawColor.getIntBGR()).encodeHex());
-		System.out.println("		getIntRGB:" + Bytes.from(rawColor.getIntRGB()).encodeHex());
+//		System.out.println("		index:" + idx);
+//		System.out.println("		getIntBGR:" + Bytes.from(rawColor.getIntBGR()).encodeHex());
+//		System.out.println("		getIntRGB:" + Bytes.from(rawColor.getIntRGB()).encodeHex());
 		
 		return rawColor;
 	}

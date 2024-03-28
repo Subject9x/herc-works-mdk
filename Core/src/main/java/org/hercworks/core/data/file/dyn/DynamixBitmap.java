@@ -29,7 +29,7 @@ import at.favre.lib.bytes.Bytes;
  */
 public class DynamixBitmap extends DataFile{
 
-	public static Bytes header = Bytes.from("0E002800", StandardCharsets.UTF_8);
+	public static Bytes header = Bytes.from(0x0E002800);
 	
 	private short rows;
 	private short cols;

@@ -55,7 +55,7 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 			System.out.println("Width:" + dbm.getCols());
 			System.out.println("Height:" + dbm.getRows());
 			System.out.println("imgByteLen:" + imgByteLen);
-			dbm.setFileName(imageCount+"_");
+			dbm.setFileName("_"+imageCount);
 			
 			dba.getImages().add(dbm);
 			imageCount++;

@@ -84,12 +84,8 @@ public final class DynFileWriter {
 		try(FileOutputStream fozz = new FileOutputStream(file)){
 			fozz.write(dbm.getRawBytes());
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
 		
