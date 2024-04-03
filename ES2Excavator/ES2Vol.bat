@@ -1,6 +1,6 @@
 @echo off
-echo enter VOL file name.
+echo enter args and files.
 echo IF Path, make it relative to where this jar is.
-set /p file= file=
-java -jar ES2Unvol-0.0.1.jar %file%
+set /p args= enter args
+java -jar ES2UnVol-0.0.1.jar %args%
 pause

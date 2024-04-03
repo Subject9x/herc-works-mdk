@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -118,7 +119,14 @@ public final class FileProcessor extends LoggingUtil{
 			if(targDirPath == null) {
 				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
 			}
-
+			
+			//check unknown DBA derivatives: DB0/DB1/DB2/HB0/HB1/HB2/HD0/HD1/HD2
+			String ext = getFileExtStr(dbaName);
+			List<String> type = Arrays.asList("hb0", "hb1", "hb2", "db0", "db1", "db2", "hd0", "hd1", "hd2");
+			if(type.contains(ext.toLowerCase())) {
+				dba.setFileName(dba.getFileName() + "_"+ext);
+			}
+			
 			//unpack DBM's regardless of options.
 			DynamixBitmapTransformer dbmConverter = new DynamixBitmapTransformer();
 			
@@ -138,10 +146,11 @@ public final class FileProcessor extends LoggingUtil{
 			//Check for any DPL palette files that were loaded in args
 			if(cmdLine.checkOption(ExcavatorCmdLine.OptionArgs.DPL)){
 				List<DynamixPalette> palettes = new ArrayList<DynamixPalette>();
-				DynamixPaletteTransformer dplConvert = new DynamixPaletteTransformer();
+				DynamixPaletteTransformer dplConvert = new DynamixPaletteTransformer(4);
 				
 				for(String fileName : cmdLine.getFileQueue().keySet()) {
 					if(cmdLine.getFileQueue().get(fileName).equals(Voln.FileType.DPL)) {
+						dplConvert.resetIndex();
 						DynamixPalette dpl = (DynamixPalette)dplConvert.bytesToObject(loadFileBytes(getAppPath() + fileName));
 						dpl.setFileName(getCleanFileName(fileNoExt(fileName)));
 						getLogger().consoleDebug("DPL loaded:" + dpl.getFileName());
@@ -160,6 +169,7 @@ public final class FileProcessor extends LoggingUtil{
 				else {
 					for(DynamixPalette dpl : palettes) {
 						for(DynamixBitmap dbm : dba.getImages()) {
+							
 							dbm.setFileName(dbm.getFileName() + "_" + dpl.getFileName());
 							DynFileWriter.writeDBMToFile(dbm, dpl, targDirPath +"/");
 						}
@@ -270,7 +280,7 @@ public final class FileProcessor extends LoggingUtil{
 			int pixelRows = rows * pixel;
 			int pixelCols = cols * pixel;
 			
-			File dplImage = new File(targDirPath + dpl.getFileName() + ".png");
+			File dplImage = new File(targDirPath + "/" + dpl.getFileName() + ".png");
 			BufferedImage imageOut  = new BufferedImage(pixelCols, pixelRows, BufferedImage.TYPE_INT_RGB);
 			
 			WritableRaster rast = (WritableRaster)imageOut.getRaster();
@@ -281,6 +291,10 @@ public final class FileProcessor extends LoggingUtil{
 
 			for(int p=0; p < dpl.getColorCount(); p++) {
 				int color = dpl.colorAt(p).getColor().getRGB();
+				
+				getLogger().consoleDebug("Color " + p + "=(" + dpl.colorAt(p).getColor().getRed() + ", "
+											+  dpl.colorAt(p).getColor().getGreen() + ", "
+											+  dpl.colorAt(p).getColor().getBlue() + ")");
 				
 				for(int r=yOffset; r < yOffset + pixel; r++) {
 					for(int c=xOffset; c < xOffset + pixel; c++) {
@@ -352,6 +366,10 @@ public final class FileProcessor extends LoggingUtil{
 	
 	private String fileNoExt(String fileName) {
 		return fileName.substring(0, fileName.lastIndexOf('.'));
+	}
+	
+	private String getFileExtStr(String fileName) {
+		return fileName.substring(fileName.lastIndexOf('.')+1);
 	}
 	
 	private byte[] loadFileBytes(String path) {

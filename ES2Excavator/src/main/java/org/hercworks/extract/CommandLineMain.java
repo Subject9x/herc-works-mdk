@@ -34,7 +34,10 @@ public class CommandLineMain {
 				if(cmd.getFileQueue().get(path).equals(FileType.VOL)) {
 					processor.unpackVolFile(path);
 				}
-				else if(cmd.getFileQueue().get(path).equals(FileType.DBA)) {
+				else if(cmd.getFileQueue().get(path).equals(FileType.DBA)
+						||cmd.getFileQueue().get(path).val().contains("db")
+						|| cmd.getFileQueue().get(path).val().contains("hd")
+						|| cmd.getFileQueue().get(path).val().contains("hb")) {
 					processor.unpackDBA(path);
 				}
 				else if(cmd.getFileQueue().get(path).equals(FileType.DPL)) {
