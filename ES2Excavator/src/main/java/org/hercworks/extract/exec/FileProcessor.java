@@ -122,7 +122,7 @@ public final class FileProcessor extends LoggingUtil{
 			
 			//check unknown DBA derivatives: DB0/DB1/DB2/HB0/HB1/HB2/HD0/HD1/HD2
 			String ext = getFileExtStr(dbaName);
-			List<String> type = Arrays.asList("hb0", "hb1", "hb2", "db0", "db1", "db2", "hd0", "hd1", "hd2");
+			List<String> type = Arrays.asList("hb0", "hb1", "hb2", "db0", "db1", "db2");
 			if(type.contains(ext.toLowerCase())) {
 				dba.setFileName(dba.getFileName() + "_"+ext);
 			}

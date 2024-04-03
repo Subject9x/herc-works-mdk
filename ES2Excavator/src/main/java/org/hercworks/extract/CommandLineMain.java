@@ -36,7 +36,6 @@ public class CommandLineMain {
 				}
 				else if(cmd.getFileQueue().get(path).equals(FileType.DBA)
 						||cmd.getFileQueue().get(path).val().contains("db")
-						|| cmd.getFileQueue().get(path).val().contains("hd")
 						|| cmd.getFileQueue().get(path).val().contains("hb")) {
 					processor.unpackDBA(path);
 				}
