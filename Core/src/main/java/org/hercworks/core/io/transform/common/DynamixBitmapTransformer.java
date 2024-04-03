@@ -26,7 +26,6 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 			return null;
 		}
 		setBytes(inputArray);
-		resetIndex();
 		
 		DynamixBitmap dbm = new DynamixBitmap();
 		dbm.setRawBytes(Bytes.from(inputArray).array());
@@ -44,7 +43,7 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		
 		skip(2);
 		
-		dbm.setImageData(Bytes.from(indexSegment(byteLen)));
+		dbm.setImageData(Bytes.from(indexSegment(byteLen-4)));
 		
 		return dbm;
 	}
@@ -69,7 +68,7 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		
 		objectBytes.write((byte)0x00);
 		
-		objectBytes.write(writeIntLE(dbm.getImageData().array().length));
+		objectBytes.write(writeIntLE(dbm.getImageData().array().length + 4));
 		
 		objectBytes.write((byte)0x00);
 		objectBytes.write((byte)0x00);

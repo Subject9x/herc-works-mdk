@@ -1,7 +1,5 @@
 package org.hercworks.core.data.file.dyn;
 
-import java.nio.charset.StandardCharsets;
-
 import org.hercworks.voln.DataFile;
 
 import at.favre.lib.bytes.Bytes;
@@ -19,7 +17,7 @@ import at.favre.lib.bytes.Bytes;
  *  UINT16 uint row count (height)
  *  UINT16 uint col count (width)
  *  UINT16 uint bitdepth length
- *  nullbyte
+ *  null byte
  *  UINT32 payload (raw image data) length
  *
  *  2 nullbytes

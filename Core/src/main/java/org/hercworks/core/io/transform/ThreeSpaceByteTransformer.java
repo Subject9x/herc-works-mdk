@@ -76,7 +76,7 @@ public abstract class ThreeSpaceByteTransformer {
 	}
 	
 	protected byte[] writeIntLE(int i) {
-		return Bytes.from(i).byteOrder(ByteOrder.LITTLE_ENDIAN).array();
+		return Bytes.from(i).reverse().array();
 	}
 	
 	protected byte[] writeShort(short s) {
@@ -84,7 +84,7 @@ public abstract class ThreeSpaceByteTransformer {
 	}
 	
 	protected byte[] writeShortLE(short s) {
-		return Bytes.from(s).byteOrder(ByteOrder.LITTLE_ENDIAN).array();
+		return Bytes.from(s).reverse().array();
 	}
 	
 	public void jumpTo(int jump) {

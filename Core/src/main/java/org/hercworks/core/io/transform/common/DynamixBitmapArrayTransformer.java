@@ -40,25 +40,27 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		
 		DynamixBitmapTransformer dynbitmapTransform = new DynamixBitmapTransformer();
 		
-		for(int i=index; i < bytes.length-index; i++) {
-			int imgByteLen = Bytes.from(bytes, i+15, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-			int fileChunk = 21 + imgByteLen;
+		int actualBytes = bytes.length - index;
+		while(index < actualBytes) {
+			int fileLength = Bytes.from(bytes, index+4, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
 			
-			Bytes dbaItem = Bytes.from(bytes, i, fileChunk);
+			byte[] dbaItem = indexSegment(fileLength + 8);	//4 for header, 4 for total file len.
+			
 			
 			dynbitmapTransform.resetIndex();
-			DynamixBitmap dbm = (DynamixBitmap)dynbitmapTransform.bytesToObject(dbaItem.array());
-			
-			i += dbm.getRawBytes().length;	//accounts for the 7 bytes of meta data AFTER file size in bytes.
+			DynamixBitmap dbm = (DynamixBitmap)dynbitmapTransform.bytesToObject(dbaItem);
 			
 			System.out.println("IMAGE:"+imageCount+"-------------");
+			System.out.println("");
 			System.out.println("Width:" + dbm.getCols());
 			System.out.println("Height:" + dbm.getRows());
-			System.out.println("imgByteLen:" + imgByteLen);
+			System.out.println("imgByteLen:" + fileLength);
 			dbm.setFileName("_"+imageCount);
 			
 			dba.getImages().add(dbm);
 			imageCount++;
+			
+			skip(1);	//spacer byte
 		}
 		
 		return dba;

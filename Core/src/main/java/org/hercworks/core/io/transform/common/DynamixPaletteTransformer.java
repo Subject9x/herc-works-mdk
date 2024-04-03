@@ -94,42 +94,37 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 	private ColorBytes toColorBytes(byte[] dynamixColor, int scalar, int idx) {
 
 		byte[] bytes = new byte[4];
-//		System.out.println("["+ idx +"] Palette Entry RAW:" + Bytes.from(dynamixColor).encodeHex());
-//		System.out.println("["+ idx +"] Palette Entry LENDIAN RAW:" + Bytes.from(dynamixColor).byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
 		
-		int ir = Byte.toUnsignedInt(dynamixColor[0]);
-		ir = (ir * scalar) > 255 ? 255 : ir * scalar;
-		bytes[0] = (byte) ir;
-		
-		
-		int ig = Byte.toUnsignedInt(dynamixColor[1]);
-		ig = (ig * scalar) > 255 ? 255 : ig * scalar;
-		bytes[1] = (byte) ig;
-		
-		int ib =  Byte.toUnsignedInt(dynamixColor[2]);
-		ib = (ib * scalar) > 255 ? 255 : ib * scalar;
-		bytes[2] = (byte) ib;
-		
-		
-		int ia = dynamixColor[3];
-		ia = ia == 1 ? 255 : 0;
-		bytes[3] = (byte) ia;
-		
-//		System.out.println("		Palette Entry:" + Bytes.from(dynamixColor).encodeHex());
-
-		if(ir == 0 && ig == 0 && ib == 0) {
-			//I think this is their alpha color;
-			bytes[3] = (byte) 1;
-			ia = 128;
+		int ir, ig, ib, ia;
+		if(idx == 0) {
+			//FIXME: uh, Alpha Transparent color index appears to be index 0?
+			ir = Byte.toUnsignedInt(dynamixColor[0]);
+			ig = Byte.toUnsignedInt(dynamixColor[1]);
+			ib = Byte.toUnsignedInt(dynamixColor[2]);
+			ia = 0;
+			
+		}
+		else {
+			ir = Byte.toUnsignedInt(dynamixColor[0]);
+			ir = (ir * scalar) > 255 ? 255 : ir * scalar;
+			bytes[0] = (byte) ir;
+			
+			ig = Byte.toUnsignedInt(dynamixColor[1]);
+			ig = (ig * scalar) > 255 ? 255 : ig * scalar;
+			bytes[1] = (byte) ig;
+			
+			ib =  Byte.toUnsignedInt(dynamixColor[2]);
+			ib = (ib * scalar) > 255 ? 255 : ib * scalar;
+			bytes[2] = (byte) ib;
+			
+			ia = dynamixColor[3];
+			ia = ia == 1 ? 255 : 0;
+			bytes[3] = (byte) ia;
 		}
 		
 		ColorBytes rawColor = new ColorBytes(bytes);
 		
 		rawColor.setColor(new Color(ir, ig, ib, ia));
-		
-//		System.out.println("		index:" + idx);
-//		System.out.println("		getIntBGR:" + Bytes.from(rawColor.getIntBGR()).encodeHex());
-//		System.out.println("		getIntRGB:" + Bytes.from(rawColor.getIntRGB()).encodeHex());
 		
 		return rawColor;
 	}

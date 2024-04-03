@@ -2,6 +2,8 @@ package org.hercworks.core.data.struct;
 
 import java.awt.Color;
 
+import at.favre.lib.bytes.Bytes;
+
 /**
  * Pure utility class to capture the underlying bytes of any 24bit color value.
  */
@@ -56,5 +58,16 @@ public class ColorBytes {
 	
 	public int getIntRGB() {
 		return (this.array[2]<<16) | (this.array[1]<<8) | this.array[0];
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "ColorBytes [hex=" + Bytes.from(getArray()).encodeHex() 
+									+ ", rgb=(" + getColor().getRed() 
+									+ ", " + getColor().getGreen()
+									+ ", " + getColor().getBlue() +")"
+									+ ", alpha=" + getColor().getAlpha()
+									+ "]";
 	}
 }

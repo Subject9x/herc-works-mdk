@@ -39,7 +39,6 @@ public final class DynFileWriter {
 			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_ARGB);
 		}
 		catch(Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
@@ -47,31 +46,35 @@ public final class DynFileWriter {
 		WritableRaster rast = (WritableRaster)imageOut.getRaster();
 		int[] rasterData = new int[dbm.getCols()*dbm.getRows()*4];
 		
-		
 		int i = 0;
 		for(int r=0; r < dbm.getRows(); r++) {
 			for(int c=0; c < dbm.getCols(); c++) {
+				if(i >= dbm.getImageData().length()) {
+					break;
+				}
 				int cell = (r * dbm.getCols()) + c;
 				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
 				try {
-					rasterData[i] = palette.colorAt(idx).getColor().getRGB() + palette.colorAt(idx).getColor().getTransparency();
-//					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx); 
+					rasterData[i] = palette.colorAt(idx).getColor().getRGB();// + palette.colorAt(idx).getColor().getTransparency();
+//					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx);
 				}
 				catch(NullPointerException nope) {
 					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 
 				}
+				catch(Exception e) {
+					System.out.println("ERROR - " + e.getMessage());
+				}
 				i++;
 			}
 		}
+		
 		rast.setDataElements(0, 0, dbm.getCols(), dbm.getRows(), rasterData);
 		
 		boolean wrote = false;
 		try {
 			wrote = ImageIO.write(imageOut, "png", file);
 		} catch (Throwable t) {
-			// TODO Auto-generated catch block
-			t.printStackTrace();
 			System.out.println(t.getMessage());
 		}
 		System.out.println("write file" + wrote);
@@ -83,10 +86,15 @@ public final class DynFileWriter {
 		
 		try(FileOutputStream fozz = new FileOutputStream(file)){
 			fozz.write(dbm.getRawBytes());
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			System.out.println(e.getMessage());
+		}
+		catch(ArrayIndexOutOfBoundsException arryErr) {
+			System.out.println("ERROR - " + arryErr.getMessage());
 		}
 		
 	}
