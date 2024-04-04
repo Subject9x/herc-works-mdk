@@ -1,7 +1,5 @@
 package org.hercworks.voln;
 
-import org.hercworks.voln.Voln.FileType;
-
 import at.favre.lib.bytes.Bytes;
 
 /**

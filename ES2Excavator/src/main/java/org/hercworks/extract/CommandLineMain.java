@@ -3,7 +3,7 @@ package org.hercworks.extract;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
-import org.hercworks.voln.Voln.FileType;
+import org.hercworks.voln.FileType;
 
 /**
  * 

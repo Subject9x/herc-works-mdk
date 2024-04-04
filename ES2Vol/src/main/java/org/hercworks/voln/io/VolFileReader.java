@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 import org.hercworks.voln.VolDir;
 import org.hercworks.voln.VolEntry;
 import org.hercworks.voln.Voln;
-import org.hercworks.voln.Voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 

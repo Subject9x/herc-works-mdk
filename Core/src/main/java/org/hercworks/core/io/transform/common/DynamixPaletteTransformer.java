@@ -9,7 +9,7 @@ import org.hercworks.core.data.file.dyn.DynamixPalette;
 import org.hercworks.core.data.struct.ColorBytes;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
-import org.hercworks.voln.Voln;
+import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -40,7 +40,7 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		DynamixPalette dpl = new DynamixPalette();
 		dpl.setRawBytes(Bytes.from(inputArray).array());	//clone array
 		
-		dpl.setExt(Voln.FileType.DPL);
+		dpl.setExt(FileType.DPL);
 		index += 4;	//skip magic header bytes.
 		
 		dpl.setPaletteSizeByte(indexIntLE());

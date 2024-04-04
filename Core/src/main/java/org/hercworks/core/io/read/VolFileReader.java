@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hercworks.voln.FileType;
 import org.hercworks.voln.VolDir;
 import org.hercworks.voln.VolEntry;
 import org.hercworks.voln.Voln;
-import org.hercworks.voln.Voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 

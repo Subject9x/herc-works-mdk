@@ -35,12 +35,12 @@ public abstract class ThreeSpaceByteTransformer {
 	
 	protected short indexShortLE() {
 		short s =  Bytes.from(bytes, index, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort();
-		index+=2;
+		index += 2;
 		return s;
 	}
 	
 	protected short indexShort() {
-		short s =  Bytes.from(bytes, index, 2).byteOrder(ByteOrder.BIG_ENDIAN).toShort();
+		short s =  Bytes.from(bytes, index, 2).toShort();
 		index+=2;
 		return s;
 	}
@@ -52,7 +52,7 @@ public abstract class ThreeSpaceByteTransformer {
 	}
 	
 	protected int indexInt() {
-		int i =  Bytes.from(bytes, index, 4).byteOrder(ByteOrder.BIG_ENDIAN).toInt();
+		int i =  Bytes.from(bytes, index, 4).toInt();
 		index+=4;
 		return i;
 	}

@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.hercworks.core.data.file.dyn.DynamixBitmap;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
-import org.hercworks.voln.Voln;
+import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -29,7 +29,7 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		
 		DynamixBitmap dbm = new DynamixBitmap();
 		dbm.setRawBytes(Bytes.from(inputArray).array());
-		dbm.setExt(Voln.FileType.DBM);
+		dbm.setExt(FileType.DBM);
 		
 		dbm.setHeader(indexSegment(4));
 		dbm.setFileSize(Bytes.from(indexSegmentLE(4)));

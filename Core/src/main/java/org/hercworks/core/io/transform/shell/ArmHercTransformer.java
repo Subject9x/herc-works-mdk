@@ -18,69 +18,62 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		
-		ArmHerc armData = new ArmHerc();
-		resetIndex();
+		if(inputArray == null || inputArray.length == 0) {
+			//TODO  - error for empty byte array
+			return null;
+		}
+		
 		setBytes(inputArray);
+
+		ArmHerc armData = new ArmHerc();
 		
-		
-		UiImageDBA topHercImg = new UiImageDBA();
+		UiHardpointGraphic topHercImg = new UiHardpointGraphic();
 		armData.setTopImgArrId(indexShortLE());
 		topHercImg.setOriginX(indexIntLE());
 		topHercImg.setOriginY(indexIntLE());
-		skip(4); //int unk2
-		skip(4); //int unk3
+		topHercImg.setOutlineX(indexIntLE());	//note: for some reason these are probably because all UIharpdoint images use the same struct.
+		topHercImg.setOutlineY(indexIntLE());	//note: for some reason these are probably because all UIharpdoint images use the same struct.
 		topHercImg.setFrameId(indexShortLE());
 		topHercImg.setFlags(UiImageDBA.RFlag.get(indexShortLE()));
 		armData.setHercTopImg(topHercImg);
 		
-		
-		UiImageDBA bottomHercImg = new UiImageDBA();
+		UiHardpointGraphic bottomHercImg = new UiHardpointGraphic();
 		armData.setBottomImgArrId(indexShortLE());
 		bottomHercImg.setOriginX(indexIntLE());
 		bottomHercImg.setOriginY(indexIntLE());
-		skip(4); //int unk5
-		skip(4); //int unk6
+		bottomHercImg.setOutlineX(indexIntLE());	//note: for some reason these are probably because all UIharpdoint images use the same struct.
+		bottomHercImg.setOutlineY(indexIntLE());	//note: for some reason these are probably because all UIharpdoint images use the same struct.
 		bottomHercImg.setFrameId(indexShortLE());
 		bottomHercImg.setFlags(UiImageDBA.RFlag.get(indexShortLE()));
 		armData.setHercBotImg(bottomHercImg);
 		
 		armData.setTotalWeapons(indexShortLE());
 		
-		skip(2);	//spacer
-		
-		armData.setTotalHardpoints(indexShortLE());
-		
-		//Setup 'empty' hardpoint graphic list
-		Map<Short, UiHardpointGraphic> emptyHardpoints = new HashMap<Short, UiHardpointGraphic>(); 
-		for(int i=0; i < armData.getTotalHardpoints(); i++) {
-			UiHardpointGraphic emptySlot = new UiHardpointGraphic();
-			emptySlot.setId(indexShortLE());
-			emptySlot.setOriginX(indexIntLE());
-			emptySlot.setOriginY(indexIntLE());
-			emptySlot.setOutlineX(indexIntLE());
-			emptySlot.setOutlineX(indexIntLE());
-			emptySlot.setFrameId(indexShortLE());
-			emptySlot.setFlags(UiImageDBA.RFlag.get(indexShortLE()));
-		}
-		armData.setEmptyHardpoints(emptyHardpoints);
+		System.out.println("total entries=" + armData.getTotalWeapons());
 		
 		//Begun Weapon-Id-Hardpoint map
 		Map<Short, UiHardpointGraphic[]> weaponHardpoints = new HashMap<Short, UiHardpointGraphic[]>();
-		for(int i=0; i < armData.getTotalWeapons(); i++) {
+		for(int i=0; i < (int)armData.getTotalWeapons(); i++) {
 			short weaponId = indexShortLE();
 			short pointTotal = indexShortLE();
+			System.out.println("-----------weapon id=" + weaponId + "---------------");
+			System.out.println("+ hardpoints=" + pointTotal);
+			
 			UiHardpointGraphic[] graphics = new UiHardpointGraphic[pointTotal];
 			
-			for(int h=0; h < pointTotal; h++) {
+			for(int h=0; h < (int)pointTotal; h++) {
+				System.out.println("+---h=" + h);
 				UiHardpointGraphic hardpoint = new UiHardpointGraphic();
 				hardpoint.setId(indexShortLE());
 				hardpoint.setOriginX(indexIntLE());
 				hardpoint.setOriginY(indexIntLE());
 				hardpoint.setOutlineX(indexIntLE());
-				hardpoint.setOutlineX(indexIntLE());
+				hardpoint.setOutlineY(indexIntLE());
 				hardpoint.setFrameId(indexShortLE());
 				hardpoint.setFlags(UiImageDBA.RFlag.get(indexShortLE()));
 				graphics[h] = hardpoint;
+				System.out.println(hardpoint.toString());
+				
 			}
 			weaponHardpoints.put(weaponId, graphics);
 		}
@@ -107,13 +100,6 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		objectBytes.write((byte)0x00);
 		
 		objectBytes.write(writeShortLE(data.getTotalHardpoints()));
-		
-		//TODO - log null / empty data
-		//Setup 'empty' hardpoint graphic list
-		for(short id : data.getEmptyHardpoints().keySet()) {
-			objectBytes.write(writeShortLE(id));
-			objectBytes.write(uiHardpointToBytes(data.getEmptyHardpoints().get(id)));
-		}
 		
 		//Begun Weapon-Id-Hardpoint map
 		for(short id : data.getWeaponHardpoints().keySet()) {

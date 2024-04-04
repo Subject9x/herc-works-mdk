@@ -10,8 +10,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.hercworks.extract.exec.LoggingUtil;
-import org.hercworks.voln.Voln;
-import org.hercworks.voln.Voln.FileType;
+import org.hercworks.voln.FileType;
 
 
 /***
@@ -51,7 +50,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 
 		this.parser = new DefaultParser();
 		this.options = new Options();
-		this.fileQueue = new HashMap<String, Voln.FileType>();
+		this.fileQueue = new HashMap<String, FileType>();
 		
 		this.options.addOption(OptionArgs.HELP.val(), "Display help options");
 		this.options.addOption(OptionArgs.DBG.val(), "Set log output to debug mode.");
@@ -105,7 +104,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 	}
 	
 	private FileType checkFileTypes(String arg) {
-		for(FileType t : Voln.FileType.values()) {
+		for(FileType t : FileType.values()) {
 			if(arg.toLowerCase().contains(t.val())) {
 				return t;
 			}
@@ -113,7 +112,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 		return null;
 	}
 	
-	public Map<String, Voln.FileType> getFileQueue(){
+	public Map<String, FileType> getFileQueue(){
 		return this.fileQueue;
 	}
 	

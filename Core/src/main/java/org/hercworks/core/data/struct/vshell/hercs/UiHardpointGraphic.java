@@ -48,4 +48,16 @@ public class UiHardpointGraphic extends UiImageDBA{
 	public void setOutlineY(int outlineY) {
 		this.outlineY = outlineY;
 	}
+
+	@Override
+	public String toString() {
+		return "UiHardpointGraphic [hardpointId=" + id
+				+ ", originX=" + getOriginX() 
+				+ ", originY=" + getOriginY() 
+				+ ", outlineX=" + outlineX 
+				+ ", outlineY=" + outlineY  
+				+ ", frameId="+ getFrameId() + ", flags=" + getFlags() + "]";
+	}
+	
+	
 }

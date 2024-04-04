@@ -27,6 +27,7 @@ import org.hercworks.extract.CommandLineMain;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
 import org.hercworks.extract.cmd.Logger;
+import org.hercworks.voln.FileType;
 import org.hercworks.voln.Voln;
 import org.hercworks.voln.io.VolFileReader;
 import org.hercworks.voln.io.VolFileWriter;
@@ -149,7 +150,7 @@ public final class FileProcessor extends LoggingUtil{
 				DynamixPaletteTransformer dplConvert = new DynamixPaletteTransformer(4);
 				
 				for(String fileName : cmdLine.getFileQueue().keySet()) {
-					if(cmdLine.getFileQueue().get(fileName).equals(Voln.FileType.DPL)) {
+					if(cmdLine.getFileQueue().get(fileName).equals(FileType.DPL)) {
 						dplConvert.resetIndex();
 						DynamixPalette dpl = (DynamixPalette)dplConvert.bytesToObject(loadFileBytes(getAppPath() + fileName));
 						dpl.setFileName(getCleanFileName(fileNoExt(fileName)));
@@ -219,7 +220,7 @@ public final class FileProcessor extends LoggingUtil{
 			DynamixPaletteTransformer dplConvert = new DynamixPaletteTransformer();
 			
 			for(String fileName : cmdLine.getFileQueue().keySet()) {
-				if(cmdLine.getFileQueue().get(fileName).equals(Voln.FileType.DPL)) {
+				if(cmdLine.getFileQueue().get(fileName).equals(FileType.DPL)) {
 					DynamixPalette dpl = (DynamixPalette)dplConvert.bytesToObject(loadFileBytes(getAppPath() + fileName));
 					dpl.setFileName(getCleanFileName(fileNoExt(fileName)));
 					getLogger().consoleDebug("DPL loaded:" + dpl.getFileName());

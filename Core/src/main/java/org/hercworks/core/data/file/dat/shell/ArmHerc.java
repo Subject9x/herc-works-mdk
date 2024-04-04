@@ -29,6 +29,7 @@ import org.hercworks.voln.DataFile;
  *  42- UINT16 - render flags
  *  
  *  44- UINT16 - weapon count total - all hercs have 26, which does match total weapons in game, but not sure if this value is weapons.
+ *  									BECAUSE - most ARM_[herc] files only seem to have 24 total weapon IDs'
  *  
  *  46-47 - ? - space bytes?
  *  
@@ -45,8 +46,8 @@ import org.hercworks.voln.DataFile;
  *  
  *  SEQ1 - hardpoint graphics segments {@linkplain UiHardpoint}
  *  	S1_0- UINT16 - hardpoint number.
- *  	S1_2- UINT32 - X-ofs - [HERC]_OUT.DBA
- *  	S1_6- UINT32 - Y-ofs - [HERC]_OUT.DBA
+ *  	S1_2- UINT32 - X-ofs - [HERC]_WEP.DBA
+ *  	S1_6- UINT32 - Y-ofs - [HERC]_WEP.DBA
  *  	S1_10- UINT32- X-ofs - [HERC]_OUT.DBA
  *  	S1_14- UINT32- Y-ofs - [HERC]_OUT.DBA
  *  	S1_18- UINT16 - frame number - [HERC]_WEP.DBA/FRAME_X & [HERC]_OUT.DBA/FRAME_X
@@ -78,7 +79,6 @@ public class ArmHerc extends DataFile{
 	
 	private short totalHardpoints;
 	
-	private Map<Short, UiHardpointGraphic> emptyHardpoints;
 	private Map<Short, UiHardpointGraphic[]> weaponHardpoints;
 	
 	public ArmHerc() {}
@@ -87,8 +87,6 @@ public class ArmHerc extends DataFile{
 		return hercTopImg;
 	}
 
-	
-	
 	public short getTopImgArrId() {
 		return topImgArrId;
 	}
@@ -107,10 +105,6 @@ public class ArmHerc extends DataFile{
 
 	public short getTotalHardpoints() {
 		return totalHardpoints;
-	}
-
-	public Map<Short, UiHardpointGraphic> getEmptyHardpoints() {
-		return emptyHardpoints;
 	}
 
 	public Map<Short, UiHardpointGraphic[]> getWeaponHardpoints() {
@@ -132,11 +126,7 @@ public class ArmHerc extends DataFile{
 	public void setTotalHardpoints(short totalHardpoints) {
 		this.totalHardpoints = totalHardpoints;
 	}
-
-	public void setEmptyHardpoints(Map<Short, UiHardpointGraphic> emptyHardpoints) {
-		this.emptyHardpoints = emptyHardpoints;
-	}
-
+	
 	public void setWeaponHardpoints(Map<Short, UiHardpointGraphic[]> weaponHardpoints) {
 		this.weaponHardpoints = weaponHardpoints;
 	}

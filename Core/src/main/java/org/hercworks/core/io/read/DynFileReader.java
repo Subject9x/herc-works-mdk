@@ -15,7 +15,7 @@ import org.hercworks.core.io.transform.common.DynamixBitmapArrayTransformer;
 import org.hercworks.core.io.transform.common.DynamixBitmapTransformer;
 import org.hercworks.core.io.transform.common.DynamixPaletteTransformer;
 import org.hercworks.voln.DataFile;
-import org.hercworks.voln.Voln;
+import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -328,7 +328,7 @@ public final class DynFileReader {
 		String dir = null;
 		while(tokenzer.hasMoreTokens()) {
 			String t = tokenzer.nextToken();
-			if(Voln.FileType.typeFromVal(t) != null){
+			if(FileType.typeFromVal(t) != null){
 				dir = t;
 				break;
 			}
