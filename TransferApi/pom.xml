@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.hercworks</groupId>
+    <artifactId>herc-works</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>TransferApi</artifactId>
+  <name>Data Transfer API</name>
+  <description>wrapper library for core that exports/imports data to other modern formats.</description>
+  <packaging>jar</packaging>
+  
+	<dependencies>
+	    <dependency>
+			<groupId>at.favre.lib</groupId>
+			<artifactId>bytes</artifactId>
+			<version>1.6.1</version>
+			<scope>compile</scope>
+		</dependency>
+	    
+	    <dependency>
+			<groupId>org.hercworks</groupId>
+			<artifactId>ES2Vol</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>at.favre.lib</groupId>
+					<artifactId>bytes</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	    
+		<dependency>
+			<groupId>org.hercworks</groupId>
+			<artifactId>Core</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>at.favre.lib</groupId>
+					<artifactId>bytes</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hercworks</groupId>
+					<artifactId>ES2Vol</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+		    <version>2.16.0</version>
+		</dependency>
+		
+	    <dependency>
+		      <groupId>junit</groupId>
+		      <artifactId>junit</artifactId>
+		      <version>4.9</version>
+		      <scope>test</scope>
+	    </dependency>
+  </dependencies>
+  
+</project>

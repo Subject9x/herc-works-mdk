@@ -23,6 +23,7 @@
 	<modules>
 		<module>ES2Vol</module>
 		<module>Core</module>
+		<module>TransferApi</module>
 		<module>ES2Excavator</module>
 		<module>HercWorksUI</module>
 	</modules>
