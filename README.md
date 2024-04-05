@@ -15,6 +15,9 @@ applications can leverage.
 + Byte-to-Object transformer API to allow interoperability with ES2 engine, and other languages.
 + Data-to-JSON API for user-friendly presentation.
 
+### TransferApi
+Convenience DTO wrapper for Core Module, outputs targeted Core data files out to JSON specifically and where applicable.
+
 ### ES2Excavator
 CLI tool for accessing specific files, and converting them out into workable formats.
 + DBA - unpack DynamixBitmapArrays to separate DBM files.

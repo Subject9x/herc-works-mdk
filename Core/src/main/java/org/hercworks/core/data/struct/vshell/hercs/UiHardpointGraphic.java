@@ -58,6 +58,4 @@ public class UiHardpointGraphic extends UiImageDBA{
 				+ ", outlineY=" + outlineY  
 				+ ", frameId="+ getFrameId() + ", flags=" + getFlags() + "]";
 	}
-	
-	
 }
