@@ -23,7 +23,7 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 		
 		setBytes(inputArray);
 		short count = indexShortLE();
-		ArmWeap armWeap = new ArmWeap((short)33);
+		ArmWeap armWeap = new ArmWeap(count);
 		armWeap.setTotalWeapons(count);
 		armWeap.setRawBytes(inputArray);
 		armWeap.setExt(FileType.DAT);
@@ -41,8 +41,8 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 		}
 		
 		armWeap.setTotalSecondList(indexShortLE());
-		armWeap.setSecondary(new UiHardpointGraphic[armWeap.getTotalSecondList()]);
-		
+		UiHardpointGraphic[] secondList = new UiHardpointGraphic[armWeap.getTotalSecondList()];
+				
 		for(int i=0; i < armWeap.getTotalSecondList(); i++) {
 			UiHardpointGraphic icon = new UiHardpointGraphic();
 			icon.setId(indexShortLE());
@@ -51,8 +51,9 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 			icon.setFrameId(indexShortLE());
 			icon.setFlags(RFlag.NORMAL);
 			System.out.println(icon.toString());
-			armWeap.getSecondary()[i] = icon;
+			secondList[i] = icon;
 		}
+		armWeap.setSecondary(secondList);
 		
 		
 		return armWeap;
@@ -65,16 +66,24 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 		
 		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
 		
-		objectBytes.write(writeShort(data.getTotalWeapons()));
+		objectBytes.write(writeShortLE(data.getTotalWeapons()));
 		
-		for(int i=0; i < 33; i++) {
+		for(int i=0; i < data.getTotalWeapons(); i++) {
 			UiHardpointGraphic icon = data.getEntries()[i];
-			if(icon != null) {
-				objectBytes.write(writeShort(icon.getId()));
-				objectBytes.write(writeIntLE(icon.getOriginX()));
-				objectBytes.write(writeIntLE(icon.getOriginY()));
-				objectBytes.write(writeShortLE(icon.getFrameId()));
-			}
+			objectBytes.write(writeShortLE(icon.getId()));
+			objectBytes.write(writeIntLE(icon.getOriginX()));
+			objectBytes.write(writeIntLE(icon.getOriginY()));
+			objectBytes.write(writeShortLE(icon.getFrameId()));
+		}
+		
+		objectBytes.write(writeShortLE(data.getTotalSecondList()));
+		
+		for(int i=0; i < data.getTotalSecondList(); i++) {
+			UiHardpointGraphic icon = data.getSecondary()[i];
+			objectBytes.write(writeShortLE(icon.getId()));
+			objectBytes.write(writeIntLE(icon.getOriginX()));
+			objectBytes.write(writeIntLE(icon.getOriginY()));
+			objectBytes.write(writeShortLE(icon.getFrameId()));
 		}
 		
 		return objectBytes.toByteArray();

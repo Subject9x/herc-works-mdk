@@ -21,12 +21,14 @@ public class ArmWeapDTOServiceImpl implements ArmWeapDTOService{
 			
 			icon.setId(WeaponLUT.getById(graphic.getId()));
 			icon.setOriginX(graphic.getOriginX());
-			icon.setOriginX(graphic.getOriginY());
+			icon.setOriginY(graphic.getOriginY());
 			icon.setFrameId(graphic.getFrameId());
+			icon.setFlag(RFlag.NORMAL);
 			
 			dto.getIcons()[i] = icon;
 		}
 		
+		dto.setSecondList(source.getTotalSecondList());
 		dto.setSecondary(new ArmWeapIconDTO[source.getTotalSecondList()]);
 		for(int i=0; i < source.getTotalSecondList(); i++) {
 			UiHardpointGraphic graphic = source.getSecondary()[i];
@@ -34,8 +36,9 @@ public class ArmWeapDTOServiceImpl implements ArmWeapDTOService{
 			
 			icon.setId(WeaponLUT.getById(graphic.getId()));
 			icon.setOriginX(graphic.getOriginX());
-			icon.setOriginX(graphic.getOriginY());
+			icon.setOriginY(graphic.getOriginY());
 			icon.setFrameId(graphic.getFrameId());
+			icon.setFlag(RFlag.NORMAL);
 			
 			dto.getSecondary()[i] = icon;
 		}
@@ -54,13 +57,14 @@ public class ArmWeapDTOServiceImpl implements ArmWeapDTOService{
 			
 			graphic.setId((short)icon.getId().getId());
 			graphic.setOriginX(icon.getOriginX());
-			graphic.setOriginX(icon.getOriginY());
+			graphic.setOriginY(icon.getOriginY());
 			graphic.setFrameId(icon.getFrameId());
 			graphic.setFlags(RFlag.NORMAL);
 			
 			armWeap.getEntries()[i] = graphic;
 		}
 		
+		armWeap.setTotalSecondList(source.getSecondList());
 		armWeap.setSecondary(new UiHardpointGraphic[source.getSecondList()]);
 		for(int i=0; i < source.getSecondList(); i++) {
 			UiHardpointGraphic graphic = new UiHardpointGraphic();
@@ -68,7 +72,7 @@ public class ArmWeapDTOServiceImpl implements ArmWeapDTOService{
 			
 			graphic.setId((short)icon.getId().getId());
 			graphic.setOriginX(icon.getOriginX());
-			graphic.setOriginX(icon.getOriginY());
+			graphic.setOriginY(icon.getOriginY());
 			graphic.setFrameId(icon.getFrameId());
 			graphic.setFlags(RFlag.NORMAL);
 			
