@@ -40,7 +40,7 @@ public abstract class ThreeSpaceByteTransformer {
 	}
 	
 	protected short indexShort() {
-		short s =  Bytes.from(bytes, index, 2).toShort();
+		short s =  Bytes.from(bytes, index, 2).byteOrder(ByteOrder.BIG_ENDIAN).toShort();
 		index+=2;
 		return s;
 	}
@@ -80,7 +80,7 @@ public abstract class ThreeSpaceByteTransformer {
 	}
 	
 	protected byte[] writeShort(short s) {
-		return Bytes.from(s).array();
+		return Bytes.from(s).byteOrder(ByteOrder.BIG_ENDIAN).array();
 	}
 	
 	protected byte[] writeShortLE(short s) {

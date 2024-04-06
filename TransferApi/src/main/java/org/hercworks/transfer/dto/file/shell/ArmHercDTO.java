@@ -1,7 +1,8 @@
-package org.hercworks.transfer.dto.shell;
+package org.hercworks.transfer.dto.file.shell;
 
 import java.util.Map;
 
+import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.transfer.dto.shell.struct.UiHardpointDTO;
 import org.hercworks.transfer.dto.shell.struct.UiImageDTO;
@@ -9,6 +10,9 @@ import org.hercworks.transfer.dto.shell.struct.UiImageDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+/***
+ * Wraps {@linkplain ArmHerc} SHELL0/GAM/
+ */
 @JsonRootName("Arm_Herc_dat")
 public class ArmHercDTO {
 

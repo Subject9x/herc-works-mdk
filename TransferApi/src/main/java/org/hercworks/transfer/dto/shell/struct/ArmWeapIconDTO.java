@@ -1,59 +1,38 @@
 package org.hercworks.transfer.dto.shell.struct;
 
+import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA.RFlag;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("")
-public class UiHardpointDTO{
-	
-	@JsonProperty(value = "hardpoint", index = 1)
-	private short id;
+public class ArmWeapIconDTO {
+
+	@JsonProperty(value = "weapon", index = 1)
+	private WeaponLUT id;
 	
 	@JsonProperty(value = "x", index = 2)
 	private int originX;
 	
 	@JsonProperty(value = "y", index = 3)
 	private int originY;
-	
-	@JsonProperty(value = "outline_x", index = 4)
-	private int outlineX;
-	
-	@JsonProperty(value = "outline_y", index = 5)
-	private int outlineY;
-	
+
 	@JsonProperty(value = "frame", index = 6)
 	private short frameId;
 	
 	@JsonProperty(value = "draw_flag", index = 7)
 	private RFlag flag;
-	
-	public UiHardpointDTO() {}
 
-	public short getId() {
+	public ArmWeapIconDTO() {}
+	
+	public WeaponLUT getId() {
 		return id;
 	}
 
-	public int getOutlineX() {
-		return outlineX;
-	}
-
-	public int getOutlineY() {
-		return outlineY;
-	}
-
-	public void setId(short id) {
+	public void setId(WeaponLUT id) {
 		this.id = id;
 	}
-
-	public void setOutlineX(int outlineX) {
-		this.outlineX = outlineX;
-	}
-
-	public void setOutlineY(int outlineY) {
-		this.outlineY = outlineY;
-	}	
 
 	public int getOriginX() {
 		return originX;
@@ -86,4 +65,8 @@ public class UiHardpointDTO{
 	public void setFlag(RFlag flag) {
 		this.flag = flag;
 	}
+	
+
+	
+	
 }

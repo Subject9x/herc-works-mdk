@@ -1,9 +1,14 @@
 package org.hercworks.core.io.transform.shell;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.hercworks.core.data.file.dat.shell.ArmWeap;
+import org.hercworks.core.data.struct.vshell.hercs.UiHardpointGraphic;
+import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA.RFlag;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 
@@ -11,16 +16,68 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
-		// TODO Auto-generated method stub
+		
+		if(inputArray == null || inputArray.length <= 0) {
+			return null;
+		}
+		
+		setBytes(inputArray);
+		short count = indexShortLE();
+		ArmWeap armWeap = new ArmWeap((short)33);
+		armWeap.setTotalWeapons(count);
+		armWeap.setRawBytes(inputArray);
+		armWeap.setExt(FileType.DAT);
+		armWeap.setFileName("ARM_WEAP");
+		
+		for(int i=0; i < armWeap.getTotalWeapons(); i++) {
+			UiHardpointGraphic icon = new UiHardpointGraphic();
+			icon.setId(indexShortLE());
+			icon.setOriginX(indexIntLE());
+			icon.setOriginY(indexIntLE());
+			icon.setFrameId(indexShortLE());
+			icon.setFlags(RFlag.NORMAL);
+			System.out.println(icon.toString());
+			armWeap.getEntries()[i] = icon;
+		}
+		
+		armWeap.setTotalSecondList(indexShortLE());
+		armWeap.setSecondary(new UiHardpointGraphic[armWeap.getTotalSecondList()]);
+		
+		for(int i=0; i < armWeap.getTotalSecondList(); i++) {
+			UiHardpointGraphic icon = new UiHardpointGraphic();
+			icon.setId(indexShortLE());
+			icon.setOriginX(indexIntLE());
+			icon.setOriginY(indexIntLE());
+			icon.setFrameId(indexShortLE());
+			icon.setFlags(RFlag.NORMAL);
+			System.out.println(icon.toString());
+			armWeap.getSecondary()[i] = icon;
+		}
 		
 		
-		return null;
+		return armWeap;
 	}
 
 	@Override
 	public byte[] objectToBytes(DataFile source) throws ClassCastException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ArmWeap data = (ArmWeap)source;
+		
+		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
+		
+		objectBytes.write(writeShort(data.getTotalWeapons()));
+		
+		for(int i=0; i < 33; i++) {
+			UiHardpointGraphic icon = data.getEntries()[i];
+			if(icon != null) {
+				objectBytes.write(writeShort(icon.getId()));
+				objectBytes.write(writeIntLE(icon.getOriginX()));
+				objectBytes.write(writeIntLE(icon.getOriginY()));
+				objectBytes.write(writeShortLE(icon.getFrameId()));
+			}
+		}
+		
+		return objectBytes.toByteArray();
 	}
 
 }

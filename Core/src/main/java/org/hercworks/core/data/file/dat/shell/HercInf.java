@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.dat.shell;
 
+import org.hercworks.core.data.struct.vshell.hercs.HercInfEntry;
 import org.hercworks.voln.DataFile;
 
 /**
@@ -21,86 +22,18 @@ import org.hercworks.voln.DataFile;
 public class HercInf extends DataFile{
  
 	private short totalHercs;
-	private Entry[] data;
+	private HercInfEntry[] data;
 	
 	public HercInf(int totalHercs) {
-		data = new Entry[totalHercs];
-	}
-	
-	public class Entry{
-
-		private short hercId;
-		private short weight;
-		private	short speed;
-		private short hardpointTotal;
-		private short salvageReq;
-		private short buildMissionCount;
-		private short flagCampaignStart;
-		
-		public Entry() {}
-
-		public short getHercId() {
-			return hercId;
-		}
-
-		public short getWeight() {
-			return weight;
-		}
-
-		public short getSpeed() {
-			return speed;
-		}
-
-		public short getHardpointTotal() {
-			return hardpointTotal;
-		}
-
-		public short getSalvageReq() {
-			return salvageReq;
-		}
-
-		public short getBuildMissionCount() {
-			return buildMissionCount;
-		}
-
-		public short getFlagCampaignStart() {
-			return flagCampaignStart;
-		}
-
-		public void setHercId(short hercId) {
-			this.hercId = hercId;
-		}
-
-		public void setWeight(short weight) {
-			this.weight = weight;
-		}
-
-		public void setSpeed(short speed) {
-			this.speed = speed;
-		}
-
-		public void setHardpointTotal(short hardpointTotal) {
-			this.hardpointTotal = hardpointTotal;
-		}
-
-		public void setSalvageReq(short salvageReq) {
-			this.salvageReq = salvageReq;
-		}
-
-		public void setBuildMissionCount(short buildMissionCount) {
-			this.buildMissionCount = buildMissionCount;
-		}
-
-		public void setFlagCampaignStart(short flagCampaignStart) {
-			this.flagCampaignStart = flagCampaignStart;
-		}
+		this.totalHercs= (short) totalHercs;
+		data = new HercInfEntry[totalHercs];
 	}
 
 	public short getTotalHercs() {
 		return totalHercs;
 	}
 
-	public Entry[] getData() {
+	public HercInfEntry[] getData() {
 		return data;
 	}
 
@@ -108,7 +41,7 @@ public class HercInf extends DataFile{
 		this.totalHercs = totalHercs;
 	}
 
-	public void setData(Entry[] data) {
+	public void setData(HercInfEntry[] data) {
 		this.data = data;
 	}
 }

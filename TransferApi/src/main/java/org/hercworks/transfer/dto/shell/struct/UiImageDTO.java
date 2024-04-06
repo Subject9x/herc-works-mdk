@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("")
 public class UiImageDTO {
 	
+	@JsonProperty(value = "id", index = 1)
+	private short id;
+	
 	@JsonProperty(value = "x", index = 2)
 	private int originX;
 	
@@ -22,6 +25,13 @@ public class UiImageDTO {
 	
 	public UiImageDTO() {}
 	
+	public short getId() {
+		return id;
+	}
+
+	public void setId(short id) {
+		this.id = id;
+	}
 
 	public int getOriginX() {
 		return originX;
