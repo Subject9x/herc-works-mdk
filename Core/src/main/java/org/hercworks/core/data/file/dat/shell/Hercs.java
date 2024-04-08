@@ -92,6 +92,10 @@ public class Hercs extends DataFile{
 			this.data = data;
 		}
 	}
+	
+	public Entry addEntry() {
+		return new Entry();
+	}
 
 	public short getTotal() {
 		return total;

@@ -13,7 +13,7 @@ import org.hercworks.voln.DataFile;
  *  	S0_2 - UINT16 - len of weapon name, null-terminated.
  *  	S0_4+ - STR - null terminated string.
  *      S0_4+Len - UINT16 - Salvage cost, game * 100 to convert from tons to Kgs.
- *      S0_4+Len+UINT16 - Byte - ? - unknown flag.
+ *      S0_4+Len+UINT16 - Byte - start campaign with this unlocked.
  *      S0_4+Len+UINT16+Byte - UINT16 - ? - unknown value
  *  
  *  0 + SEQ(len) - UINT16 - total campaign-start weapon inventory 
@@ -22,15 +22,15 @@ import org.hercworks.voln.DataFile;
  *      S1_2- UINT16 - weapon health as % in 100.
  *      S1_4- UINT16 - missile enum
  */
-public class Weapons extends DataFile{
+public class WeaponsDat extends DataFile{
 
 	private short totalCount;
-	
 	private Entry[] data;
-	
+	private short startWeaponTotal;
 	private UiWeaponEntry[] startingWeapons;
 	
-	public Weapons(int total) {
+	public WeaponsDat(int total) {
+		this.totalCount = (short)total;
 		data = new Entry[total];
 	}
 	
@@ -38,16 +38,13 @@ public class Weapons extends DataFile{
 		return totalCount;
 	}
 
-
 	public Entry[] getData() {
 		return data;
 	}
 
-
 	public void setTotalCount(short totalCount) {
 		this.totalCount = totalCount;
 	}
-
 
 	public void setData(Entry[] data) {
 		this.data = data;
@@ -60,17 +57,31 @@ public class Weapons extends DataFile{
 	public void setStartingWeapons(UiWeaponEntry[] startingWeapons) {
 		this.startingWeapons = startingWeapons;
 	}
+	
+	public short getStartWeaponTotal() {
+		return startWeaponTotal;
+	}
 
+	public void setStartWeaponTotal(short startWeaponTotal) {
+		this.startWeaponTotal = startWeaponTotal;
+	}
+
+	public Entry addEntry(int idx) {
+		Entry item = new Entry();
+		getData()[idx] = item;
+		return item;
+	}
+	
 	/**
 	 * 
 	 */
 	public class Entry{
 		
 		private short id;
-		private byte nameLen;
+		private short nameLen;
 		private String name;
 		private short salvageCost;	//* 100 to convert to tons
-		private byte unk1;
+		private byte startUnlock;
 		private short unk2;
 		
 		public Entry() {}
@@ -79,7 +90,7 @@ public class Weapons extends DataFile{
 			return id;
 		}
 
-		public byte getNameLen() {
+		public short getNameLen() {
 			return nameLen;
 		}
 
@@ -91,8 +102,8 @@ public class Weapons extends DataFile{
 			return salvageCost;
 		}
 
-		public byte getUnk1() {
-			return unk1;
+		public byte getStartUnlock() {
+			return startUnlock;
 		}
 
 		public short getUnk2() {
@@ -103,7 +114,7 @@ public class Weapons extends DataFile{
 			this.id = id;
 		}
 
-		public void setNameLen(byte nameLen) {
+		public void setNameLen(short nameLen) {
 			this.nameLen = nameLen;
 		}
 
@@ -115,8 +126,8 @@ public class Weapons extends DataFile{
 			this.salvageCost = salvageCost;
 		}
 
-		public void setUnk1(byte unk1) {
-			this.unk1 = unk1;
+		public void setStartUnlock(byte unk1) {
+			this.startUnlock = unk1;
 		}
 
 		public void setUnk2(short unk2) {

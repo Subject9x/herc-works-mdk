@@ -10,23 +10,25 @@ import java.util.Map;
  */
 public enum HercLUT {
 
-	OUTLAW((short)0, "Outlaw"),
-	RAPTOR_II((short)1, "Raptor_II"),
-	TOMAHAWK((short)2, "Tomahawk"),
-	SAMSON((short)3, "Samson"),
-	COLOSSUS((short)4, "Colossus"),
-	APOCALYPSE((short)5, "Apocalypse"),
-	OGRE((short)6, "Ogre"),
-	MAVERICK((short)7, "Maverick"),
-	RAZOR((short)8, "Razor");
+	OUTLAW((short)0, "Outlaw", (short)3),
+	RAPTOR_II((short)1, "Raptor_II", (short)5),
+	TOMAHAWK((short)2, "Tomahawk", (short)5),
+	SAMSON((short)3, "Samson", (short)8),
+	COLOSSUS((short)4, "Colossus",  (short)9),
+	APOCALYPSE((short)5, "Apocalypse",  (short)10),
+	OGRE((short)6, "Ogre",  (short)10),
+	MAVERICK((short)7, "Maverick", (short)4),
+	RAZOR((short)8, "Razor", (short)7);
 
 	private static final Map<Short,HercLUT> ENUM_MAP;
 	private String name;
 	private short id;
+	private short hardpointMax;
 	
-	private HercLUT(short id, String name) {
+	private HercLUT(short id, String name, short hardpointMax) {
 		this.name = name;
 		this.id = id;
+		this.hardpointMax = hardpointMax;
 	}
 
 	static {
