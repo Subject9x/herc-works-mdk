@@ -10,6 +10,7 @@ import org.hercworks.core.data.struct.vshell.hercs.UiHardpointGraphic;
 import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 
@@ -26,6 +27,8 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 
 		ArmHerc armData = new ArmHerc();
+		armData.setExt(FileType.DAT);
+		
 		
 		UiHardpointGraphic topHercImg = new UiHardpointGraphic();
 		armData.setTopImgArrId(indexShortLE());

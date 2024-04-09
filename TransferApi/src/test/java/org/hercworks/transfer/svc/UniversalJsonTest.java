@@ -11,17 +11,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.ArmWeap;
+import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
-import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
+import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
+import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.FileType;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class UniversalJsonTest {
 			Path resourceDirectory = Paths.get("src","test","resources");
 			String absolutePath = resourceDirectory.toFile().getAbsolutePath();
 			
-			File dat = new File(absolutePath + "/ARM_APOC.DAT");
+			File dat = new File(absolutePath + "/HERCS.DAT");
 //			
 			assertTrue(dat.exists());
 			assertTrue(!dat.isDirectory());
@@ -47,34 +48,33 @@ public class UniversalJsonTest {
 			byte[] bytes = fizz.readAllBytes();
 			fizz.close();
 //			
-			ArmHercTransformer armHercTransform = new ArmHercTransformer();
- 			ArmHerc armHercDat = (ArmHerc) armHercTransform.bytesToObject(bytes);
+			HercsStartTransformer hercsConvert = new HercsStartTransformer();
+			Hercs armHercDat = (Hercs) hercsConvert.bytesToObject(bytes);
 //			
 			assertNotNull(armHercDat);
 //			
-			armHercDat.setFileName("ARM_APOC");
+			armHercDat.setFileName("HERCS");
 			armHercDat.setExt(FileType.DAT);
 			armHercDat.setGameDirPath("/GAM/");
 //			
 //			
-			ArmHercDTOServiceImpl dtoSvc = new ArmHercDTOServiceImpl();
-//			
-			ArmHercDTO dto = dtoSvc.convertToDTO(armHercDat);
+			StartingHercsDTOService dtoSvc = new StartingHercsDTOServiceImpl();
+			StartHercsDTO dto = dtoSvc.convertToDTO(armHercDat);
 //			
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 			
-			File export = new File(resourceDirectory+ "/ARM_APOC.json" );
+			File export = new File(resourceDirectory+ "/HERCS.json" );
 			objectMapper.writeValue(export, dto);
 			
-			File exportBytes = new File(resourceDirectory+ "/ARM_APOC_2.DAT");
+			File exportBytes = new File(resourceDirectory+ "/HERCS.DAT");
 			
-			ArmHercDTO readDTO = (ArmHercDTO)objectMapper.readValue(export, ArmHercDTO.class);
+			StartHercsDTO readDTO = (StartHercsDTO)objectMapper.readValue(export, StartHercsDTO.class);
 			
 			armHercDat = dtoSvc.fromDTO(readDTO);
 			
 			FileOutputStream foss = new FileOutputStream(exportBytes);
-			foss.write(armHercTransform.objectToBytes(armHercDat));
+			foss.write(hercsConvert.objectToBytes(armHercDat));
 			foss.close();
 			
 		} catch (FileNotFoundException e) {

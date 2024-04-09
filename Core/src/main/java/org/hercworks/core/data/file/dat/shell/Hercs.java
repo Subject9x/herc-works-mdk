@@ -29,6 +29,8 @@ public class Hercs extends DataFile{
 	private short total;
 	private Entry[] data;
 	
+	public Hercs() {}
+	
 	public Hercs(short total) {
 		this.total = total;
 		this.data = new Entry[total];
