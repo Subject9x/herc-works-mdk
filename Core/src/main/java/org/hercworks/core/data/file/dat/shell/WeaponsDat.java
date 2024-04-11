@@ -79,7 +79,7 @@ public class WeaponsDat extends DataFile{
 		
 		private short id;
 		private short nameLen;
-		private String name;
+		private byte[] name;
 		private short salvageCost;	//* 100 to convert to tons
 		private byte startUnlock;
 		private short unk2;
@@ -94,7 +94,7 @@ public class WeaponsDat extends DataFile{
 			return nameLen;
 		}
 
-		public String getName() {
+		public byte[] getName() {
 			return name;
 		}
 
@@ -118,7 +118,7 @@ public class WeaponsDat extends DataFile{
 			this.nameLen = nameLen;
 		}
 
-		public void setName(String name) {
+		public void setName(byte[] name) {
 			this.name = name;
 		}
 

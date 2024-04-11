@@ -1,4 +1,4 @@
-package org.hercworks.core.vol.util;
+package org.hercworks.core.util;
 
 import java.nio.ByteOrder;
 

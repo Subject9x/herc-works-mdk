@@ -31,7 +31,7 @@ public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 			WeaponsDat.Entry entry = data.addEntry(i);
 			entry.setId(indexShortLE());
 			entry.setNameLen(indexShortLE());
-			entry.setName(new String(indexSegment(entry.getNameLen())));
+			entry.setName(indexSegment(entry.getNameLen()));
 			entry.setSalvageCost(indexShortLE());
 			entry.setStartUnlock(indexByte());
 			entry.setUnk2(indexShortLE());
@@ -64,7 +64,7 @@ public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 			
 			objectBytes.write(writeShortLE(entry.getId()));
 			objectBytes.write(writeShortLE(entry.getNameLen()));
-			objectBytes.write(entry.getName().getBytes());
+			objectBytes.write(entry.getName());
 			objectBytes.write(writeShortLE(entry.getSalvageCost()));
 			objectBytes.write(entry.getStartUnlock());
 			objectBytes.write(writeShortLE(entry.getUnk2()));

@@ -1,6 +1,6 @@
 package org.hercworks.core.data.struct.vshell.hercs;
 
-import org.hercworks.core.vol.util.ByteOps;
+import org.hercworks.core.util.ByteOps;
 
 /**
  * 	STRUCT

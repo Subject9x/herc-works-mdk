@@ -67,12 +67,12 @@ public class UniversalJsonTest {
 			File export = new File(resourceDirectory+ "/HERCS.json" );
 			objectMapper.writeValue(export, dto);
 			
-			File exportBytes = new File(resourceDirectory+ "/HERCS.DAT");
 			
 			StartHercsDTO readDTO = (StartHercsDTO)objectMapper.readValue(export, StartHercsDTO.class);
 			
 			armHercDat = dtoSvc.fromDTO(readDTO);
-			
+
+			File exportBytes = new File(resourceDirectory+ "/HERCS.DAT");
 			FileOutputStream foss = new FileOutputStream(exportBytes);
 			foss.write(hercsConvert.objectToBytes(armHercDat));
 			foss.close();

@@ -1,5 +1,6 @@
 package org.hercworks.transfer.svc.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
 import org.hercworks.transfer.dto.shell.struct.WeaponsDatItem;
 import org.hercworks.transfer.svc.WeaponsDatShellDTOService;
+import org.hercworks.voln.FileType;
+
+import at.favre.lib.bytes.Bytes;
 
 public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService {
 
@@ -25,8 +29,7 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 			WeaponsDat.Entry entry = source.getData()[i];
 			
 			item.setId(entry.getId());
-			String name = entry.getName();
-			name = name.substring(0, name.length() - 1);
+			String name = Bytes.from(entry.getName(), 0, entry.getNameLen()-1).encodeHex();
 			item.setName(name);
 			item.setSalvageCost(entry.getSalvageCost());
 			item.setStartUnlock(entry.getStartUnlock());
@@ -54,13 +57,16 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 	public WeaponsDat fromDTO(WeaponsDatDTO source) {
 		
 		WeaponsDat data = new WeaponsDat(source.getTotal());
+		
+		data.setExt(FileType.DAT);
+		
 		for(int i=0; i < source.getTotal(); i++) {
 			WeaponsDat.Entry entry = data.addEntry(i);
 			WeaponsDatItem item = source.getWeapons()[i];
 			
 			entry.setId(item.getId());
-			entry.setNameLen((byte)item.getName().length());
-			entry.setName(item.getName()+" ");
+			entry.setNameLen((byte)(item.getName().length()+1));
+			entry.setName(Bytes.from(item.getName().getBytes()).append((byte)0).array());
 			entry.setSalvageCost(item.getSalvageCost());
 			entry.setStartUnlock(item.getStartUnlock());
 			entry.setUnk2(item.getUnk2());
