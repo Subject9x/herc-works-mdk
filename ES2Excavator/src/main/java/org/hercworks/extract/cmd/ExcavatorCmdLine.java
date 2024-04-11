@@ -1,7 +1,7 @@
 package org.hercworks.extract.cmd;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -10,7 +10,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.hercworks.extract.exec.LoggingUtil;
+import org.hercworks.extract.util.FileItem;
 import org.hercworks.voln.FileType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /***
@@ -23,19 +26,25 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 	//consistent arg values.
 	public static enum OptionArgs{
 		
-		HELP("h"),
-		DBG("x"),
-		DPL("p"),
-		SRC("s");
+		HELP("h", "-h"),
+		DBG("x", "-x"),
+		DPL("p","-p"),
+		SRC("s", "-s");
 		
 		private String val;
+		private String arg;
 		
-		private OptionArgs(String val) {
+		private OptionArgs(String val, String arg) {
 			this.val = val;
+			this.arg = arg;
 		}
 		
 		public String val() {
 			return this.val;
+		}
+		
+		public String arg() {
+			return this.arg;
 		}
 	}
 	
@@ -44,13 +53,15 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 	private CommandLine cmdLine;
 	private CommandLineParser parser;
 	private Options options;
-	private Map<String, FileType> fileQueue;
+	private List<FileItem> fileQueue;
+	private List<String> optionArgs = new ArrayList<String>();	//populated by parsing via CommandLineParser
+	private ObjectMapper jsonMapper = new ObjectMapper();
 	
 	private ExcavatorCmdLine() {
 
 		this.parser = new DefaultParser();
 		this.options = new Options();
-		this.fileQueue = new HashMap<String, FileType>();
+		this.fileQueue = new ArrayList<FileItem>();
 		
 		this.options.addOption(OptionArgs.HELP.val(), "Display help options");
 		this.options.addOption(OptionArgs.DBG.val(), "Set log output to debug mode.");
@@ -65,10 +76,20 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 			
 			if(cmdLine.hasOption(OptionArgs.HELP.val())) {
 				printHelp();
+				optionArgs.add(OptionArgs.HELP.arg());
 			}
 			
 			if(cmdLine.hasOption(OptionArgs.DBG.val())) {
 				getLogger().setDebug(true);
+				optionArgs.add(OptionArgs.DBG.arg());
+			}
+			
+			if(cmdLine.hasOption(OptionArgs.DPL.val())) {
+				optionArgs.add(OptionArgs.DPL.arg());
+			}
+			
+			if(cmdLine.hasOption(OptionArgs.SRC.val())) {
+				optionArgs.add(OptionArgs.SRC.arg());
 			}
 			
 			getLogger().console("-------------------Active options-------------------");
@@ -82,16 +103,16 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 	}
 	
 	
-	public Map<String, FileType> parseFiles(String[] args) throws Exception{
+	public List<FileItem> parseFiles(String[] args) throws Exception{
 		if(args.length == 0) {
 			throw new NullPointerException("error: no files or arguments!");
 		}
 		
 		for(String arg : args) {
-			FileType t = checkFileTypes(arg);
-			if(t != null) {
-				fileQueue.put(arg, t);	
-			}
+			if(!optionArgs.contains(arg)) {
+				FileType t = checkFileTypes(arg);
+				fileQueue.add(new FileItem(arg, t));	
+			}	
 		}
 		
 		return fileQueue;
@@ -112,7 +133,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 		return null;
 	}
 	
-	public Map<String, FileType> getFileQueue(){
+	public List<FileItem> getFileQueue(){
 		return this.fileQueue;
 	}
 	
@@ -125,5 +146,9 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 			cmd = new ExcavatorCmdLine(); 
 		}
 		return cmd;
+	}
+	
+	public ObjectMapper getJsonMapper() {
+		return this.jsonMapper;
 	}
 }

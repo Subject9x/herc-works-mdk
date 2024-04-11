@@ -9,13 +9,14 @@
   <name>HercWorksUI</name>
   <description>GUI for Herc-Works</description>
   <packaging>jar</packaging>
+  <version>${es2.ui.version}</version>
   
   	<dependencies>
 		 
 		<dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>Core</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.core.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	

@@ -9,6 +9,7 @@
   <name>Data Transfer API</name>
   <description>wrapper library for core that exports/imports data to other modern formats.</description>
   <packaging>jar</packaging>
+  <version>${es2.transfr.version}</version>
   
 	<dependencies>
 	    <dependency>
@@ -21,7 +22,7 @@
 	    <dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>ES2Vol</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.vol.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -34,7 +35,7 @@
 		<dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>Core</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.core.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>

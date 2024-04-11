@@ -14,7 +14,12 @@
 	<url></url>
 
 	<properties>
-  	  	<revision>0.0.1</revision>
+		<revision>0.0.1</revision>
+  	  	<es2.vol.version>0.0.1</es2.vol.version>
+  	  	<es2.core.version>0.0.1</es2.core.version>
+  	  	<es2.transfr.version>0.01</es2.transfr.version>
+  	  	<es2.excavate.version>0.0.3</es2.excavate.version>
+  	  	<es2.ui.version>0.0.1</es2.ui.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>

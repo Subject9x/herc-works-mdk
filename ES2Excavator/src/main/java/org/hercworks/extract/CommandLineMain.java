@@ -1,18 +1,31 @@
 package org.hercworks.extract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
-import org.hercworks.voln.FileType;
+import org.hercworks.extract.exec.impl.DynamixFileProcessor;
+import org.hercworks.extract.exec.impl.JsonExportProcessor;
+import org.hercworks.extract.exec.impl.JsonImportProcessor;
+import org.hercworks.extract.util.FileItem;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
  */
-public class CommandLineMain {
+public final class CommandLineMain {
 	
 	public static ExcavatorCmdLine cmd  = ExcavatorCmdLine.cmd();
-	public static FileProcessor processor = FileProcessor.instance();
+	
+	public static DynamixFileProcessor dynamixFiles = new DynamixFileProcessor();
+	public static JsonImportProcessor jsonImportFiles = new JsonImportProcessor();
+	public static JsonExportProcessor jsonExportFiles = new JsonExportProcessor();
 	public static Logger log = Logger.getLogger();
+	
+	private static List<FileProcessor> processors  = new ArrayList<FileProcessor>();
 	
 	public static void main(String[] args) {
 		
@@ -22,7 +35,13 @@ public class CommandLineMain {
 			cmd.parseCommands(args);
 			cmd.parseFiles(args);
 			
-			processor.init(cmd, log);
+			dynamixFiles.init(cmd, log);
+			jsonImportFiles.init(cmd, log);
+			jsonExportFiles.init(cmd, log);
+			
+			processors.add(dynamixFiles);
+			processors.add(jsonImportFiles);
+			processors.add(jsonExportFiles);
 			
 			if(cmd.getFileQueue().isEmpty()) {
 				log.consoleDebug("No files passed in.");
@@ -30,20 +49,21 @@ public class CommandLineMain {
 				return;
 			}
 			
-			for(String path : cmd.getFileQueue().keySet()) {
-				if(cmd.getFileQueue().get(path).equals(FileType.VOL)) {
-					processor.unpackVolFile(path);
+			List<FileItem> skipList = new ArrayList<FileItem>();
+			for(FileItem file : cmd.getFileQueue()) {
+				if(!skipList.contains(file)) {
+					for(FileProcessor p : processors) {
+						if(p.filterFile(file)) {
+							skipList.add(file);
+						}
+					}
 				}
-				else if(cmd.getFileQueue().get(path).equals(FileType.DBA)
-						||cmd.getFileQueue().get(path).val().contains("db")
-						|| cmd.getFileQueue().get(path).val().contains("hb")) {
-					processor.unpackDBA(path);
-				}
-				else if(cmd.getFileQueue().get(path).equals(FileType.DPL)) {
-					processor.exportDPL(path);
-				}
-				else if(cmd.getFileQueue().get(path).equals(FileType.DBM)) {
-					processor.exportDBM(path);
+			}
+			skipList = null;
+			
+			for(FileProcessor p : processors) {
+				if(p.hasFiles()) {
+					p.processFiles();
 				}
 			}
 			

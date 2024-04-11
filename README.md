@@ -23,6 +23,10 @@ CLI tool for accessing specific files, and converting them out into workable for
 + DBA - unpack DynamixBitmapArrays to separate DBM files.
 + DBM - export DBA to colorized png when provided a DPL file.
 + DPL - exports to a png image of colors in a grid.
++ SHELL/GAM/WEAPONS.DAT - import/export to JSON files more modding.
++ SHELL/GAM/HERCS.DAT - import/export to JSON files more modding.
++ SHELL/GAM/HERC_INF.DAT - import/export to JSON files more modding.
++ SHELL/GAM/ARM_[herc].DAT - import/export to JSON files more modding.
 
 ### HercWorksUI
 Will start later.

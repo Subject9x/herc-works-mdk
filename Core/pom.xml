@@ -11,6 +11,7 @@
   <name>HercWorksCore</name>
   <description>Core api and data structures for interacting with ES2 assets.</description>
   <packaging>jar</packaging>
+  <version>${es2.core.version}</version>
   
   <dependencies>
     <dependency>
@@ -30,7 +31,7 @@
 	<dependency>
 		<groupId>org.hercworks</groupId>
 		<artifactId>ES2Vol</artifactId>
-		<version>0.0.1</version>
+		<version>${es2.vol.version}</version>
 		<scope>compile</scope>
 		<exclusions>
 			<exclusion>

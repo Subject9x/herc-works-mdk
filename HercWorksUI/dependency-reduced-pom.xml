@@ -8,6 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>HercWorksUI</artifactId>
   <name>HercWorksUI</name>
+  <version>${es2.ui.version}</version>
   <description>GUI for Herc-Works</description>
   <build>
     <plugins>

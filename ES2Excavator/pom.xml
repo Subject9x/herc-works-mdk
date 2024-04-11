@@ -12,7 +12,8 @@
 	<description>command-line tool for unpacking ES2 archive formats; vol, dba,
 		dat, etc.</description>
 	<packaging>jar</packaging>
-
+  	<version>${es2.excavate.version}</version>
+	
 	<dependencies>
 		<dependency>
 		  <groupId>commons-cli</groupId>
@@ -24,16 +25,14 @@
 		<dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>ES2Vol</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.vol.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-			</exclusions>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>Core</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.core.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -50,7 +49,7 @@
 		<dependency>
 			<groupId>org.hercworks</groupId>
 			<artifactId>TransferApi</artifactId>
-			<version>0.0.1</version>
+			<version>${es2.transfr.version}</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -59,6 +58,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+	    <dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>4.9</version>
+	      <scope>test</scope>
+	    </dependency>
 		
 	</dependencies>
 
@@ -73,6 +79,21 @@
 			https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
+		        <version>3.3.1</version>
+		        <executions>
+					<execution>
+						<phase>generate-test-resources</phase>
+						<configuration>
+					<outputDirectory>${basedir}/target/classes</outputDirectory>
+					<resources>
+						<resource>		
+							<directory>src/test/resources</directory>
+							<filtering>false</filtering>
+						</resource>
+					</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

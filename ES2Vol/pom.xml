@@ -11,6 +11,7 @@
 	<name>ThreeSpace2Vol</name>
 	<description>ThreeSpace vol I/O library.</description>
 	<packaging>jar</packaging>
+  	<version>${es2.vol.version}</version>
 
 
 	<dependencies>
