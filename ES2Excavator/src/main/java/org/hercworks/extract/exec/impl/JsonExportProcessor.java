@@ -7,11 +7,16 @@ import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.ArmWeap;
 import org.hercworks.core.data.file.dat.shell.HercInf;
 import org.hercworks.core.data.file.dat.shell.Hercs;
+import org.hercworks.core.data.file.dat.shell.InitHerc;
+import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
+import org.hercworks.core.io.transform.shell.InitHercTransformer;
+import org.hercworks.core.io.transform.shell.TrainingHercsTransform;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
@@ -19,21 +24,23 @@ import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.util.FileItem;
 import org.hercworks.extract.util.FileMatch;
+import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
+import org.hercworks.transfer.dto.file.shell.InitHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
+import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.ArmHercDTOService;
-import org.hercworks.transfer.svc.ArmWeapDTOService;
-import org.hercworks.transfer.svc.HercInfDTOService;
-import org.hercworks.transfer.svc.StartingHercsDTOService;
-import org.hercworks.transfer.svc.WeaponsDatShellDTOService;
+import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
+import org.hercworks.voln.DataFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -78,31 +85,31 @@ public class JsonExportProcessor extends FileProcessor{
 						
 			switch(match) {
 				case WEAPONS:
-					exportWeaponsDat(file.getName());
+					exportJson(file.getName(), new WeaponsDatTransformer(), WeaponsDat.class, new WeaponsDatShellDTOServiceImpl(), WeaponsDatDTO.class);
 					break;
 				case ARM_HERC:
-					exportArmHerc(file.getName());
+					exportJson(file.getName(), new ArmHercTransformer(), ArmHerc.class, new ArmHercDTOServiceImpl(), ArmHercDTO.class);
 					break;
 				case ARM_WEAP:
-					exportArmWeap(file.getName());
+					exportJson(file.getName(), new ArmWeapTransformer(), ArmWeap.class, new ArmWeapDTOServiceImpl(), ArmWeapDTO.class);
 					break;
 				case RPR_HERC:
 					
 					break;
 				case INI_HERC:
-					
+					exportJson(file.getName(), new InitHercTransformer(), InitHerc.class, new InitHercDTOServiceImpl(), InitHercDTO.class);
 					break;
 				case HERCS:
-					exportHercsDat(file.getName());
+					exportJson(file.getName(), new  HercsStartTransformer(), Hercs.class, new StartingHercsDTOServiceImpl(), StartHercsDTO.class);
 					break;
 				case HERC_INF:
-					exportHercInf(file.getName());
+					exportJson(file.getName(), new  HercInfoTransformer(), HercInf.class, new HercInfoDTOServiceImpl(), HercInfDTO.class);
 					break;
 				case CAREER:
 					
 					break;
 				case TRAINING_HERCS:
-					
+					exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
 					break;
 				default:
 					break;
@@ -110,24 +117,23 @@ public class JsonExportProcessor extends FileProcessor{
 		}
 	}
 
-	public void exportWeaponsDat(String file) {
+	public void exportJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
 		try {
-			getLogger().console("--------------------------EXPORTING /GAM/WEAPONS.DAT-----------------------------------");
+			getLogger().console("--------------------------EXPORTING " + file + " -----------------------------------");
 			
-			WeaponsDatTransformer weaponsConvert = new WeaponsDatTransformer();
-			WeaponsDat weapons = (WeaponsDat)weaponsConvert.bytesToObject(loadFileBytes(getAppPath() + file));
+			DataFile exportDat = transformerClass.bytesToObject(loadFileBytes(getAppPath() + file));
+			exportDat = dataClass.cast(exportDat);
 			
-			
-			if(weapons == null) {
+			if(exportDat == null) {
 				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
 			}
 			
-			weapons.setFileName(getCleanFileName(fileNoExt(file)));
+			((DataFile)exportDat).setFileName(getCleanFileName(fileNoExt(file)));
 			
 			String targDirPath = null;
 			if(cmdLine.checkOption(OptionArgs.SRC)) {
 				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				weapons.assignDir(getAppPath());
+				((DataFile)exportDat).assignDir(getAppPath());
 				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
 			}
 			else {
@@ -138,174 +144,21 @@ public class JsonExportProcessor extends FileProcessor{
 				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
 			}
 
-			WeaponsDatShellDTOService dtoService = new WeaponsDatShellDTOServiceImpl();
-			WeaponsDatDTO dto = dtoService.convertToDTO(weapons);
+			Object dto = dtoService.convertToDTO(((DataFile)exportDat));
 			
-			File json = new File(targDirPath + "/" + weapons.getFileName() + ".json");
+			dto = dtoClass.cast(dto);
+			
+
+			File json = new File(targDirPath + "/" + ((DataFile)exportDat).getFileName() + ".json");
 			json.setWritable(true);
 			objectMapper.writeValue(json, dto);
-			
+//			
 			
 		} catch(Exception e) {
 			getLogger().console(e.getMessage());
+			return;
 		}
-	}
-
-	public void exportArmHerc(String file) {
-		try {
-			getLogger().console("--------------------------EXPORTING /GAM/ARM_<herc>.DAT-----------------------------------");
-			
-			ArmHercTransformer armHercTransform = new ArmHercTransformer();
-			ArmHerc armHerc = (ArmHerc)armHercTransform.bytesToObject(loadFileBytes(getAppPath() + file));
-			
-			if(armHerc == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			armHerc.setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				armHerc.assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			ArmHercDTOService dtoService = new ArmHercDTOServiceImpl();
-			ArmHercDTO dto = dtoService.convertToDTO(armHerc);
-			
-			File json = new File(targDirPath + "/" + armHerc.getFileName() + ".json");
-			json.setWritable(true);
-			objectMapper.writeValue(json, dto);
-			
-			
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
-		}
-	}
-
-	public void exportHercInf(String file) {
-		try {
-			getLogger().console("------------------------EXPORTING /GAM/HERC_INF.DAT-----------------------------------");
-			
-			HercInfoTransformer transformer = new HercInfoTransformer();
-			HercInf hercInf = (HercInf)transformer.bytesToObject(loadFileBytes(getAppPath() + file));
-			
-			if(hercInf == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			hercInf.setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				hercInf.assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			HercInfDTOService dtoService = new HercInfoDTOServiceImpl();
-			HercInfDTO dto = dtoService.convertToDTO(hercInf);
-			
-			File json = new File(targDirPath + "/" + hercInf.getFileName() + ".json");
-			json.setWritable(true);
-			objectMapper.writeValue(json, dto);
-			
-			
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
-		}
-	}
-	
-	public void exportHercsDat(String file) {
-		try {
-			getLogger().console("------------------------EXPORTING /GAM/HERCS.DAT-----------------------------------");
-			
-			HercsStartTransformer transformer = new HercsStartTransformer();
-			Hercs data = (Hercs)transformer.bytesToObject(loadFileBytes(getAppPath() + file));
-			
-			if(data == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			data.setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				data.assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			StartingHercsDTOService dtoService = new StartingHercsDTOServiceImpl();
-			StartHercsDTO dto = dtoService.convertToDTO(data);
-			
-			File json = new File(targDirPath + "/" + data.getFileName() + ".json");
-			json.setWritable(true);
-			objectMapper.writeValue(json, dto);
-			
-			
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
-		}
-	}
-	
-	public void exportArmWeap(String file) {
-		try {
-			getLogger().console("------------------------EXPORTING /GAM/ARM_WEAP.DAT-----------------------------------");
-			
-			ArmWeapTransformer transformer = new ArmWeapTransformer();
-			ArmWeap data = (ArmWeap)transformer.bytesToObject(loadFileBytes(getAppPath() + file));
-			
-			if(data == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			data.setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				data.assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			ArmWeapDTOService dtoService = new ArmWeapDTOServiceImpl();
-			ArmWeapDTO dto = dtoService.convertToDTO(data);
-			
-			File json = new File(targDirPath + "/" + data.getFileName() + ".json");
-			json.setWritable(true);
-			objectMapper.writeValue(json, dto);
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
-		}
+		getLogger().console("+ Write complete.");
+		getLogger().console("------------------------------------------------------------------------------------");
 	}
 }

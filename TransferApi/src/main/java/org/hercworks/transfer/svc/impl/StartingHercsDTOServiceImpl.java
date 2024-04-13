@@ -1,77 +1,95 @@
 package org.hercworks.transfer.svc.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.struct.HercLUT;
 import org.hercworks.core.data.struct.WeaponLUT;
+import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
+import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.shell.struct.HercHardpointDTO;
+import org.hercworks.transfer.dto.shell.struct.ShellHercDTO;
 import org.hercworks.transfer.dto.shell.struct.StartHercsEntryDTO;
-import org.hercworks.transfer.svc.StartingHercsDTOService;
+import org.hercworks.transfer.svc.GeneralDTOService;
+import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
-public class StartingHercsDTOServiceImpl implements StartingHercsDTOService{
+public class StartingHercsDTOServiceImpl implements GeneralDTOService{
 
 	@Override
-	public StartHercsDTO convertToDTO(Hercs source) {
+	public TransferObject convertToDTO(DataFile source) {
+		
+		Hercs srcData = (Hercs)source;
 		
 		StartHercsDTO dto = new StartHercsDTO();
 		
 		List<StartHercsEntryDTO> hercs = new ArrayList<StartHercsEntryDTO>();
-		for(int i=0; i < source.getTotal(); i++) {
-			Hercs.Entry entry = source.getData()[(short)i];
+		for(int i=0; i < srcData.getData().length; i++) {
+			Hercs.Entry entry = srcData.getData()[i];
 			
-			StartHercsEntryDTO herc = new StartHercsEntryDTO(entry.getHardpointCount());
-			herc.setBayId(entry.getBayId());
-			herc.setBuildCompleteLevel(entry.getBuildCompleteLevel());
-			herc.setHealthRatio(entry.getHealthRatio());
-			herc.setHercId(HercLUT.getById(entry.getHercId()));
+			StartHercsEntryDTO hercStartEntry = new StartHercsEntryDTO();
+			ShellHercDTO hercDTO = new ShellHercDTO();
 			
-			for(int h=0; h < entry.getHardpointCount(); h++) {
-				UiWeaponEntry item = entry.getData().get((short)h);
-				
+			hercStartEntry.setBayId(entry.getBayId());
+			hercDTO.setHercId(HercLUT.getById(entry.getHerc().getHercId()));
+			hercDTO.setBuildCompleteLevel(entry.getHerc().getBuildCompleteLevel());
+			hercDTO.setHealthRatio(entry.getHerc().getHealthRatio());
+			
+			HercHardpointDTO[] hardpoints = new HercHardpointDTO[entry.getHerc().getHardpoints().size()];
+			
+			for(int h=0; h < entry.getHerc().getHardpoints().size(); h++) {
+				UiWeaponEntry item = entry.getHerc().getHardpoints().get((short)h);
 				HercHardpointDTO slot = new HercHardpointDTO();
+				
 				slot.setHardpoint((short)h);
 				slot.setItem(WeaponLUT.getById(item.getItemId()));
 				slot.setHealthPercent(item.getHealthPercent());
 				slot.setMissileNum(item.getMissileEnum());
-				herc.getHardpoints()[h] = slot;
+				hardpoints[h] = slot;
 			}
-			hercs.add(herc);
+			hercDTO.setHardpoints(hardpoints);
+			hercStartEntry.setHerc(hercDTO);
+			hercs.add(hercStartEntry);
 		}
 		dto.setHercs(hercs);
 		return dto;
 	}
 
 	@Override
-	public Hercs fromDTO(StartHercsDTO source) {
+	public DataFile fromDTO(TransferObject source) {
 		
-		Hercs object = new Hercs((short)source.getHercs().size());
+		StartHercsDTO srcData = (StartHercsDTO)source;
 		
-		for(int i=0; i < source.getHercs().size(); i++) {
-			StartHercsEntryDTO dtoHerc = source.getHercs().get(i);
+		Hercs object = new Hercs((short)srcData.getHercs().size());
+		object.setExt(FileType.DAT);
+		
+		for(int i=0; i < srcData.getHercs().size(); i++) {
+			StartHercsEntryDTO dtoHerc = srcData.getHercs().get(i);
 			
-			Hercs.Entry herc = object.addEntry();
-			herc.setBayId(dtoHerc.getBayId());
-			herc.setBuildCompleteLevel(dtoHerc.getBuildCompleteLevel());
-			herc.setHealthRatio(dtoHerc.getHealthRatio());
-			herc.setHercId(dtoHerc.getHercId().getId());
-			herc.setHardpointCount((short)dtoHerc.getHardpoints().length);
+			Hercs.Entry hercsEntry = object.addEntry();
+			hercsEntry.setHerc(new ShellHercData());
 			
-			for(int h=0; h < dtoHerc.getHardpoints().length; h++) {
-				HercHardpointDTO dtoSlot = dtoHerc.getHardpoints()[h];
+			hercsEntry.setBayId(dtoHerc.getBayId());
+			hercsEntry.getHerc().setHercId(dtoHerc.getHerc().getHercId().getId());
+			hercsEntry.getHerc().setHealthRatio(dtoHerc.getHerc().getHealthRatio());
+			hercsEntry.getHerc().setBuildCompleteLevel(dtoHerc.getHerc().getBuildCompleteLevel());
+			hercsEntry.getHerc().setHardpoints(new LinkedHashMap<Short, UiWeaponEntry>());
+			
+			for(int h=0; h < dtoHerc.getHerc().getHardpoints().length; h++) {
+				HercHardpointDTO dtoSlot = dtoHerc.getHerc().getHardpoints()[h];
 				
 				UiWeaponEntry item = new UiWeaponEntry();
 				item.setItemId((short)dtoSlot.getItem().getId());
 				item.setHealthPercent(dtoSlot.getHealthPercent());
 				item.setMissileEnum(dtoSlot.getMissileNum());
 				
-				herc.getData().put((short)h, item);
+				hercsEntry.getHerc().getHardpoints().put((short)h, item);
 			}
-			
-			object.getData()[(short)i] = herc;
+			object.getData()[(short)i] = hercsEntry;
 		}
 		
 		return object;

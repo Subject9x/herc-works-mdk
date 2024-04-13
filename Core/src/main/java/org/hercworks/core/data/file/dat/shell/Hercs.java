@@ -1,8 +1,6 @@
 package org.hercworks.core.data.file.dat.shell;
 
-import java.util.LinkedHashMap;
-
-import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
+import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.voln.DataFile;
 
 
@@ -11,6 +9,9 @@ import org.hercworks.voln.DataFile;
  * 		/SHELL/GAM/HERCS.DAT
  * 	
  * 	most likely sets player's starting herc list when a new campaign is started.
+ * 
+ * 	It's a collection of {@linkplain ShellHercData}
+ * 
  *  0- UINT16 - total hercs
  *  SEQ0 - herc count
  *  	S0_0- UINT16 - bayId
@@ -26,23 +27,17 @@ import org.hercworks.voln.DataFile;
  */
 public class Hercs extends DataFile{
 
-	private short total;
 	private Entry[] data;
 	
 	public Hercs() {}
 	
 	public Hercs(short total) {
-		this.total = total;
 		this.data = new Entry[total];
 	}
 	
 	public class Entry{
 		private short bayId;
-		private short hercId;
-		private short healthRatio;
-		private short buildCompleteLevel;
-		private short hardpointCount;
-		private LinkedHashMap<Short, UiWeaponEntry> data;
+		private ShellHercData herc;
 		
 		public Entry() {}
 
@@ -50,48 +45,16 @@ public class Hercs extends DataFile{
 			return bayId;
 		}
 
-		public short getHercId() {
-			return hercId;
-		}
-
-		public short getHealthRatio() {
-			return healthRatio;
-		}
-
-		public short getBuildCompleteLevel() {
-			return buildCompleteLevel;
-		}
-
-		public short getHardpointCount() {
-			return hardpointCount;
-		}
-
-		public LinkedHashMap<Short, UiWeaponEntry> getData() {
-			return data;
-		}
-
 		public void setBayId(short bayId) {
 			this.bayId = bayId;
 		}
 
-		public void setHercId(short hercId) {
-			this.hercId = hercId;
+		public ShellHercData getHerc() {
+			return herc;
 		}
 
-		public void setHealthRatio(short healthRatio) {
-			this.healthRatio = healthRatio;
-		}
-
-		public void setBuildCompleteLevel(short buildCompleteLevel) {
-			this.buildCompleteLevel = buildCompleteLevel;
-		}
-
-		public void setHardpointCount(short hardpointCount) {
-			this.hardpointCount = hardpointCount;
-		}
-
-		public void setData(LinkedHashMap<Short, UiWeaponEntry> data) {
-			this.data = data;
+		public void setHerc(ShellHercData herc) {
+			this.herc = herc;
 		}
 	}
 	
@@ -99,16 +62,8 @@ public class Hercs extends DataFile{
 		return new Entry();
 	}
 
-	public short getTotal() {
-		return total;
-	}
-
 	public Entry[] getData() {
 		return data;
-	}
-
-	public void setTotal(short total) {
-		this.total = total;
 	}
 
 	public void setData(Entry[] data) {

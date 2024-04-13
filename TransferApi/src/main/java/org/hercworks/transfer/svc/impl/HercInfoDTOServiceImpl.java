@@ -3,21 +3,25 @@ package org.hercworks.transfer.svc.impl;
 import org.hercworks.core.data.file.dat.shell.HercInf;
 import org.hercworks.core.data.struct.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.HercInfEntry;
+import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
 import org.hercworks.transfer.dto.shell.struct.HercInfoDTOEntry;
-import org.hercworks.transfer.svc.HercInfDTOService;
+import org.hercworks.transfer.svc.GeneralDTOService;
+import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
 
 
-public class HercInfoDTOServiceImpl implements HercInfDTOService{
+public class HercInfoDTOServiceImpl implements GeneralDTOService{
 
 	@Override
-	public HercInfDTO convertToDTO(HercInf source) {
+	public TransferObject convertToDTO(DataFile source) {
 		
-		HercInfDTO dto =  new HercInfDTO(source.getTotalHercs());
+		HercInf srcData = (HercInf)source;
 		
-		for(short i=0; i < source.getData().length; i++) {
-			HercInfEntry item = source.getData()[i];
+		HercInfDTO dto =  new HercInfDTO(srcData.getTotalHercs());
+		
+		for(short i=0; i < srcData.getData().length; i++) {
+			HercInfEntry item = srcData.getData()[i];
 			HercInfoDTOEntry entry = dto.newEntry();
 			entry.setHercId(item.getHercId());
 			entry.setHercName(HercLUT.getById(item.getHercId()));
@@ -34,13 +38,15 @@ public class HercInfoDTOServiceImpl implements HercInfDTOService{
 	}
 
 	@Override
-	public HercInf fromDTO(HercInfDTO source) {
+	public DataFile fromDTO(TransferObject source) {
 		
-		HercInf hercInf = new HercInf(source.getTotalHercs());
+		HercInfDTO srcData = (HercInfDTO)source;
+		
+		HercInf hercInf = new HercInf(srcData.getTotalHercs());
 		hercInf.setExt(FileType.DAT);
 		
-		for(short i=0; i < source.getTotalHercs(); i+=(short)1) {
-			HercInfoDTOEntry item = source.getData()[i];
+		for(short i=0; i < srcData.getTotalHercs(); i+=(short)1) {
+			HercInfoDTOEntry item = srcData.getData()[i];
 			HercInfEntry entry = new HercInfEntry();
 			entry.setHercId(item.getHercId());
 			entry.setWeight(item.getWeight());

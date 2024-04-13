@@ -17,7 +17,6 @@ import org.hercworks.core.data.file.dat.shell.WeaponsDat;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
-import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
@@ -58,8 +57,8 @@ public class UniversalJsonTest {
 			armHercDat.setGameDirPath("/GAM/");
 //			
 //			
-			StartingHercsDTOService dtoSvc = new StartingHercsDTOServiceImpl();
-			StartHercsDTO dto = dtoSvc.convertToDTO(armHercDat);
+			GeneralDTOService dtoSvc = new StartingHercsDTOServiceImpl();
+			StartHercsDTO dto = (StartHercsDTO)dtoSvc.convertToDTO(armHercDat);
 //			
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -70,7 +69,7 @@ public class UniversalJsonTest {
 			
 			StartHercsDTO readDTO = (StartHercsDTO)objectMapper.readValue(export, StartHercsDTO.class);
 			
-			armHercDat = dtoSvc.fromDTO(readDTO);
+			armHercDat = (Hercs)dtoSvc.fromDTO(readDTO);
 
 			File exportBytes = new File(resourceDirectory+ "/HERCS.DAT");
 			FileOutputStream foss = new FileOutputStream(exportBytes);
@@ -115,9 +114,9 @@ public class UniversalJsonTest {
 			data.setGameDirPath("/GAM/");
 //			
 //			
-			ArmWeapDTOService dtoSvc = new ArmWeapDTOServiceImpl();
+			GeneralDTOService dtoSvc = new ArmWeapDTOServiceImpl();
 //			
-			ArmWeapDTO dto = dtoSvc.convertToDTO(data);
+			ArmWeapDTO dto = (ArmWeapDTO)dtoSvc.convertToDTO(data);
 //			
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -129,7 +128,7 @@ public class UniversalJsonTest {
 			
 			ArmWeapDTO readDTO = (ArmWeapDTO)objectMapper.readValue(export, ArmWeapDTO.class);
 			
-			data = dtoSvc.fromDTO(readDTO);
+			data = (ArmWeap)dtoSvc.fromDTO(readDTO);
 			
 			FileOutputStream foss = new FileOutputStream(exportBytes);
 			foss.write(transform.objectToBytes(data));
@@ -169,8 +168,8 @@ public class UniversalJsonTest {
 			assertNotNull(data);
 			data.setGameDirPath("/GAM/");
 			
-			WeaponsDatShellDTOService dtoSvc = new WeaponsDatShellDTOServiceImpl();
-			WeaponsDatDTO dto = dtoSvc.convertToDTO(data);
+			GeneralDTOService dtoSvc = new WeaponsDatShellDTOServiceImpl();
+			WeaponsDatDTO dto = (WeaponsDatDTO)dtoSvc.convertToDTO(data);
 //			
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -182,7 +181,7 @@ public class UniversalJsonTest {
 			
 			WeaponsDatDTO readDTO = (WeaponsDatDTO)objectMapper.readValue(export, WeaponsDatDTO.class);
 			
-			data = dtoSvc.fromDTO(readDTO);
+			data = (WeaponsDat)dtoSvc.fromDTO(readDTO);
 			
 			FileOutputStream foss = new FileOutputStream(exportBytes);
 			foss.write(transform.objectToBytes(data));

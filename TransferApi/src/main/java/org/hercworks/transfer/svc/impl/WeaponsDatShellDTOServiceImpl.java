@@ -1,35 +1,38 @@
 package org.hercworks.transfer.svc.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
+import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
 import org.hercworks.transfer.dto.shell.struct.WeaponsDatItem;
-import org.hercworks.transfer.svc.WeaponsDatShellDTOService;
+import org.hercworks.transfer.svc.GeneralDTOService;
+import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
-public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService {
+public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 
 	@Override
-	public WeaponsDatDTO convertToDTO(WeaponsDat source) {
+	public TransferObject convertToDTO(DataFile source) {
+		
+		WeaponsDat srcData = (WeaponsDat)source;
 		
 		WeaponsDatDTO dto = new WeaponsDatDTO();
 		
-		dto.setTotal(source.getTotalCount());
+		dto.setTotal(srcData.getTotalCount());
 		
-		WeaponsDatItem[] entries = new WeaponsDatItem[source.getTotalCount()];
-		for(int i=0; i < source.getTotalCount(); i++) {
+		WeaponsDatItem[] entries = new WeaponsDatItem[srcData.getTotalCount()];
+		for(int i=0; i < srcData.getTotalCount(); i++) {
 			WeaponsDatItem item = new WeaponsDatItem();
-			WeaponsDat.Entry entry = source.getData()[i];
+			WeaponsDat.Entry entry = srcData.getData()[i];
 			
 			item.setId(entry.getId());
-			String name = Bytes.from(entry.getName(), 0, entry.getNameLen()-1).encodeHex();
+			String name = new String(Bytes.from(entry.getName(), 0, entry.getNameLen()-1).array());
 			item.setName(name);
 			item.setSalvageCost(entry.getSalvageCost());
 			item.setStartUnlock(entry.getStartUnlock());
@@ -39,8 +42,8 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 		dto.setWeapons(entries);
 		
 		List<String[]> startList = new ArrayList<String[]>();
-		for(int i=0; i < source.getStartWeaponTotal(); i++) {
-			UiWeaponEntry entry = source.getStartingWeapons()[i];
+		for(int i=0; i < srcData.getStartWeaponTotal(); i++) {
+			UiWeaponEntry entry = srcData.getStartingWeapons()[i];
 			
 			String[] line = new String[3];
 			line[0] = WeaponLUT.getById(entry.getItemId()).getName();
@@ -54,15 +57,17 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 	}
 
 	@Override
-	public WeaponsDat fromDTO(WeaponsDatDTO source) {
+	public DataFile fromDTO(TransferObject source) {
 		
-		WeaponsDat data = new WeaponsDat(source.getTotal());
+		WeaponsDatDTO srcDto = (WeaponsDatDTO)source;
+		
+		WeaponsDat data = new WeaponsDat(srcDto.getTotal());
 		
 		data.setExt(FileType.DAT);
 		
-		for(int i=0; i < source.getTotal(); i++) {
+		for(int i=0; i < srcDto.getTotal(); i++) {
 			WeaponsDat.Entry entry = data.addEntry(i);
-			WeaponsDatItem item = source.getWeapons()[i];
+			WeaponsDatItem item = srcDto.getWeapons()[i];
 			
 			entry.setId(item.getId());
 			entry.setNameLen((byte)(item.getName().length()+1));
@@ -72,9 +77,9 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 			entry.setUnk2(item.getUnk2());
 		}
 		
-		data.setStartingWeapons(new UiWeaponEntry[source.getStartingList().size()]);
-		for(int i=0; i < source.getStartingList().size(); i++) {
-			String[] line = source.getStartingList().get(i);
+		data.setStartingWeapons(new UiWeaponEntry[srcDto.getStartingList().size()]);
+		for(int i=0; i < srcDto.getStartingList().size(); i++) {
+			String[] line = srcDto.getStartingList().get(i);
 			
 			UiWeaponEntry entry = new UiWeaponEntry();
 			
@@ -85,7 +90,7 @@ public class WeaponsDatShellDTOServiceImpl implements WeaponsDatShellDTOService 
 			data.getStartingWeapons()[i] = entry;
 		}
 
-		data.setStartWeaponTotal((short)source.getStartingList().size());
+		data.setStartWeaponTotal((short)srcDto.getStartingList().size());
 		return data;
 	}
 

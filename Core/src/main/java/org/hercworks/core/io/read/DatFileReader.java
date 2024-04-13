@@ -1,8 +1,11 @@
 package org.hercworks.core.io.read;
 
 import java.nio.ByteOrder;
+import java.util.LinkedHashMap;
 
 import org.hercworks.core.data.file.dat.shell.InitHerc;
+import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
+import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.VolEntry;
 
@@ -36,30 +39,36 @@ public final class DatFileReader {
 		byte[] data = iniStats.getRawBytes();
 		int cursor = 0;
 		
-		iniStats.setHercId(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+		iniStats.setData(new ShellHercData());
+		
+		iniStats.getData().setHercId(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		cursor +=2;
 
-		iniStats.setUnknown2_100(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN));
-		cursor +=4;	//acounts for 2-byte spacer(assumed)
-		
-		//WARN: this does not sync up to herc's total hardpoint....so we will have to figure out why
-		iniStats.setHardpointCount(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+		iniStats.getData().setHealthRatio(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		cursor +=2;
 		
-		iniStats.initHardpoints();
+		iniStats.getData().setBuildCompleteLevel(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+		cursor +=2;
+		
+		//WARN: this does not sync up to herc's total hardpoint....so we will have to figure out why
+		short activeHardpoints = Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort();
+		cursor +=2;
+		
+		iniStats.getData().setHardpoints(new LinkedHashMap<Short, UiWeaponEntry>());
 		
 		for(int i=cursor; i < iniStats.getRawBytes().length; i+=2) {
 			
-			InitHerc.Hardpoint hardpoint = iniStats.addHardpoint(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+			short id = Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort();
+			UiWeaponEntry hardpoint = new UiWeaponEntry();
 			i += 2;
 			
-			hardpoint.setUint16_1(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+			hardpoint.setItemId(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 			i += 2;
 			
-			hardpoint.setUint16_2(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+			hardpoint.setHealthPercent(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 			i += 2;
 			
-			hardpoint.setUint16_3(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+			hardpoint.setMissileEnum(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 		}
 		
 		return iniStats;

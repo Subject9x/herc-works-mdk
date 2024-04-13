@@ -17,7 +17,7 @@ public enum FileMatch {
 	HERCS("HERCS"),
 	HERC_INF("HERC_INF"),
 	CAREER("CAREER"),
-	TRAINING_HERCS("TRN_HERCS");
+	TRAINING_HERCS("TRN_HERC");
 	
 	private String namePattern;
 	private static final Map<String,FileMatch> ENUM_MAP;

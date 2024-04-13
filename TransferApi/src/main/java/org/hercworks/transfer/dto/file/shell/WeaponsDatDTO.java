@@ -2,13 +2,14 @@ package org.hercworks.transfer.dto.file.shell;
 
 import java.util.List;
 
+import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.shell.struct.WeaponsDatItem;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("")
-public class WeaponsDatDTO {
+public class WeaponsDatDTO extends TransferObject {
 
 	@JsonProperty(value = "total", index = 1)
 	private short total;

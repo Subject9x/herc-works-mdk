@@ -11,6 +11,8 @@ import org.hercworks.voln.FileType;
 
 public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 
+	public WeaponsDatTransformer() {}
+	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		

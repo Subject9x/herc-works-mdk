@@ -87,7 +87,7 @@
 					<outputDirectory>${basedir}/target/classes</outputDirectory>
 					<resources>
 						<resource>		
-							<directory>src/test/resources</directory>
+							<directory>src/test/resources/UNPACK</directory>
 							<filtering>false</filtering>
 						</resource>
 					</resources>

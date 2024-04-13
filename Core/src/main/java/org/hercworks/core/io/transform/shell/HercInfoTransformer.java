@@ -11,6 +11,8 @@ import org.hercworks.voln.FileType;
 
 public class HercInfoTransformer extends ThreeSpaceByteTransformer{
 
+	public HercInfoTransformer() {}
+	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 	
