@@ -34,4 +34,9 @@ public final class ByteOps {
 		arr[index] = s[0];
 		arr[index+1] = s[1];
 	}
+	
+
+//	public static byte[] readEntireBytes() {
+//		
+//	}
 }

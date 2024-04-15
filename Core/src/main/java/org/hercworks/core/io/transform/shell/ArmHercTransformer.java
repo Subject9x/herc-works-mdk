@@ -23,7 +23,6 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 			//TODO  - error for empty byte array
 			return null;
 		}
-		
 		setBytes(inputArray);
 
 		ArmHerc armData = new ArmHerc();
@@ -59,8 +58,8 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		for(int i=0; i < (int)armData.getTotalWeapons(); i++) {
 			short weaponId = indexShortLE();
 			short pointTotal = indexShortLE();
-			System.out.println("-----------weapon id=" + weaponId + "---------------");
-			System.out.println("+ hardpoints=" + pointTotal);
+//			System.out.println("-----------weapon id=" + weaponId + "---------------");
+//			System.out.println("+ hardpoints=" + pointTotal);
 			
 			UiHardpointGraphic[] graphics = new UiHardpointGraphic[pointTotal];
 			
@@ -75,7 +74,7 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 				hardpoint.setFrameId(indexShortLE());
 				hardpoint.setFlags(UiImageDBA.RFlag.get(indexShortLE()));
 				graphics[h] = hardpoint;
-				System.out.println(hardpoint.toString());
+//				System.out.println(hardpoint.toString());
 				
 			}
 			weaponHardpoints.put(weaponId, graphics);

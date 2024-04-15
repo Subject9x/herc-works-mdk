@@ -24,6 +24,13 @@ public class TestExports {
 	
 	public static String[] argsExportAll = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT","/UNPACK/SHELL0/GAM/HERCS.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/INI_OUTL.DAT","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
+	
+	
+	@Test
+	public void exportRepair() {
+		CommandLineMain.main(new String[] {"-x", "/UNPACK/RPR_OUTL.json"});	
+	}
+	
 	@Test
 	public void exportAll() {
 		CommandLineMain.main(argsExportAll);	

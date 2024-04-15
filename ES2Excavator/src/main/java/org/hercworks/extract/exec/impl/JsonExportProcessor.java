@@ -8,6 +8,7 @@ import org.hercworks.core.data.file.dat.shell.ArmWeap;
 import org.hercworks.core.data.file.dat.shell.HercInf;
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.InitHerc;
+import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
@@ -16,6 +17,7 @@ import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.InitHercTransformer;
+import org.hercworks.core.io.transform.shell.RprHercTransform;
 import org.hercworks.core.io.transform.shell.TrainingHercsTransform;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
@@ -29,6 +31,7 @@ import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
 import org.hercworks.transfer.dto.file.shell.InitHercDTO;
+import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
@@ -37,6 +40,7 @@ import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
@@ -94,7 +98,7 @@ public class JsonExportProcessor extends FileProcessor{
 					exportJson(file.getName(), new ArmWeapTransformer(), ArmWeap.class, new ArmWeapDTOServiceImpl(), ArmWeapDTO.class);
 					break;
 				case RPR_HERC:
-					
+					exportJson(file.getName(), new RprHercTransform(), RprHerc.class, new RepairHercDTOServiceImpl(), RepairHercDTO.class);
 					break;
 				case INI_HERC:
 					exportJson(file.getName(), new InitHercTransformer(), InitHerc.class, new InitHercDTOServiceImpl(), InitHercDTO.class);

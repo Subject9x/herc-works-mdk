@@ -28,9 +28,28 @@ public final class CommandLineMain {
 	private static List<FileProcessor> processors  = new ArrayList<FileProcessor>();
 	
 	public static void main(String[] args) {
+		String version = System.getProperty("java.version");
+		System.out.println("Java environment: " + version);
 		
-		try {
+		String[] ver = version.split("\\.");
+		if(ver.length > 0) {
+			if(ver[0].equals(String.valueOf(1))) {
+				if(Integer.valueOf(ver[1]) < 9) {
+					System.out.println("Java version mismatch, requires 9+, found:" + version);
+					System.exit(1);
+					return;
+				}
+			}
+			else {
+				if(Integer.valueOf(ver[0]) < 9) {
+					System.out.println("Java version mismatch, requires 9+, found:" + version);
+					System.exit(1);
+					return;
+				}
+			}
+		}
 			
+		try {	
 			cmd.setLogger(log);
 			cmd.parseCommands(args);
 			cmd.parseFiles(args);

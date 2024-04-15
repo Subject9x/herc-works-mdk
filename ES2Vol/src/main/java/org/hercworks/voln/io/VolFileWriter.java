@@ -193,7 +193,8 @@ public final class VolFileWriter {
 	}
 	
 	private static void writeVolAssetFile(String dirPath, VolEntry entry){
-		File file = new File(dirPath + "\\" + entry.getFileName().strip());
+//		File file = new File(dirPath + "\\" + entry.getFileName().strip());	//Java 11
+		File file = new File(dirPath + "\\" + entry.getFileName().trim());	//Java 9 compatibility
 		
 		try(FileOutputStream fizz = new FileOutputStream(file);){
 			fizz.write(entry.getRawBytes());

@@ -49,92 +49,8 @@ public final class DynFileReader {
 				newDPal = (DynamixPalette)convert.bytesToObject(fileBytes.array());
 				newDPal.setFileName(DataFile.makeFileName(filePath));
 				newDPal.assignDir(filePath);
-
-//				
-//				int cursor = 4;	//skip header
-//				
-//				int paletteBytesSize = Bytes.from(fileBytes.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-//				cursor += 4;
-//				
-//				int colorCount = Bytes.from(fileBytes.array(), cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-//				newDPal.setColorCount(colorCount);
-//				
-//				cursor += 4;
-//				
-//				int colorBytes = colorCount * 4;	//assuming 4 bytes per color?
-//				
-//				newDPal.setRawIndexBytes(Bytes.from(fileBytes.array(), cursor, fileBytes.array().length - cursor));
-//			
-//				int scalar = 4;
-//				int colorIdx = 0;
-//				
-//				//DO NOT CHANGE - original "mostly working" 4-byte RGBA value read
-//				for(int b=cursor; b < colorBytes; b += 4) {
-//					
-//					Bytes shadeBytes = Bytes.from(fileBytes.array(), b, 4).byteOrder(ByteOrder.BIG_ENDIAN);	
-//					byte[] bytes = new byte[4];
-//					
-//					System.out.println("["+ colorIdx +"] Palette Entry RAW:" + shadeBytes.encodeHex());
-//					System.out.println("["+ colorIdx +"] Palette Entry LENDIAN RAW:" + shadeBytes.byteOrder(ByteOrder.LITTLE_ENDIAN).encodeHex());
-//					
-//					int ir = Byte.toUnsignedInt(shadeBytes.byteAt(0));
-//					ir = (ir * scalar) > 255 ? 255 : ir * scalar;
-//					bytes[0] = (byte) ir;
-//					
-//					
-//					int ig = Byte.toUnsignedInt(shadeBytes.byteAt(1));
-//					ig = (ig * scalar) > 255 ? 255 : ig * scalar;
-//					bytes[1] = (byte) ig;
-//					
-//					int ib =  Byte.toUnsignedInt(shadeBytes.byteAt(2));
-//					ib = (ib * scalar) > 255 ? 255 : ib * scalar;
-//					bytes[2] = (byte) ib;
-//					
-//					
-//					int ia = shadeBytes.byteAt(3);
-//					ia = ia == 1 ? 255 : 0;
-//					bytes[3] = (byte) ia;
-//					
-//					System.out.println("		Palette Entry:" + shadeBytes.encodeHex());
-//
-//					if(ir == 0 && ig == 0 && ib == 0) {
-//						//I think this is their alpha color;
-//						bytes[3] = (byte) 1;
-//						ia = 128;
-//					}
-//					
-//					ColorBytes rawColor = new ColorBytes(bytes);
-//					
-//					rawColor.setColor(new Color(ir, ig, ib, ia));
-//					
-//					newDPal.getColors().put(colorIdx, rawColor);
-//					colorIdx++;	
-//					
-//					
-//					
-//					System.out.println("		index:" + colorIdx);
-//					System.out.println("		getIntBGR:" + Bytes.from(rawColor.getIntBGR()).encodeHex());
-//					System.out.println("		getIntRGB:" + Bytes.from(rawColor.getIntRGB()).encodeHex());
-//					
-//				}
 			}
 		}
-
-//		Map<Integer, ColorBytes> reverse = new HashMap<Integer, ColorBytes>();
-//		int idx = 0;
-//		for(int i =0; i < newDPal.getColors().keySet().size(); i++) {
-//			
-//			ColorBytes old = newDPal.getColors().get(i);
-//			
-//			ColorBytes replaceBytes = new ColorBytes(Bytes.from(old.getArray()).copy().array());
-//			replaceBytes.setColor(new Color(old.getColor().getRed(), old.getColor().getGreen(), old.getColor().getBlue(), old.getColor().getAlpha()));
-//			
-//			reverse.put(idx, replaceBytes);
-//			idx++;
-//		}
-//		newDPal.setColors(reverse);
-		
-		
 		return newDPal;
 	}
 	
@@ -147,43 +63,7 @@ public final class DynFileReader {
 		DynamixBitmapTransformer convert = new DynamixBitmapTransformer();
 		
 		DynamixBitmap newDBM = (DynamixBitmap)convert.bytesToObject(data);
-		
-		
-//		DynamixBitmap newDBM =  new DynamixBitmap();
-//		Bytes imgBytes = null;
-//		
-//		newDBM.setRawBytes(data);
-//		
-//		int cursor = 4;	//skip header
-//		
-//		newDBM.setFileSize(Bytes.from(data, cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
-//		cursor += 4;
-//		
-//		//height loaded first
-//		newDBM.setRows(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
-//		cursor += 2;
-//		System.out.println("Height:" + newDBM.getRows());
-//		
-//		//width second
-//		newDBM.setCols(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
-//		cursor += 2;
-//		System.out.println("Width:" + newDBM.getCols());
-//
-//		
-//		newDBM.setBitDepth(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
-//		cursor += 2;
-//		
-//		cursor += 1; //null byte spacer?
-//		
-//		int imgByteLen = Bytes.from(data, cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-//		cursor += 4;	//size in UINT32 of image data.
-//		
-//		cursor += 2;	//null spacer bytes
-//		
-//		imgBytes = Bytes.from(data, cursor, imgByteLen);
-//	
-//		newDBM.setImageData(imgBytes);
-		
+
 		return newDBM;
 	}
 	
@@ -199,42 +79,6 @@ public final class DynFileReader {
 		
 		DynamixBitmapArray newDBA = (DynamixBitmapArray)transform.bytesToObject(data);
 	
-//		newDBA.setRawBytes(data);
-//		newDBA.setImages(new LinkedHashSet<DynamixBitmap>());
-//		
-//		int cursor = 4;	//skip header
-//		
-//		newDBA.setFileSize(Bytes.from(data, cursor, 4).byteOrder(ByteOrder.LITTLE_ENDIAN));
-//		cursor += 4;
-//		
-//		newDBA.setArrayRow(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
-//		cursor += 2;
-//		
-//		newDBA.setArrayCols(Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toChar());
-//		cursor += 2;
-//		
-//		int imgCount = 0;	//for debug
-//		for(int i=cursor; i < data.length-12; i++) {
-//			//lil bit of read-ahead.
-//			int imgByteLen = Bytes.from(data, i+15, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
-//			
-//			int fileChunk = 21 + imgByteLen;
-//			Bytes dbaItem = Bytes.from(data, i, fileChunk).byteOrder(ByteOrder.LITTLE_ENDIAN);
-//			
-//			DynamixBitmap dbm = DynFileReader.parseBytesToDBM(dbaItem.array());
-//			
-//			i += dbm.getRawBytes().length;	//accounts for the 7 bytes of meta data AFTER file size in bytes.
-//			
-//			System.out.println("IMAGE:"+imgCount+"-------------");
-//			System.out.println("Width:" + dbm.getCols());
-//			System.out.println("Height:" + dbm.getRows());
-//			System.out.println("imgByteLen:" + imgByteLen);
-//			
-//			dbm.setFileName(imgCount+"_");
-//			
-//			newDBA.getImages().add(dbm);
-//			imgCount++;
-//		}
 		return newDBA;
 	}
 	
@@ -339,4 +183,5 @@ public final class DynFileReader {
 		}
 		return dir;
 	}
+	
 }
