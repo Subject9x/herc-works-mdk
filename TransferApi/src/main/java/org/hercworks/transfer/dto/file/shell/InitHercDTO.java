@@ -1,6 +1,6 @@
 package org.hercworks.transfer.dto.file.shell;
 
-import org.hercworks.core.data.struct.HercLUT;
+import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.shell.struct.HercHardpointDTO;

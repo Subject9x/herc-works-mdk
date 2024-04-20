@@ -1,6 +1,6 @@
 package org.hercworks.transfer.dto.shell.struct;
 
-import org.hercworks.core.data.struct.HercLUT;
+import org.hercworks.core.data.struct.herc.HercLUT;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;

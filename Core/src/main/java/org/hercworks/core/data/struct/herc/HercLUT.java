@@ -1,4 +1,4 @@
-package org.hercworks.core.data.struct;
+package org.hercworks.core.data.struct.herc;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +50,10 @@ public enum HercLUT {
 	public short getId() {
 		return id;
 	}
+	
+	public short getHardpointMax() {
+		return hardpointMax;
+	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -58,7 +62,7 @@ public enum HercLUT {
 	public void setId(short id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.name;

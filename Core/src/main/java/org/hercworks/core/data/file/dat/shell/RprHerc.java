@@ -1,6 +1,5 @@
 package org.hercworks.core.data.file.dat.shell;
 
-import java.util.List;
 import java.util.Map;
 
 import org.hercworks.core.data.struct.vshell.hercs.UiHardpointGraphic;

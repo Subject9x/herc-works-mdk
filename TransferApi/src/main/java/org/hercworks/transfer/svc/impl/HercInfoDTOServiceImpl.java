@@ -1,7 +1,7 @@
 package org.hercworks.transfer.svc.impl;
 
 import org.hercworks.core.data.file.dat.shell.HercInf;
-import org.hercworks.core.data.struct.HercLUT;
+import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.HercInfEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;

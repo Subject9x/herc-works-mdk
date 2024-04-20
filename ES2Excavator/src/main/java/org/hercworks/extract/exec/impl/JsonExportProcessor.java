@@ -11,7 +11,9 @@ import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.file.sav.PlayerSave;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
+import org.hercworks.core.io.transform.common.PlayerSaveTransform;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
@@ -73,7 +75,7 @@ public class JsonExportProcessor extends FileProcessor{
 	@Override
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
-		if(file.getName().contains(".DAT")) {
+		if(file.getName().contains(".DAT") || file.getName().contains(".sav")) {
 			if(FileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;
@@ -115,11 +117,59 @@ public class JsonExportProcessor extends FileProcessor{
 				case TRAINING_HERCS:
 					exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
 					break;
+				case SAVE_FILE:
+					exportTest(file.getName(), new PlayerSaveTransform(), PlayerSave.class, null, null);
+					break;
 				default:
 					break;
 			}
 		}
 	}
+	
+	public void exportTest(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
+		try {
+			getLogger().console("--------------------------EXPORTING " + file + " -----------------------------------");
+			
+			DataFile exportDat = transformerClass.bytesToObject(loadFileBytes(getAppPath() + file));
+			exportDat = dataClass.cast(exportDat);
+			
+			if(exportDat == null) {
+				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
+			}
+			
+			((DataFile)exportDat).setFileName(getCleanFileName(fileNoExt(file)));
+			
+//			String targDirPath = null;
+//			if(cmdLine.checkOption(OptionArgs.SRC)) {
+//				getLogger().consoleDebug("--keeping DAT export to source directory.");
+//				((DataFile)exportDat).assignDir(getAppPath());
+//				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
+//			}
+//			else {
+//				targDirPath = makeExportPath(this.unpackPath);
+//			}
+//			
+//			if(targDirPath == null) {
+//				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
+//			}
+//
+//			Object dto = dtoService.convertToDTO(((DataFile)exportDat));
+//			
+//			dto = dtoClass.cast(dto);
+//			
+//			File json = new File(targDirPath + "/" + ((DataFile)exportDat).getFileName() + ".json");
+//			json.setWritable(true);
+//			objectMapper.writeValue(json, dto);
+//			
+			
+		} catch(Exception e) {
+			getLogger().console(e.getMessage());
+			return;
+		}
+		getLogger().console("+ Write complete.");
+		getLogger().console("------------------------------------------------------------------------------------");
+	}
+	
 
 	public void exportJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
 		try {

@@ -27,6 +27,11 @@ public class TestExports {
 	
 	
 	@Test
+	public void exportSave() {
+		CommandLineMain.main(new String[] {"-x", "/GAME_0.sav"});	
+	}
+	
+	@Test
 	public void exportRepair() {
 		CommandLineMain.main(new String[] {"-x", "/UNPACK/RPR_OUTL.json"});	
 	}

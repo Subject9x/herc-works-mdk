@@ -11,8 +11,6 @@ import org.hercworks.extract.exec.impl.JsonExportProcessor;
 import org.hercworks.extract.exec.impl.JsonImportProcessor;
 import org.hercworks.extract.util.FileItem;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * 
  */

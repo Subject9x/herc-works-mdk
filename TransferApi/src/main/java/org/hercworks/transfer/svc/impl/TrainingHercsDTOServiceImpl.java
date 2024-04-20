@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
-import org.hercworks.core.data.struct.HercLUT;
 import org.hercworks.core.data.struct.WeaponLUT;
+import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
