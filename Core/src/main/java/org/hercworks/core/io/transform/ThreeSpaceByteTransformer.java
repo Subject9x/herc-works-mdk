@@ -106,4 +106,8 @@ public abstract class ThreeSpaceByteTransformer {
 	public void resetIndex() {
 		index = 0;
 	}
+	
+	public byte[] getBytes() {
+		return bytes;
+	}
 }
