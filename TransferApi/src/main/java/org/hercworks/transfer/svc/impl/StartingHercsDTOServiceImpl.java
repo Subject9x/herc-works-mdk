@@ -1,7 +1,7 @@
 package org.hercworks.transfer.svc.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.Hercs;
@@ -77,7 +77,7 @@ public class StartingHercsDTOServiceImpl implements GeneralDTOService{
 			hercsEntry.getHerc().setHercId(dtoHerc.getHerc().getHercId().getId());
 			hercsEntry.getHerc().setHealthRatio(dtoHerc.getHerc().getHealthRatio());
 			hercsEntry.getHerc().setBuildCompleteLevel(dtoHerc.getHerc().getBuildCompleteLevel());
-			hercsEntry.getHerc().setHardpoints(new LinkedHashMap<Short, UiWeaponEntry>());
+			hercsEntry.getHerc().setHardpoints(new HashMap<Short, UiWeaponEntry>());
 			
 			for(int h=0; h < dtoHerc.getHerc().getHardpoints().length; h++) {
 				HercHardpointDTO dtoSlot = dtoHerc.getHerc().getHardpoints()[h];

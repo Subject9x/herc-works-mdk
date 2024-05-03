@@ -1,5 +1,6 @@
 package org.hercworks.core.data.struct.vshell.hercs;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.hercworks.core.data.file.dat.shell.Hercs;
@@ -27,7 +28,7 @@ public class ShellHercData {
 	private short hercId;
 	private short healthRatio;
 	private short buildCompleteLevel;
-	private LinkedHashMap<Short, UiWeaponEntry> hardpoints;
+	private HashMap<Short, UiWeaponEntry> hardpoints;
 	
 	public ShellHercData() {}
 	
@@ -43,7 +44,7 @@ public class ShellHercData {
 		return buildCompleteLevel;
 	}
 
-	public LinkedHashMap<Short, UiWeaponEntry> getHardpoints() {
+	public HashMap<Short, UiWeaponEntry> getHardpoints() {
 		return hardpoints;
 	}
 
@@ -59,7 +60,7 @@ public class ShellHercData {
 		this.buildCompleteLevel = buildCompleteLevel;
 	}
 	
-	public void setHardpoints(LinkedHashMap<Short, UiWeaponEntry> data) {
+	public void setHardpoints(HashMap<Short, UiWeaponEntry> data) {
 		this.hardpoints = data;
 	}
 }

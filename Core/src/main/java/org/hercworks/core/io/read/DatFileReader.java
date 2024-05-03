@@ -1,7 +1,7 @@
 package org.hercworks.core.io.read;
 
 import java.nio.ByteOrder;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
@@ -54,7 +54,7 @@ public final class DatFileReader {
 		short activeHardpoints = Bytes.from(data, cursor, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort();
 		cursor +=2;
 		
-		iniStats.getData().setHardpoints(new LinkedHashMap<Short, UiWeaponEntry>());
+		iniStats.getData().setHardpoints(new HashMap<Short, UiWeaponEntry>());
 		
 		for(int i=cursor; i < iniStats.getRawBytes().length; i+=2) {
 			

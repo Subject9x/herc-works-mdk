@@ -1,7 +1,7 @@
 package org.hercworks.transfer.svc.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
@@ -72,7 +72,7 @@ public class TrainingHercsDTOServiceImpl implements GeneralDTOService{
 			herc.setHealthRatio(dtoHerc.getHealthRatio());
 			herc.setBuildCompleteLevel(dtoHerc.getBuildCompleteLevel());
 			
-			LinkedHashMap<Short, UiWeaponEntry> hardpoints = new LinkedHashMap<Short, UiWeaponEntry>();
+			HashMap<Short, UiWeaponEntry> hardpoints = new HashMap<Short, UiWeaponEntry>();
 			for(int h=0; h < dtoHerc.getHardpoints().length; h++) {
 				HercHardpointDTO slot = dtoHerc.getHardpoints()[h];
 				UiWeaponEntry item = new  UiWeaponEntry();

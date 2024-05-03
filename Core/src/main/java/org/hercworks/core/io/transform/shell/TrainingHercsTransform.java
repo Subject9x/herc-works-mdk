@@ -3,7 +3,7 @@ package org.hercworks.core.io.transform.shell;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
@@ -32,7 +32,7 @@ public class TrainingHercsTransform extends ThreeSpaceByteTransformer{
 			herc.setHercId(indexShortLE());
 			herc.setHealthRatio(indexShortLE());
 			herc.setBuildCompleteLevel(indexShortLE());
-			herc.setHardpoints(new LinkedHashMap<Short, UiWeaponEntry>());
+			herc.setHardpoints(new HashMap<Short, UiWeaponEntry>());
 			int activeHardpoints = (int)indexShortLE();
 			
 			for(int h=0; h < activeHardpoints; h++) {
