@@ -7,7 +7,7 @@
 
 	<groupId>org.hercworks</groupId>
 	<artifactId>herc-works</artifactId>
- 	<version>${revision}</version>
+ 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>herc-works</name>
@@ -15,12 +15,10 @@
 
 	<properties>
 		<jdk.version>1.8</jdk.version>
-		<revision>0.0.1</revision>
   	  	<es2.vol.version>0.0.1</es2.vol.version>
   	  	<es2.core.version>0.0.1</es2.core.version>
-  	  	<es2.transfr.version>0.01</es2.transfr.version>
+  	  	<es2.transfr.version>0.0.1</es2.transfr.version>
   	  	<es2.excavate.version>0.0.5</es2.excavate.version>
-  	  	<es2.ui.version>0.0.1</es2.ui.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>9</maven.compiler.release>
 	</properties>
@@ -30,7 +28,6 @@
 		<module>Core</module>
 		<module>TransferApi</module>
 		<module>ES2Excavator</module>
-		<module>HercWorksUI</module>
 	</modules>
 
 	<build>
