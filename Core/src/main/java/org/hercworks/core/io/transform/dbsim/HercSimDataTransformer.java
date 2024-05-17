@@ -6,9 +6,9 @@ import org.hercworks.voln.DataFile;
 
 import at.favre.lib.bytes.Bytes;
 
-public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
+public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 
-	public TransformHercInfoDat() {}
+	public HercSimDataTransformer() {}
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
@@ -26,6 +26,7 @@ public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
 		data.setDecelTurning(indexShortLE());
 
 		data.setCameraBoneId(indexShortLE());
+		
 		data.setInputThrottleHercFlag(indexShortLE());
 		
 		data.setUnk14_ValAnim1(indexShortLE());
@@ -54,6 +55,8 @@ public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
 			data.getModelLoDBoneIds()[i] = indexByte();
 		}
 		
+		data.setUnk66_Val1000(indexShortLE());
+		
 		data.setLegsCritFlags1(indexShortLE());
 		data.setLegsCritFlags2(indexShortLE());
 		data.setModelLegsTotal(indexShortLE());
@@ -64,6 +67,9 @@ public class TransformHercInfoDat extends ThreeSpaceByteTransformer{
 		data.setInputFlagFlyer(indexShortLE());
 		
 		data.setUnk80_ValHudId(indexShortLE());
+		
+		data.setUnk82_val(indexShortLE());
+		data.setUnk84_val(indexShortLE());
 		
 		byte[] unitName = indexSegment(12);
 		Bytes b = Bytes.from(unitName[0]);

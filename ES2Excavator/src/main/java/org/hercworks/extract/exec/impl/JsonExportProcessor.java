@@ -11,9 +11,12 @@ import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.file.dat.sim.HercInfoDat;
 import org.hercworks.core.data.file.sav.PlayerSave;
+import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.core.io.transform.common.PlayerSaveTransform;
+import org.hercworks.core.io.transform.dbsim.HercSimDataTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
@@ -37,10 +40,12 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
+import org.hercworks.transfer.dto.file.sim.HercSimDatDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.HercSimDataDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
@@ -80,6 +85,14 @@ public class JsonExportProcessor extends FileProcessor{
 				filesToProcess.add(file);
 				filter = true;
 			}
+			else {
+				for(HercLUT herc : HercLUT.values()) {
+					if(file.getName().toLowerCase().contains(herc.getName().toLowerCase()+".dat")) {
+						filesToProcess.add(file);
+						filter = true;
+					}
+				}
+			}
 		}
 		return filter;
 	}
@@ -88,40 +101,49 @@ public class JsonExportProcessor extends FileProcessor{
 	public void processFiles() {
 		for(FileItem file : filesToProcess) {
 			FileMatch match = FileMatch.getByPattern(file.getName()); 
+			if(match != null) {
+				switch(match) {
+					case WEAPONS:
+						exportJson(file.getName(), new WeaponsDatTransformer(), WeaponsDat.class, new WeaponsDatShellDTOServiceImpl(), WeaponsDatDTO.class);
+						break;
+					case ARM_HERC:
+						exportJson(file.getName(), new ArmHercTransformer(), ArmHerc.class, new ArmHercDTOServiceImpl(), ArmHercDTO.class);
+						break;
+					case ARM_WEAP:
+						exportJson(file.getName(), new ArmWeapTransformer(), ArmWeap.class, new ArmWeapDTOServiceImpl(), ArmWeapDTO.class);
+						break;
+					case RPR_HERC:
+						exportJson(file.getName(), new RprHercTransform(), RprHerc.class, new RepairHercDTOServiceImpl(), RepairHercDTO.class);
+						break;
+					case INI_HERC:
+						exportJson(file.getName(), new InitHercTransformer(), InitHerc.class, new InitHercDTOServiceImpl(), InitHercDTO.class);
+						break;
+					case HERCS:
+						exportJson(file.getName(), new  HercsStartTransformer(), Hercs.class, new StartingHercsDTOServiceImpl(), StartHercsDTO.class);
+						break;
+					case HERC_INF:
+						exportJson(file.getName(), new  HercInfoTransformer(), HercInf.class, new HercInfoDTOServiceImpl(), HercInfDTO.class);
+						break;
+					case CAREER:
 						
-			switch(match) {
-				case WEAPONS:
-					exportJson(file.getName(), new WeaponsDatTransformer(), WeaponsDat.class, new WeaponsDatShellDTOServiceImpl(), WeaponsDatDTO.class);
-					break;
-				case ARM_HERC:
-					exportJson(file.getName(), new ArmHercTransformer(), ArmHerc.class, new ArmHercDTOServiceImpl(), ArmHercDTO.class);
-					break;
-				case ARM_WEAP:
-					exportJson(file.getName(), new ArmWeapTransformer(), ArmWeap.class, new ArmWeapDTOServiceImpl(), ArmWeapDTO.class);
-					break;
-				case RPR_HERC:
-					exportJson(file.getName(), new RprHercTransform(), RprHerc.class, new RepairHercDTOServiceImpl(), RepairHercDTO.class);
-					break;
-				case INI_HERC:
-					exportJson(file.getName(), new InitHercTransformer(), InitHerc.class, new InitHercDTOServiceImpl(), InitHercDTO.class);
-					break;
-				case HERCS:
-					exportJson(file.getName(), new  HercsStartTransformer(), Hercs.class, new StartingHercsDTOServiceImpl(), StartHercsDTO.class);
-					break;
-				case HERC_INF:
-					exportJson(file.getName(), new  HercInfoTransformer(), HercInf.class, new HercInfoDTOServiceImpl(), HercInfDTO.class);
-					break;
-				case CAREER:
-					
-					break;
-				case TRAINING_HERCS:
-					exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
-					break;
-				case SAVE_FILE:
-					exportTest(file.getName(), new PlayerSaveTransform(), PlayerSave.class, null, null);
-					break;
-				default:
-					break;
+						break;
+					case TRAINING_HERCS:
+						exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
+						break;
+					case SAVE_FILE:
+						exportTest(file.getName(), new PlayerSaveTransform(), PlayerSave.class, null, null);
+						break;
+					default:
+						break;
+				}
+			}
+			else{
+				for(HercLUT hercs : HercLUT.values()) {
+					if(file.getName().toLowerCase().contains(hercs.getName().toLowerCase())) {
+						exportJson(file.getName(), new HercSimDataTransformer(), HercInfoDat.class, new HercSimDataDTOServiceImpl(), HercSimDatDTO.class);
+						return;
+					}
+				}
 			}
 		}
 	}

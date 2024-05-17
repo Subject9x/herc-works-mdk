@@ -12,9 +12,11 @@ public class TestExports {
 	public static String[] hercsDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/HERCS.DAT"};
 	public static String[] hercsJsonArgs = new String[] {"-x","/UNPACK/HERCS.json"};
 	
+	public static String[] simHercDatArgs = new String[] {"-x","/UNPACK/SIMVOL0/dat/TOMAHAWK.DAT"};
+	public static String[] simHercJsonDatArgs = new String[] {"-x","/UNPACK/HERC_INF.json"};
+	
 	public static String[] hercInfDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] hercInfJsonArgs = new String[] {"-x","/UNPACK/HERC_INF.json"};
-	
 	
 	public static String[] hercInitDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/INI_OUTL.DAT"};
 	public static String[] hercInitJsonArgs = new String[] {"-x","/UNPACK/INI_OUTL.json"};
@@ -25,6 +27,11 @@ public class TestExports {
 	public static String[] argsExportAll = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT","/UNPACK/SHELL0/GAM/HERCS.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/INI_OUTL.DAT","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
 	
+	
+	@Test
+	public void exportHercSimDat() {
+		CommandLineMain.main(simHercDatArgs);
+	}
 	
 	@Test
 	public void exportSave() {
@@ -58,7 +65,7 @@ public class TestExports {
 	@Test
 	public void testHercs() {
 		
-		CommandLineMain.main(hercsDatArgs);
+//		CommandLineMain.main(hercsDatArgs);
 		
 		CommandLineMain.main(hercsJsonArgs);
 		
