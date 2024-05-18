@@ -1,10 +1,11 @@
 package org.hercworks.core.io.transform.dbsim;
 
-import org.hercworks.core.data.file.dat.sim.HercInfoDat;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import org.hercworks.core.data.file.dat.sim.HercSimDat;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
-
-import at.favre.lib.bytes.Bytes;
 
 public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 
@@ -14,7 +15,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		index = 0;
 		
-		HercInfoDat data = new HercInfoDat();
+		HercSimDat data = new HercSimDat();
 		data.setRawBytes(inputArray);
 		
 		setBytes(inputArray);
@@ -71,15 +72,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		data.setUnk82_val(indexShortLE());
 		data.setUnk84_val(indexShortLE());
 		
-		byte[] unitName = indexSegment(12);
-		Bytes b = Bytes.from(unitName[0]);
-		for(int i=1; i < 12; i++) {
-			if(unitName[i] == 0x00) {
-				break;
-			}
-			b = b.append(unitName[i]);
-		}
-		data.setNameBytes(new String(b.toCharArray()));
+		data.setNameBytes(indexSegment(12));
 		
 		data.setCameraYAxisAdj(indexShortLE());
 		data.setCameraXAxisAdj(indexShortLE());
@@ -110,35 +103,167 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		
 		data.setModelSkinId(indexShortLE());
 		
-		data.setUnk148_val(indexShortLE());
 		data.setUnk150_val(indexShortLE());
 		data.setUnk152_val(indexShortLE());
 		data.setUnk154_fixedVal(indexShortLE());
 		data.setUnk156_400or800(indexShortLE());
 		
-		skip(11);
+		skip(12);
 		
 		data.setUnk170_val(indexShortLE());
 		data.setUnk172_val(indexShortLE());
 		data.setUnk174_250or275(indexShortLE());
 		
-		skip(13);
+		skip(14);
 		
 		data.setShieldMaxTotal(indexShortLE());
 		data.setUnk192_val(indexShortLE());
 		data.setPhysicsFrictionCoef(indexShortLE());
 		data.setPhysicsFrctionAccel(indexShortLE());
 		
-
+		skip(6);
+				
 		data.setDebrisFile(indexSegment(12));
 		
 		return data;
 	}
 
 	@Override
-	public byte[] objectToBytes(DataFile dataObj)  throws ClassCastException{
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] objectToBytes(DataFile dataObj)  throws ClassCastException, IOException{
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		HercSimDat data = (HercSimDat)dataObj;
+		
+		out.write(writeShortLE(data.getSpeedTurn()));
+		out.write(writeShortLE(data.getSpeedReverse()));
+		out.write(writeShortLE(data.getSpeedForward()));
+		out.write(writeShortLE(data.getUnk6_Val30()));
+		out.write(writeShortLE(data.getDecelTurning()));
+		
+		out.write(writeShortLE(data.getCameraBoneId()));
+		
+		out.write(writeShortLE(data.getInputThrottleHercFlag()));
+		
+		out.write(writeShortLE(data.getUnk14_ValAnim1()));
+		out.write(writeShortLE(data.getUnk16_ValAnim2()));
+		out.write(writeShortLE(data.getUnk18_ValAnim3()));
+		out.write(writeShortLE(data.getUnitOffsetYAdjust()));
+		
+		out.write(writeShortLE(data.getUnk22_Val750Razor0()));
+		
+		out.write(writeShortLE(data.getAiAimTargOffset()));
+		
+		out.write(writeShortLE(data.getInputTorsoRazrFlag()));
+		out.write(writeShortLE(data.getTorsoTwistSpeed()));
+		out.write(writeShortLE(data.getUnk30_Val1000()));
+		out.write(writeShortLE(data.getTorsoTwistDegreeMax()));
+		out.write(writeShortLE(data.getInputFlagsTorso()));
+		out.write(writeShortLE(data.getTorsoPitchMaxRate()));
+		out.write(writeShortLE(data.getTorsoPitchRate()));
+		out.write(writeShortLE(data.getTorsoPitchMax()));
+		out.write(writeShortLE(data.getTorsoPitchMin()));
+		
+		out.write(writeShortLE(data.getUnk44_MoveAnimRate()));
+		
+		for(int i=0; i < 20; i++) {
+			out.write(data.getModelLoDBoneIds()[i]);
+		}
+		
+		out.write(writeShortLE(data.getUnk66_Val1000()));
+		
+		out.write(writeShortLE(data.getLegsCritFlags1()));
+		out.write(writeShortLE(data.getLegsCritFlags2()));
+		out.write(writeShortLE(data.getModelLegsTotal()));
+		out.write(writeShortLE(data.getModelFlagNoDebris()));
+		
+		out.write(writeShortLE(data.getUnk76_Val()));
+		
+		out.write(writeShortLE(data.getInputFlagFlyer()));
+		
+		out.write(writeShortLE(data.getUnk80_ValHudId()));
+		
+		out.write(writeShortLE(data.getUnk82_val()));
+		
+		out.write(writeShortLE(data.getUnk84_val()));
+		
+		//write name
+		out.write(data.getNameBytes());
+		
+		out.write(writeShortLE(data.getCameraYAxisAdj()));
+		out.write(writeShortLE(data.getCameraXAxisAdj()));
+		
+		//blank bytes 0x102
+		out.write((byte)0x00);
+		out.write((byte)0x00);
+		
+		out.write(writeShortLE(data.getCameraExtOrgOffset()));
+		
+		//blank bytes 0x106
+		out.write((byte)0x00);
+		out.write((byte)0x00);
+		
+		out.write(writeShortLE(data.getUnk108_camExtVal1()));
+		out.write(writeShortLE(data.getUnk110_camExtVal2()));
+		
+		out.write(writeShortLE(data.getModelFlagsShadow1()));
+		out.write(writeShortLE(data.getModelFlagsShadow2()));
+		
+		out.write(writeShortLE(data.getUnk116_val()));
+		out.write(writeShortLE(data.getUnk118_val()));
+		out.write(writeShortLE(data.getUnk120_val()));
+		out.write(writeShortLE(data.getUnk122_mdlFlagVal()));
+		
+		//range
+		for(int i=0; i < 12; i++){
+			out.write(writeShortLE(data.getUnk124_all500()[i]));
+		}
+		
+		out.write(writeShortLE(data.getModelSkinId()));
+		
+		out.write(writeShortLE(data.getUnk150_val()));
+		out.write(writeShortLE(data.getUnk152_val()));
+		out.write(writeShortLE(data.getUnk154_fixedVal()));
+		out.write(writeShortLE(data.getUnk156_400or800()));
+		
+		//158 - 169 - BLANK BYTES
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		out.write((byte)0x0);
+		
+		
+		out.write(writeShortLE(data.getUnk170_val()));
+		out.write(writeShortLE(data.getUnk172_val()));
+		out.write(writeShortLE(data.getUnk174_250or275()));
+		
+		// 176 - 189 - BLANK BYTES
+		for(int i=0; i<14; i++) {
+			out.write((byte)0x00);
+		}
+		
+		out.write(writeShortLE(data.getShieldMaxTotal()));
+		out.write(writeShortLE(data.getUnk192_val()));
+		out.write(writeShortLE(data.getPhysicsFrictionCoef()));
+		out.write(writeShortLE(data.getPhysicsFrctionAccel()));
+		
+		//198 - 203 - BLANK BYTES
+		for(int i=0; i<6; i++) {
+			out.write((byte)0x00);
+		}
+		
+	    out.write(data.getDebrisFile());
+
+		
+		return out.toByteArray();
 	}
 
 }

@@ -28,10 +28,9 @@ public abstract class FileProcessor extends LoggingUtil{
 	
 	protected FileProcessor(ExcavatorCmdLine cmdLine) {}
 	
+	public abstract boolean filterFile(FileItem file);
 	
 	public abstract void processFiles();
-	
-	public abstract boolean filterFile(FileItem file);
 	
 	/**
 	 * Must be called by main class, initiliazing FileProcessor state, configures paths.
@@ -137,4 +136,7 @@ public abstract class FileProcessor extends LoggingUtil{
 	public boolean hasFiles() {
 		return !filesToProcess.isEmpty();
 	}
+	
+	
+	
 }

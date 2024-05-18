@@ -1,10 +1,11 @@
 package org.hercworks.transfer.svc.impl;
 
-import org.hercworks.core.data.file.dat.sim.HercInfoDat;
+import org.hercworks.core.data.file.dat.sim.HercSimDat;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.sim.HercSimDatDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -13,10 +14,9 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 	@Override
 	public TransferObject convertToDTO(DataFile source) {
 		
-		HercInfoDat src = (HercInfoDat)source;
+		HercSimDat src = (HercSimDat)source;
 		
 		HercSimDatDTO dto = new HercSimDatDTO();
-		
 		
 		dto.setSpeedTurn(src.getSpeedTurn());
 		dto.setSpeedReverse(src.getSpeedReverse());
@@ -72,7 +72,16 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		dto.setUnk82_val(src.getUnk82_val());
 		dto.setUnk84_val(src.getUnk84_val());
 		
-		dto.setNameBytes(src.getNameBytes());
+		byte[] unitName = src.getNameBytes();
+		Bytes b = Bytes.from(unitName[0]);
+		for(int i=1; i < 12; i++) {
+			if(unitName[i] == 0x00) {
+				break;
+			}
+			b = b.append(unitName[i]);
+		}
+		
+		dto.setNameStr(new String(Bytes.from(b).toCharArray()));
 		
 		dto.setCameraYAxisAdj(src.getCameraYAxisAdj());
 		dto.setCameraXAxisAdj(src.getCameraXAxisAdj());
@@ -98,7 +107,6 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dto.setModelSkinId(src.getModelSkinId());
 		
-		dto.setUnk148_val(src.getUnk148_val());
 		dto.setUnk150_val(src.getUnk150_val());
 		dto.setUnk152_val(src.getUnk152_val());
 		dto.setUnk154_fixedVal(src.getUnk154_fixedVal());
@@ -122,15 +130,130 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		}
 		String debrisFile = new String(Bytes.from(src.getDebrisFile(), 0, c).toCharArray());
 		dto.setDebrisFile(debrisFile);
-		
-		
+			
 		return dto;
 	}
 
 	@Override
 	public DataFile fromDTO(TransferObject source) {
-		// TODO Auto-generated method stub
-		return null;
+		HercSimDat dat = new HercSimDat();
+		dat.setExt(FileType.DAT);
+		HercSimDatDTO dto = (HercSimDatDTO)source;
+		
+		dat.setSpeedTurn((short)dto.getSpeedTurn());
+		dat.setSpeedReverse((short)dto.getSpeedReverse());
+		dat.setSpeedForward((short)dto.getSpeedForward());
+		dat.setUnk6_Val30((short)dto.getUnk6_Val30());
+		dat.setDecelTurning((short)dto.getDecelTurning());
+		
+		dat.setCameraBoneId((short)dto.getCameraBoneId());
+		
+		dat.setInputThrottleHercFlag((short)dto.getInputThrottleHercFlag());
+		
+		dat.setUnk14_ValAnim1((short)dto.getUnk14_ValAnim1());
+		dat.setUnk16_ValAnim2((short)dto.getUnk16_ValAnim2());
+		dat.setUnk18_ValAnim3((short)dto.getUnk18_ValAnim3());
+		dat.setUnitOffsetYAdjust((short)dto.getUnitOffsetYAdjust());
+		dat.setUnk22_Val750Razor0((short)dto.getUnk22_Val750Razor0());
+		
+		dat.setAiAimTargOffset((short)dto.getAiAimTargOffset());
+		
+		dat.setInputTorsoRazrFlag((short)dto.getInputTorsoRazrFlag());
+		dat.setTorsoTwistSpeed((short)dto.getTorsoTwistSpeed());
+		
+		dat.setUnk30_Val1000((short)dto.getUnk30_Val1000());
+		
+		dat.setTorsoTwistDegreeMax((short)dto.getTorsoTwistDegreeMax());
+		dat.setInputFlagsTorso((short)dto.getInputFlagsTorso());
+		dat.setTorsoPitchMaxRate((short)dto.getTorsoPitchMaxRate());
+		dat.setTorsoPitchRate((short)dto.getTorsoPitchRate());
+		dat.setTorsoPitchMax((short)dto.getTorsoPitchMax());
+		dat.setTorsoPitchMin((short)dto.getTorsoPitchMin());
+		
+		dat.setUnk44_MoveAnimRate((short)dto.getUnk44MoveAnimRate());
+		
+		byte[] boneId = new byte[20];
+		for(int i=0; i<20; i++) {
+			boneId[i] = (byte)dto.getModelLoDBoneIds()[i]; 
+		}
+		dat.setModelLoDBoneIds(boneId);
+		
+		dat.setUnk66_Val1000((short)dto.getUnk66_Val1000());
+		
+		dat.setLegsCritFlags1((short)dto.getLegsCritFlags1());
+		dat.setLegsCritFlags2((short)dto.getLegsCritFlags2());
+		dat.setModelLegsTotal((short)dto.getModelLegsTotal());
+		dat.setModelFlagNoDebris((short)dto.getModelFlagNoDebris());
+		
+		dat.setUnk76_Val((short)dto.getUnk76_Val());
+		
+		dat.setInputFlagFlyer((short)dto.getInputFlagFlyer());
+		
+		dat.setUnk80_ValHudId((short)dto.getUnk80_ValHudId());
+		
+		dat.setUnk82_val((short)dto.getUnk82_val());
+		dat.setUnk84_val((short)dto.getUnk84_val());
+		
+		byte[] chars = new byte[12];
+		for(int i=0; i<12; i++) {
+			if(i < dto.getNameStr().length()) {
+				chars[i] = (byte)dto.getNameStr().toCharArray()[i];
+			}
+			else{
+				chars[i] = (byte)0x00;
+			}
+		}
+		dat.setNameBytes(chars);
+		
+		dat.setCameraYAxisAdj((short)dto.getCameraYAxisAdj());
+		dat.setCameraXAxisAdj((short)dto.getCameraXAxisAdj());
+		
+		dat.setCameraExtOrgOffset((short)dto.getCameraExtOrgOffset());
+		
+		dat.setUnk108_camExtVal1((short)dto.getUnk108_camExtVal1());
+		dat.setUnk110_camExtVal2((short)dto.getUnk110_camExtVal2());
+		
+		dat.setModelFlagsShadow1((short)dto.getModelFlagsShadow1());
+		dat.setModelFlagsShadow2((short)dto.getModelFlagsShadow2());
+		
+		dat.setUnk116_val((short)dto.getUnk116_val());
+		dat.setUnk118_val((short)dto.getUnk118_val());
+		dat.setUnk120_val((short)dto.getUnk120_val());
+		dat.setUnk122_mdlFlagVal((short)dto.getUnk122_mdlFlagVal());
+		
+		short[] seg500 = new short[12];
+		for(int i=0; i<12; i++) {
+			seg500[i] = (short)dto.getUnk124_all500()[i]; 
+		}
+		dat.setUnk124_all500(seg500);
+		
+		dat.setModelSkinId((short)dto.getModelSkinId());
+		dat.setUnk150_val((short)dto.getUnk150_val());
+		dat.setUnk152_val((short)dto.getUnk152_val());
+		dat.setUnk154_fixedVal((short)dto.getUnk154_fixedVal());
+		dat.setUnk156_400or800((short)dto.getUnk156_400or800());
+		
+		dat.setUnk170_val((short)dto.getUnk170_val());
+		dat.setUnk172_val((short)dto.getUnk172_val());
+		dat.setUnk174_250or275((short)dto.getUnk174_250or275());
+		
+		dat.setShieldMaxTotal((short)dto.getShieldMaxTotal());
+		dat.setUnk192_val((short)dto.getUnk192_val());
+		dat.setPhysicsFrictionCoef((short)dto.getPhysicsFrictionCoef());
+		dat.setPhysicsFrctionAccel((short)dto.getPhysicsFrctionAccel());
+		
+		byte[] debrisChar = new byte[12];
+		for(int i=0; i<12; i++) {
+			if(i < dto.getDebrisFile().length()) {
+				debrisChar[i] = (byte)dto.getDebrisFile().toCharArray()[i];
+			}
+			else{
+				debrisChar[i] = (byte)0x00;
+			}
+		}
+		dat.setDebrisFile(debrisChar);
+		
+		return dat;
 	}
 
 }

@@ -1,6 +1,5 @@
 package org.hercworks.extract.exec.impl;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
@@ -11,12 +10,9 @@ import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
-import org.hercworks.core.data.file.dat.sim.HercInfoDat;
 import org.hercworks.core.data.file.sav.PlayerSave;
-import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.core.io.transform.common.PlayerSaveTransform;
-import org.hercworks.core.io.transform.dbsim.HercSimDataTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
@@ -26,9 +22,8 @@ import org.hercworks.core.io.transform.shell.RprHercTransform;
 import org.hercworks.core.io.transform.shell.TrainingHercsTransform;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
-import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
 import org.hercworks.extract.cmd.Logger;
-import org.hercworks.extract.exec.FileProcessor;
+import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
 import org.hercworks.extract.util.FileMatch;
 import org.hercworks.transfer.dto.file.TransferObject;
@@ -40,12 +35,10 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.dto.file.sim.HercSimDatDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.HercSimDataDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
@@ -65,7 +58,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * 		implemented.
  * 
  */
-public class JsonExportProcessor extends FileProcessor{
+public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 
 	private ObjectMapper objectMapper;
 	
@@ -84,14 +77,6 @@ public class JsonExportProcessor extends FileProcessor{
 			if(FileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;
-			}
-			else {
-				for(HercLUT herc : HercLUT.values()) {
-					if(file.getName().toLowerCase().contains(herc.getName().toLowerCase()+".dat")) {
-						filesToProcess.add(file);
-						filter = true;
-					}
-				}
 			}
 		}
 		return filter;
@@ -137,14 +122,6 @@ public class JsonExportProcessor extends FileProcessor{
 						break;
 				}
 			}
-			else{
-				for(HercLUT hercs : HercLUT.values()) {
-					if(file.getName().toLowerCase().contains(hercs.getName().toLowerCase())) {
-						exportJson(file.getName(), new HercSimDataTransformer(), HercInfoDat.class, new HercSimDataDTOServiceImpl(), HercSimDatDTO.class);
-						return;
-					}
-				}
-			}
 		}
 	}
 	
@@ -182,52 +159,6 @@ public class JsonExportProcessor extends FileProcessor{
 //			File json = new File(targDirPath + "/" + ((DataFile)exportDat).getFileName() + ".json");
 //			json.setWritable(true);
 //			objectMapper.writeValue(json, dto);
-//			
-			
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
-			return;
-		}
-		getLogger().console("+ Write complete.");
-		getLogger().console("------------------------------------------------------------------------------------");
-	}
-	
-
-	public void exportJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
-		try {
-			getLogger().console("--------------------------EXPORTING " + file + " -----------------------------------");
-			
-			DataFile exportDat = transformerClass.bytesToObject(loadFileBytes(getAppPath() + file));
-			exportDat = dataClass.cast(exportDat);
-			
-			if(exportDat == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			((DataFile)exportDat).setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				((DataFile)exportDat).assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			Object dto = dtoService.convertToDTO(((DataFile)exportDat));
-			
-			dto = dtoClass.cast(dto);
-			
-
-			File json = new File(targDirPath + "/" + ((DataFile)exportDat).getFileName() + ".json");
-			json.setWritable(true);
-			objectMapper.writeValue(json, dto);
 //			
 			
 		} catch(Exception e) {

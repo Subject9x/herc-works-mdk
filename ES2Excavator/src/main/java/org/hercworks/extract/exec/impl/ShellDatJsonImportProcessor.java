@@ -1,7 +1,5 @@
 package org.hercworks.extract.exec.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
@@ -12,7 +10,6 @@ import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
-import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
@@ -22,12 +19,10 @@ import org.hercworks.core.io.transform.shell.RprHercTransform;
 import org.hercworks.core.io.transform.shell.TrainingHercsTransform;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
-import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
 import org.hercworks.extract.cmd.Logger;
-import org.hercworks.extract.exec.FileProcessor;
+import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
 import org.hercworks.extract.util.FileMatch;
-import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
@@ -36,7 +31,6 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
@@ -45,7 +39,6 @@ import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
-import org.hercworks.voln.DataFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -59,7 +52,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * 		implemented.
  * 
  */
-public class JsonImportProcessor extends FileProcessor{
+public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 	
 	private ObjectMapper objectMapper;
 	
@@ -118,51 +111,6 @@ public class JsonImportProcessor extends FileProcessor{
 				default:
 					break;
 			}
-		}
-	}
-	
-	public void importJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
-		try {
-			getLogger().console("--------------------------EXPORTING " + file + " -----------------------------------");
-			
-			
-			TransferObject dto = objectMapper.readValue(loadFileBytes(getAppPath() + file), dtoClass);
-			
-			dtoClass.cast(dto);
-			
-			if(dto == null) {
-				throw new Exception("ERROR - failed to convert [" + file + "] to File Object.");
-			}
-			
-			DataFile convert = dtoService.fromDTO(dto);
-			convert = dataClass.cast(convert);
-		
-			((DataFile)convert).setFileName(getCleanFileName(fileNoExt(file)));
-			
-			String targDirPath = null;
-			if(cmdLine.checkOption(OptionArgs.SRC)) {
-				getLogger().consoleDebug("--keeping DAT export to source directory.");
-				((DataFile)convert).assignDir(getAppPath());
-				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
-			}
-			else {
-				targDirPath = makeExportPath(this.unpackPath);
-			}
-			
-			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
-			}
-
-			byte[] data = transformerClass.objectToBytes(convert);
-			
-			File out = new File(targDirPath + "/" + ((DataFile)convert).getFileName() + "." + ((DataFile)convert).getExt().val());
-			
-			FileOutputStream foss = new FileOutputStream(out);
-			foss.write(data);
-			foss.close();
-			
-		} catch(Exception e) {
-			getLogger().console(e.getMessage());
 		}
 	}
 }

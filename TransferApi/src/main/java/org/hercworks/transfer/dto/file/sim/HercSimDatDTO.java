@@ -115,7 +115,7 @@ public class HercSimDatDTO extends TransferObject {
 	private int unk84_val; //usually 1
 
 	@JsonProperty(value = "name", index = 35)
-	private String nameBytes; //0x86 - 0x97
+	private String nameStr; //0x86 - 0x97
 
 	@JsonProperty(value = "cam_adj_ofs_y", index = 36)
 	private int cameraYAxisAdj;
@@ -158,9 +158,6 @@ public class HercSimDatDTO extends TransferObject {
 	@JsonProperty(value = "modelSkinId", index = 48)
 	private int modelSkinId;
 	
-	@JsonProperty(value = "unk148_val", index = 49)
-	private int unk148_val;
-
 	@JsonProperty(value = "unk150_val", index = 50)
 	private int unk150_val;
 
@@ -339,8 +336,8 @@ public class HercSimDatDTO extends TransferObject {
 		return unk84_val;
 	}
 
-	public String getNameBytes() {
-		return nameBytes;
+	public String getNameStr() {
+		return nameStr;
 	}
 
 	public int getCameraYAxisAdj() {
@@ -397,10 +394,6 @@ public class HercSimDatDTO extends TransferObject {
 
 	public int getModelSkinId() {
 		return modelSkinId;
-	}
-
-	public int getUnk148_val() {
-		return unk148_val;
 	}
 
 	public int getUnk150_val() {
@@ -591,8 +584,8 @@ public class HercSimDatDTO extends TransferObject {
 		this.unk84_val = unk84_val;
 	}
 
-	public void setNameBytes(String nameBytes) {
-		this.nameBytes = nameBytes;
+	public void setNameStr(String nameStr) {
+		this.nameStr = nameStr;
 	}
 
 	public void setCameraYAxisAdj(int cameraYAxisAdj) {
@@ -649,10 +642,6 @@ public class HercSimDatDTO extends TransferObject {
 
 	public void setModelSkinId(int modelSkinId) {
 		this.modelSkinId = modelSkinId;
-	}
-
-	public void setUnk148_val(int unk148_val) {
-		this.unk148_val = unk148_val;
 	}
 
 	public void setUnk150_val(int unk150_val) {

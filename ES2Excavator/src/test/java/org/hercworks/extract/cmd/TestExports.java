@@ -13,7 +13,7 @@ public class TestExports {
 	public static String[] hercsJsonArgs = new String[] {"-x","/UNPACK/HERCS.json"};
 	
 	public static String[] simHercDatArgs = new String[] {"-x","/UNPACK/SIMVOL0/dat/TOMAHAWK.DAT"};
-	public static String[] simHercJsonDatArgs = new String[] {"-x","/UNPACK/HERC_INF.json"};
+	public static String[] simHercJsonDatArgs = new String[] {"-x","/UNPACK/TOMAHAWK.json"};
 	
 	public static String[] hercInfDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] hercInfJsonArgs = new String[] {"-x","/UNPACK/HERC_INF.json"};
@@ -30,7 +30,8 @@ public class TestExports {
 	
 	@Test
 	public void exportHercSimDat() {
-		CommandLineMain.main(simHercDatArgs);
+		CommandLineMain.main(simHercJsonDatArgs);
+//		CommandLineMain.main(simHercDatArgs);
 	}
 	
 	@Test

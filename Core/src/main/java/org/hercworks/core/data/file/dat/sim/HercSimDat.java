@@ -102,7 +102,7 @@ import org.hercworks.voln.DataFile;
  *  
  *  204...216- STRING - UNIT\DEBRIS_FILE
  */
-public class HercInfoDat extends DataFile {
+public class HercSimDat extends DataFile {
 
 	private short speedTurn;
 	private short speedReverse;
@@ -159,7 +159,7 @@ public class HercInfoDat extends DataFile {
 	
 	private short unk84_val; //usually 1
 	
-	private String nameBytes; //0x86 - 0x97
+	private byte[] nameBytes; //0x86 - 0x97
 	
 	private short cameraYAxisAdj;
 	private short cameraXAxisAdj;
@@ -186,24 +186,29 @@ public class HercInfoDat extends DataFile {
 	
 	private short modelSkinId;
 	
-	private short unk148_val;
 	private short unk150_val;
 	private short unk152_val;
 	private short unk154_fixedVal;
 	private short unk156_400or800;
 	
+	//158 - 169 - BLANK BYTES
+	
 	private short unk170_val;
 	private short unk172_val;
 	private short unk174_250or275;
+	
+	// 176 - 189 - BLANK BYTES
 	
 	private short shieldMaxTotal;
 	private short unk192_val;
 	private short physicsFrictionCoef;
 	private short physicsFrctionAccel;
 	
+	//198 - 203 - BLANK BYTES
+	
 	private byte[] debrisFile;
 	
-	public HercInfoDat() {}
+	public HercSimDat() {}
 
 	public short getSpeedTurn() {
 		return speedTurn;
@@ -345,7 +350,7 @@ public class HercInfoDat extends DataFile {
 		return unk84_val;
 	}
 
-	public String getNameBytes() {
+	public byte[] getNameBytes() {
 		return nameBytes;
 	}
 
@@ -403,10 +408,6 @@ public class HercInfoDat extends DataFile {
 
 	public short getModelSkinId() {
 		return modelSkinId;
-	}
-
-	public short getUnk148_val() {
-		return unk148_val;
 	}
 
 	public short getUnk150_val() {
@@ -550,7 +551,7 @@ public class HercInfoDat extends DataFile {
 	}
 
 	public static void setModelLodArrOFs(int modelLodArrOFs) {
-		HercInfoDat.modelLodArrOFs = modelLodArrOFs;
+		HercSimDat.modelLodArrOFs = modelLodArrOFs;
 	}
 
 	public void setModelLoDBoneIds(byte[] modelLoDBoneIds) {
@@ -597,7 +598,7 @@ public class HercInfoDat extends DataFile {
 		this.unk84_val = unk84_val;
 	}
 
-	public void setNameBytes(String nameBytes) {
+	public void setNameBytes(byte[] nameBytes) {
 		this.nameBytes = nameBytes;
 	}
 
@@ -646,7 +647,7 @@ public class HercInfoDat extends DataFile {
 	}
 
 	public static void setUnk124_range(int unk124_range) {
-		HercInfoDat.unk124_range = unk124_range;
+		HercSimDat.unk124_range = unk124_range;
 	}
 
 	public void setUnk124_all500(short[] unk124_all500) {
@@ -655,10 +656,6 @@ public class HercInfoDat extends DataFile {
 
 	public void setModelSkinId(short modelSkinId) {
 		this.modelSkinId = modelSkinId;
-	}
-
-	public void setUnk148_val(short unk148_val) {
-		this.unk148_val = unk148_val;
 	}
 
 	public void setUnk150_val(short unk150_val) {
