@@ -1,6 +1,8 @@
 package org.hercworks.extract.exec.impl;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.hercworks.core.data.file.dat.sim.HercSimDat;
 import org.hercworks.core.data.struct.herc.HercLUT;
@@ -15,6 +17,8 @@ import org.hercworks.transfer.svc.impl.HercSimDataDTOServiceImpl;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class HercDatJsonExportProcessor extends GenericJsonProcessor {
+	
+	private List<HercLUT> specialCases = Arrays.asList(HercLUT.RAZOR, HercLUT.SKIMMER, HercLUT.SPIDER);
 	
 	@Override
 	public void init(ExcavatorCmdLine cmdLine, Logger logger) throws IOException  {
@@ -39,7 +43,7 @@ public class HercDatJsonExportProcessor extends GenericJsonProcessor {
 	public void processFiles() {
 		for(FileItem file : filesToProcess) {
 			//Razor is an edge case
-			if(!file.getName().toLowerCase().contains(HercLUT.RAZOR.getName().toLowerCase())) {
+			if(!checkCase(file.getName())) {
 				exportJson(file.getName(), new HercSimDataTransformer(), HercSimDat.class, new HercSimDataDTOServiceImpl(), HercSimDatDTO.class);
 				return;
 			}
@@ -47,5 +51,15 @@ public class HercDatJsonExportProcessor extends GenericJsonProcessor {
 				getLogger().consoleDebug("RAZOR.DAT parsing todo");
 			}
 		}
+	}
+	
+	private boolean checkCase(String fileName) {
+		
+		for(HercLUT entry : specialCases) {
+			if(fileName.toLowerCase().contains(entry.getName().toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

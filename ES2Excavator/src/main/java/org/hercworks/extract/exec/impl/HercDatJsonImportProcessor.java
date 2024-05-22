@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class HercDatJsonImportProcessor extends GenericJsonProcessor{
 
-	
+	public HercDatJsonImportProcessor() {}
 	
 	@Override
 	public void init(ExcavatorCmdLine cmdLine, Logger logger) throws IOException  {

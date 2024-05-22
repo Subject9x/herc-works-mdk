@@ -18,7 +18,22 @@ public enum HercLUT {
 	APOCALYPSE((short)5, "Apocalypse",  (short)10),
 	OGRE((short)6, "Ogre",  (short)10),
 	MAVERICK((short)7, "Maverick", (short)4),
-	RAZOR((short)8, "Razor", (short)7);
+	RAZOR((short)8, "Razor", (short)7),
+	//WARN - I don't know if Cybrid hercs are on the same num-id sequence as player hercs, so the following is not accurate.
+	//I have cybrids here for convenience.
+	ACHILLES((short)9, "ACHILLES", (short)6),
+	CERBERUS((short)10, "CERBERUS", (short)9),
+	DIABLO((short)11, "DIABLO", (short)8),
+	HEADHUNTER((short)12, "HEADHUNTER", (short)9),
+	HYPERION((short)13, "HYPERION", (short)9),
+	MIRIMAC((short)14, "MIRIMAC", (short)5),
+	MONGOOSE((short)15, "MONGOOSE", (short)3),
+	PITBULL((short)16, "PITBULL", (short)1),
+	RAMSES((short)17, "RAMSES", (short)4),
+	SCARAB((short)18, "SCARAB", (short)4),
+	STINGRAY((short)19, "STINGRAY", (short)3),
+	SKIMMER((short)20, "SKIMMER", (short)3),
+	SPIDER((short)21, "SPIDER", (short)1);
 
 	private static final Map<Short,HercLUT> ENUM_MAP;
 	private String name;

@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.hercworks.core.data.file.dat.sim.HercSimDat;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 
@@ -16,6 +17,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		index = 0;
 		
 		HercSimDat data = new HercSimDat();
+		data.setExt(FileType.DAT);
 		data.setRawBytes(inputArray);
 		
 		setBytes(inputArray);

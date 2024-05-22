@@ -1,5 +1,6 @@
 Earthsiege 2 Vol file unpacker.
-4/11/2024
+5/17/2024
+v0.1.8
 
 Requirements:
 -------------------------------------------------------------------------------------------
@@ -31,6 +32,10 @@ Export to JSON
 -------------------------------------------------------------------------------------------
 	+ SHELL0/GAM/ - WEAPONS.DAT, ARM_WEAP.DAT, HERCS.DAT, HERC_INF.DAT, ARM_<herc name>.DAT
 		+ these can be converted to JSON plaintext files.
+		
+	+ SIMVOL0/dat/<herc_name>.DAT
+		+ output DBSIM herc data for editing and re-import.
+		+ Razor, Spider, Skimmer are not support YET, these don't confirm to the 216-size herc data file that other hercs do.
 
 	+ after making your edits, feed the JSON file back into the cmd line.
 		+ This will generate a corresponding .DAT file that has your new changes.

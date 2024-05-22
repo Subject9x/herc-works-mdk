@@ -14,7 +14,8 @@ public enum HercInternals {
 	ENGINE((short)5, "Engine"),
 	HYDRAULICS((short)6, "Hydraulics"),
 	STABILIZERS((short)7, "Stabiliziers"),
-	LIFE_SUPPRT((short)8, "Life Support");
+	LIFE_SUPPRT((short)8, "Life Support"),
+	PILOT((short)9, "Pilot");
 	
 	private short id;
 	private String label;

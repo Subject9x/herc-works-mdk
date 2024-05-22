@@ -8,6 +8,7 @@ import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.exec.impl.DynamixFileProcessor;
+import org.hercworks.extract.exec.impl.FlightModelExportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonExportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonImportProcessor;
 import org.hercworks.extract.exec.impl.ShellDatJsonExportProcessor;
@@ -22,15 +23,11 @@ public final class CommandLineMain {
 	public static ExcavatorCmdLine cmd  = ExcavatorCmdLine.cmd();
 	
 	public static DynamixFileProcessor dynamixFiles = new DynamixFileProcessor();
-	public static ShellDatJsonImportProcessor jsonImportFiles = new ShellDatJsonImportProcessor();
-	public static ShellDatJsonExportProcessor jsonExportFiles = new ShellDatJsonExportProcessor();
-	public static HercDatJsonExportProcessor hercSimDatExport = new HercDatJsonExportProcessor();
-	public static HercDatJsonImportProcessor hercSimDatImport = new HercDatJsonImportProcessor();
 	public static Logger log = Logger.getLogger();
 	
 	private static List<FileProcessor> processors  =
 			Arrays.asList(new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), new ShellDatJsonExportProcessor(),
-					new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor());
+					new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor(), new FlightModelExportProcessor());
 	
 	public static void main(String[] args) {
 		String version = System.getProperty("java.version");
@@ -62,14 +59,6 @@ public final class CommandLineMain {
 			for(FileProcessor processor : processors) {
 				processor.init(cmd, log);
 			}
-			
-//			dynamixFiles.init(cmd, log);
-//			jsonImportFiles.init(cmd, log);
-//			jsonExportFiles.init(cmd, log);
-//			
-//			processors.add(dynamixFiles);
-//			processors.add(jsonImportFiles);
-//			processors.add(jsonExportFiles);
 			
 			if(cmd.getFileQueue().isEmpty()) {
 				log.consoleDebug("No files passed in.");
