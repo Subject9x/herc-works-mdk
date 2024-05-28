@@ -29,7 +29,7 @@ public class HercDatJsonImportProcessor extends GenericJsonProcessor{
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
 		for(HercLUT herc : HercLUT.values()) {
-			if(file.getName().toLowerCase().contains(herc.getName().toLowerCase()+".json")) {
+			if(file.getName().toLowerCase().contains(herc.getAbbrevDat().toLowerCase()+".json")) {
 				filesToProcess.add(file);
 				filter = true;
 			}
@@ -43,7 +43,6 @@ public class HercDatJsonImportProcessor extends GenericJsonProcessor{
 			//Razor is an edge case
 			if(!file.getName().toLowerCase().contains(HercLUT.RAZOR.getName().toLowerCase())) {
 				importJson(file.getName(), new HercSimDataTransformer(), HercSimDat.class, new HercSimDataDTOServiceImpl(), HercSimDatDTO.class);
-				return;
 			}
 			else{
 				getLogger().consoleDebug("RAZOR.DAT parsing todo");

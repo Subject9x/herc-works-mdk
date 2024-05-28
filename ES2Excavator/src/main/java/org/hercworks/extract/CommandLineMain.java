@@ -1,7 +1,6 @@
 package org.hercworks.extract;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
@@ -9,6 +8,8 @@ import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.exec.impl.DynamixFileProcessor;
 import org.hercworks.extract.exec.impl.FlightModelExportProcessor;
+import org.hercworks.extract.exec.impl.GunLayoutExportProcessor;
+import org.hercworks.extract.exec.impl.GunLayoutImportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonExportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonImportProcessor;
 import org.hercworks.extract.exec.impl.ShellDatJsonExportProcessor;
@@ -25,9 +26,12 @@ public final class CommandLineMain {
 	public static DynamixFileProcessor dynamixFiles = new DynamixFileProcessor();
 	public static Logger log = Logger.getLogger();
 	
-	private static List<FileProcessor> processors  =
-			Arrays.asList(new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), new ShellDatJsonExportProcessor(),
-					new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor(), new FlightModelExportProcessor());
+	//new DBACompilerProcessor(),
+	private static FileProcessor[] processors  = new FileProcessor[] {
+					 new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), 
+					new ShellDatJsonExportProcessor(), new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor(), 
+					new FlightModelExportProcessor(),
+					new GunLayoutImportProcessor(), new GunLayoutExportProcessor()};
 	
 	public static void main(String[] args) {
 		String version = System.getProperty("java.version");
@@ -61,7 +65,7 @@ public final class CommandLineMain {
 			}
 			
 			if(cmd.getFileQueue().isEmpty()) {
-				log.consoleDebug("No files passed in.");
+				log.console("No files passed in, or files unrecognized.");
 				System.exit(0);
 				return;
 			}

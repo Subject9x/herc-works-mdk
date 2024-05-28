@@ -46,7 +46,6 @@ import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.DataFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
@@ -59,15 +58,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * 
  */
 public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
-
-	private ObjectMapper objectMapper;
 	
 	@Override
 	public void init(ExcavatorCmdLine cmdLine, Logger logger) throws IOException  {
 		super.init(cmdLine, logger);
-		objectMapper = cmdLine.getJsonMapper();
-		objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-	
+		setObjectMapper(cmdLine.getJsonMapper());
+		getObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 	}
 	
 	@Override

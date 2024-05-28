@@ -29,7 +29,8 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 		HELP("h", "-h"),
 		DBG("x", "-x"),
 		DPL("p","-p"),
-		SRC("s", "-s");
+		SRC("s", "-s"),
+		MKDBA("cdba", "-cdba");
 		
 		private String val;
 		private String arg;
@@ -90,7 +91,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 			
 			if(cmdLine.hasOption(OptionArgs.SRC.val())) {
 				optionArgs.add(OptionArgs.SRC.arg());
-			}
+			}			
 			
 			getLogger().console("-------------------Active options-------------------");
 			for(Option o : cmdLine.getOptions()) {
@@ -110,8 +111,14 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 		
 		for(String arg : args) {
 			if(!optionArgs.contains(arg)) {
+				
 				FileType t = checkFileTypes(arg);
-				fileQueue.add(new FileItem(arg, t));	
+				if(t != null) {
+					fileQueue.add(new FileItem(arg, t));	
+				}
+				else {
+					getLogger().console("invalid file[" + arg +"], ignoring!");
+				}
 			}	
 		}
 		

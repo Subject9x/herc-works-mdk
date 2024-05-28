@@ -27,7 +27,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 
 	public void importJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
 		try {
-			getLogger().console("--------------------------EXPORTING " + file + " -----------------------------------");
+			getLogger().console("--------------------------IMPORTING " + file + " -----------------------------------");
 			
 			
 			TransferObject dto = objectMapper.readValue(loadFileBytes(getAppPath() + file), dtoClass);

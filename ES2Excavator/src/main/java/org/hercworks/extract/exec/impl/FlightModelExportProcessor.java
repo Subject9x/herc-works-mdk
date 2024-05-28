@@ -2,7 +2,7 @@ package org.hercworks.extract.exec.impl;
 
 import java.io.IOException;
 
-import org.hercworks.core.data.file.FlightModel;
+import org.hercworks.core.data.file.dbsim.FlightModel;
 import org.hercworks.core.io.transform.common.FlightModelTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
@@ -13,18 +13,15 @@ import org.hercworks.transfer.dto.file.sim.FlightModelDTO;
 import org.hercworks.transfer.svc.impl.FlightModelDTOServiceImpl;
 import org.hercworks.voln.FileType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class FlightModelExportProcessor extends GenericJsonProcessor {
 	
-	private ObjectMapper objectMapper;
-	
 	@Override
 	public void init(ExcavatorCmdLine cmdLine, Logger logger) throws IOException  {
 		super.init(cmdLine, logger);
-		objectMapper = cmdLine.getJsonMapper();
-		objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+		setObjectMapper(cmdLine.getJsonMapper());
+		getObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 	}
 	
 	@Override
