@@ -3,7 +3,7 @@ package org.hercworks.core.io.transform.common;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.hercworks.core.data.file.FlightModel;
+import org.hercworks.core.data.file.dbsim.FlightModel;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
 

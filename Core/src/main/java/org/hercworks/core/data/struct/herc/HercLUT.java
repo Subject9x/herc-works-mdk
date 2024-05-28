@@ -10,40 +10,42 @@ import java.util.Map;
  */
 public enum HercLUT {
 
-	OUTLAW((short)0, "Outlaw", (short)3),
-	RAPTOR_II((short)1, "Raptor_II", (short)5),
-	TOMAHAWK((short)2, "Tomahawk", (short)5),
-	SAMSON((short)3, "Samson", (short)8),
-	COLOSSUS((short)4, "Colossus",  (short)9),
-	APOCALYPSE((short)5, "Apocalypse",  (short)10),
-	OGRE((short)6, "Ogre",  (short)10),
-	MAVERICK((short)7, "Maverick", (short)4),
-	RAZOR((short)8, "Razor", (short)7),
+	OUTLAW((short)0, "Outlaw", (short)3, "OUTLAW"),
+	RAPTOR_II((short)1, "Raptor_II", (short)5, "RAPTOR2"),
+	TOMAHAWK((short)2, "Tomahawk", (short)5, "TOMAHAWK"),
+	SAMSON((short)3, "Samson", (short)8, "SAMSON"),
+	COLOSSUS((short)4, "Colossus",  (short)9, "COLOSSUS"),
+	APOCALYPSE((short)5, "Apocalypse",  (short)10, "APOCA"),
+	OGRE((short)6, "Ogre",  (short)10, "OGRE"),
+	MAVERICK((short)7, "Maverick", (short)4, "MAVERICK"),
+	RAZOR((short)8, "Razor", (short)7, "RAZOR"),
 	//WARN - I don't know if Cybrid hercs are on the same num-id sequence as player hercs, so the following is not accurate.
 	//I have cybrids here for convenience.
-	ACHILLES((short)9, "ACHILLES", (short)6),
-	CERBERUS((short)10, "CERBERUS", (short)9),
-	DIABLO((short)11, "DIABLO", (short)8),
-	HEADHUNTER((short)12, "HEADHUNTER", (short)9),
-	HYPERION((short)13, "HYPERION", (short)9),
-	MIRIMAC((short)14, "MIRIMAC", (short)5),
-	MONGOOSE((short)15, "MONGOOSE", (short)3),
-	PITBULL((short)16, "PITBULL", (short)1),
-	RAMSES((short)17, "RAMSES", (short)4),
-	SCARAB((short)18, "SCARAB", (short)4),
-	STINGRAY((short)19, "STINGRAY", (short)3),
-	SKIMMER((short)20, "SKIMMER", (short)3),
-	SPIDER((short)21, "SPIDER", (short)1);
+	ACHILLES((short)9, "ACHILLES", (short)6, "ACHILLES"),
+	CERBERUS((short)10, "CERBERUS", (short)9, "CERBERUS"),
+	DIABLO((short)11, "DIABLO", (short)8, "DIABLO"),
+	HEADHUNTER((short)12, "HEADHUNTER", (short)9, "HEADHUNT"),
+	HYPERION((short)13, "HYPERION", (short)9, "HYPERION"),
+	MIRIMAC((short)14, "MIRIMAC", (short)5, "MIRIMAC"),
+	MONGOOSE((short)15, "MONGOOSE", (short)3, "MONGOOSE"),
+	PITBULL((short)16, "PITBULL", (short)1, "PITBULL"),
+	RAMSES((short)17, "RAMSES", (short)4, "RAMSES"),
+	SCARAB((short)18, "SCARAB", (short)4, "SCARAB"),
+	STINGRAY((short)19, "STINGRAY", (short)3, "STINGRAY"),
+	SKIMMER((short)20, "SKIMMER", (short)3, "SKIMMER"),
+	SPIDER((short)21, "SPIDER", (short)1, "SPIDER");
 
 	private static final Map<Short,HercLUT> ENUM_MAP;
 	private String name;
 	private short id;
 	private short hardpointMax;
+	private String abbrevDat;
 	
-	private HercLUT(short id, String name, short hardpointMax) {
+	private HercLUT(short id, String name, short hardpointMax, String abbrevDat) {
 		this.name = name;
 		this.id = id;
 		this.hardpointMax = hardpointMax;
+		this.abbrevDat = abbrevDat;
 	}
 
 	static {
@@ -76,6 +78,14 @@ public enum HercLUT {
 
 	public void setId(short id) {
 		this.id = id;
+	}
+
+	public String getAbbrevDat() {
+		return abbrevDat;
+	}
+
+	public void setAbbrevDat(String abbrevDat) {
+		this.abbrevDat = abbrevDat;
 	}
 
 	@Override

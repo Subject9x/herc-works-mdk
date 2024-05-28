@@ -3,10 +3,10 @@ package org.hercworks.core.io.transform.dbsim;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.hercworks.core.data.file.HercSimDamage;
-import org.hercworks.core.data.file.HercSimDamage.ExternalComponentEntry;
-import org.hercworks.core.data.file.HercSimDamage.HercPiece;
-import org.hercworks.core.data.file.HercSimDamage.InternalsTarget;
+import org.hercworks.core.data.file.dbsim.HercSimDamage;
+import org.hercworks.core.data.file.dbsim.HercSimDamage.ExternalComponentEntry;
+import org.hercworks.core.data.file.dbsim.HercSimDamage.HercPiece;
+import org.hercworks.core.data.file.dbsim.HercSimDamage.InternalsTarget;
 import org.hercworks.core.data.struct.herc.HercInternals;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;

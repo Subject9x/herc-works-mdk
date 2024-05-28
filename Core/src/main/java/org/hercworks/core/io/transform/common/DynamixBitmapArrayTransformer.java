@@ -16,7 +16,6 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 
 	public DynamixBitmapArrayTransformer() {}
 	
-	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		

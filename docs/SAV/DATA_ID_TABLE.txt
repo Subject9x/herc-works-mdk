@@ -13,6 +13,7 @@ Maverick    7    7    4    0700     0700      0400
 Razor       8    8    7    0800     0800      0700
 
 item    intID    int range    hex id  "2nd" id  hex range
+NONE      0          0         0000    0000       0000
 ATC20     1         450        0100    0100       C201
 ATC35     2         420        0200    0200       A401
 ATC50     3         380        0300    0300       7C01

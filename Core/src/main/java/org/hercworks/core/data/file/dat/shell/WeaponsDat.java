@@ -14,7 +14,7 @@ import org.hercworks.voln.DataFile;
  *  	S0_4+ - STR - null terminated string.
  *      S0_4+Len - UINT16 - Salvage cost, game * 100 to convert from tons to Kgs.
  *      S0_4+Len+UINT16 - Byte - start campaign with this unlocked.
- *      S0_4+Len+UINT16+Byte - UINT16 - ? - unknown value
+ *      S0_4+Len+UINT16+Byte - UINT16 - Armory Workshop build priority
  *  
  *  0 + SEQ(len) - UINT16 - total campaign-start weapon inventory 
  *  SEQ 1 - {@linkplain UiWeaponEntry}
@@ -82,7 +82,7 @@ public class WeaponsDat extends DataFile{
 		private byte[] name;
 		private short salvageCost;	//* 100 to convert to tons
 		private byte startUnlock;
-		private short unk2;
+		private short autobuildPriority;
 		
 		public Entry() {}
 
@@ -106,8 +106,8 @@ public class WeaponsDat extends DataFile{
 			return startUnlock;
 		}
 
-		public short getUnk2() {
-			return unk2;
+		public short getAutobuildPriority() {
+			return autobuildPriority;
 		}
 
 		public void setId(short id) {
@@ -130,8 +130,8 @@ public class WeaponsDat extends DataFile{
 			this.startUnlock = unk1;
 		}
 
-		public void setUnk2(short unk2) {
-			this.unk2 = unk2;
+		public void setAutobuildPriority(short autobuildPriority) {
+			this.autobuildPriority = autobuildPriority;
 		}
 	}
 

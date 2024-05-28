@@ -25,6 +25,8 @@ import at.favre.lib.bytes.Bytes;
 
 public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 
+	public PlayerSaveTransform() {}
+	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		
