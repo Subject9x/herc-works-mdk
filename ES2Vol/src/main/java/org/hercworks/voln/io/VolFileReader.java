@@ -170,6 +170,8 @@ public final class VolFileReader {
 			
 			entry.setExt(FileType.typeFromVal(entry.getFileName().substring(entry.getFileName().lastIndexOf('.') + 1)));
 			
+			entry.setDir(FileType.typeFromVal(vol.getFolders().get(entry.getDirIdx()).getLabel().toLowerCase()));
+			
 			int startOfs = entry.getVolOffset().toInt();
 			
 			entry.setFileCompressionType(Bytes.from(vol.getRawBytes(), startOfs, 1));

@@ -9,6 +9,7 @@ import org.hercworks.core.data.file.dyn.DynamixBitmap;
 import org.hercworks.core.data.file.dyn.DynamixBitmapArray;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 import at.favre.lib.bytes.Bytes;
 
@@ -28,6 +29,9 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		
 		DynamixBitmapArray dba = new DynamixBitmapArray();
 		dba.setRawBytes(Bytes.from(inputArray).array());
+		dba.setExt(FileType.DBA);
+		dba.setDir(FileType.DBA);
+		
 		dba.setImages(new LinkedHashSet<DynamixBitmap>());
 		
 		dba.setHeader(indexSegment(4));

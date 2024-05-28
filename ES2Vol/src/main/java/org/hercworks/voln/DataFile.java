@@ -13,6 +13,7 @@ public abstract class DataFile {
 	private String gameDirPath;
 	private String filePath;
 	private FileType ext;
+	private FileType dir;
 	
 	private byte[] rawBytes;
 	private Bytes fileSize;
@@ -94,5 +95,13 @@ public abstract class DataFile {
 
 	public void setHeader(byte[] header) {
 		this.header = header;
+	}
+
+	public FileType getDir() {
+		return dir;
+	}
+
+	public void setDir(FileType dir) {
+		this.dir = dir;
 	}
 }

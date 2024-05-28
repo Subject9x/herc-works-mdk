@@ -25,7 +25,9 @@ public class HercsStartTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 		
 		Hercs startHercs = new Hercs();
+		startHercs.setRawBytes(inputArray);
 		startHercs.setExt(FileType.DAT);
+		startHercs.setDir(FileType.GAM);
 		startHercs.setData(new Hercs.Entry[indexShortLE()]);
 		
 		for(int i=0; i < startHercs.getData().length; i++) {

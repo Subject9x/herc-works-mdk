@@ -10,6 +10,7 @@ import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class TrainingHercsTransform extends ThreeSpaceByteTransformer{
 
@@ -24,6 +25,9 @@ public class TrainingHercsTransform extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 		
 		TrainingHercs training = new TrainingHercs();
+		training.setRawBytes(inputArray);
+		training.setExt(FileType.DAT);
+		training.setDir(FileType.GAM);
 		
 		training.setData(new ArrayList<ShellHercData>());
 		

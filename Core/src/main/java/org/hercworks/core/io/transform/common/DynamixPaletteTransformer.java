@@ -39,8 +39,9 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		
 		DynamixPalette dpl = new DynamixPalette();
 		dpl.setRawBytes(Bytes.from(inputArray).array());	//clone array
-		
 		dpl.setExt(FileType.DPL);
+		dpl.setDir(FileType.DPL);
+		
 		index += 4;	//skip magic header bytes.
 		
 		dpl.setPaletteSizeByte(indexIntLE());

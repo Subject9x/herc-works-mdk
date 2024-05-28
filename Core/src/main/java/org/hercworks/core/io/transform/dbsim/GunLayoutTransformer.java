@@ -20,8 +20,9 @@ public class GunLayoutTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 		
 		GunLayout data = new GunLayout(indexShortLE());
-		data.setExt(FileType.GL);
 		data.setRawBytes(inputArray);
+		data.setExt(FileType.GL);
+		data.setDir(FileType.GL);
 		
 		for(int i=0; i < data.getTotalGuns(); i++) {
 			HardpointEntry entry = data.newEntry();

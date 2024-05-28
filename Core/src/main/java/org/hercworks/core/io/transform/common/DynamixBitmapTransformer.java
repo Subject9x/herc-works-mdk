@@ -30,6 +30,7 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		DynamixBitmap dbm = new DynamixBitmap();
 		dbm.setRawBytes(Bytes.from(inputArray).array());
 		dbm.setExt(FileType.DBM);
+		dbm.setDir(FileType.DBM);
 		
 		dbm.setHeader(indexSegment(4));
 		dbm.setFileSize(Bytes.from(indexSegmentLE(4)));

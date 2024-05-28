@@ -16,9 +16,15 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		index = 0;
 		
+		if(inputArray == null || inputArray.length <= 0) {
+			//TODO - null input
+			return null;
+		}
+		
 		HercSimDat data = new HercSimDat();
-		data.setExt(FileType.DAT);
 		data.setRawBytes(inputArray);
+		data.setExt(FileType.DAT);
+		data.setDir(FileType.DAT);
 		
 		setBytes(inputArray);
 		

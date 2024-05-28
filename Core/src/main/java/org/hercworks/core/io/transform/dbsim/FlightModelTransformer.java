@@ -1,4 +1,4 @@
-package org.hercworks.core.io.transform.common;
+package org.hercworks.core.io.transform.dbsim;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.hercworks.core.data.file.dbsim.FlightModel;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class FlightModelTransformer extends ThreeSpaceByteTransformer{
 
@@ -15,13 +16,16 @@ public class FlightModelTransformer extends ThreeSpaceByteTransformer{
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		
-		if(inputArray == null) {
+		if(inputArray == null || inputArray.length <= 0) {
 			return null;
 		}
 		
 		setBytes(inputArray);
 		
 		FlightModel fm = new FlightModel();
+		fm.setRawBytes(inputArray);
+		fm.setExt(FileType.FM);
+		fm.setDir(FileType.FM);
 		
 		fm.setPitchRate(indexShortLE());
 		fm.setRollRate(indexShortLE());

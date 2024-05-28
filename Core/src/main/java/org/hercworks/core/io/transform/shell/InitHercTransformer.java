@@ -24,7 +24,9 @@ public class InitHercTransformer extends ThreeSpaceByteTransformer {
 		setBytes(inputArray);
 		
 		InitHerc initHerc = new InitHerc();
+		initHerc.setRawBytes(inputArray);
 		initHerc.setExt(FileType.DAT);
+		initHerc.setDir(FileType.GAM);
 		
 		ShellHercData data = new  ShellHercData();
 		

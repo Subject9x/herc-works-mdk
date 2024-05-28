@@ -38,6 +38,7 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		
 		PlayerSave save = new PlayerSave();
 		save.setExt(FileType.SAV);
+		save.setDir(FileType.SAV);
 		
 		save.setUnk1_uint16(indexShortLE());
 		save.setSpacer1(indexByte());

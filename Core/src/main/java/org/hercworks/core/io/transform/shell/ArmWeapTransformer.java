@@ -27,6 +27,8 @@ public class ArmWeapTransformer extends ThreeSpaceByteTransformer {
 		armWeap.setTotalWeapons(count);
 		armWeap.setRawBytes(inputArray);
 		armWeap.setExt(FileType.DAT);
+		armWeap.setDir(FileType.GAM);
+		
 		armWeap.setFileName("ARM_WEAP");
 		
 		for(int i=0; i < armWeap.getTotalWeapons(); i++) {

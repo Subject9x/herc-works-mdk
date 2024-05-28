@@ -26,8 +26,9 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 
 		ArmHerc armData = new ArmHerc();
+		armData.setRawBytes(inputArray);
 		armData.setExt(FileType.DAT);
-		
+		armData.setDir(FileType.GAM);
 		
 		UiHardpointGraphic topHercImg = new UiHardpointGraphic();
 		armData.setTopImgArrId(indexShortLE());

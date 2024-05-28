@@ -23,7 +23,9 @@ public class RprHercTransform extends ThreeSpaceByteTransformer{
 		}
 		setBytes(inputArray);
 		RprHerc repairHerc = new RprHerc();
+		repairHerc.setRawBytes(inputArray);
 		repairHerc.setExt(FileType.DAT);
+		repairHerc.setDir(FileType.GAM);
 		
 		short bodImg = indexShortLE();
 		repairHerc.setBodyImgTotal(bodImg);

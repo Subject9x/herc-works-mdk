@@ -27,6 +27,7 @@ public class HercInfoTransformer extends ThreeSpaceByteTransformer{
 		HercInf hercInfo = new HercInf(totalHercs);
 		hercInfo.setRawBytes(inputArray);
 		hercInfo.setExt(FileType.DAT);
+		hercInfo.setDir(FileType.GAM);
 		
 		for(short i=0; i < totalHercs; i+=(short)1) {
 			HercInfEntry item = new HercInfEntry();

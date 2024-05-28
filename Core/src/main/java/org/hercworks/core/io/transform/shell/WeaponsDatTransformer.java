@@ -24,10 +24,12 @@ public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 		
 		short totalWeapons = indexShortLE();
+		
 		WeaponsDat data = new WeaponsDat(totalWeapons);
 		data.setFileName("WEAPONS");
-		data.setExt(FileType.DAT);
 		data.setRawBytes(inputArray);
+		data.setExt(FileType.DAT);
+		data.setDir(FileType.GAM);
 		
 		for(int i=0; i < totalWeapons; i++) {
 			WeaponsDat.Entry entry = data.addEntry(i);

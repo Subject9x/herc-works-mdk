@@ -18,9 +18,15 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
 		index = 0;
 		
+		if(inputArray == null || inputArray.length <= 0) {
+			//TODO - null input
+			return null;
+		}
+		
 		HercSimDamage data = new HercSimDamage();
-		data.setExt(FileType.DMG);
 		data.setRawBytes(inputArray);
+		data.setExt(FileType.DMG);
+		data.setDir(FileType.DMG);
 		
 		setBytes(inputArray);
 		
