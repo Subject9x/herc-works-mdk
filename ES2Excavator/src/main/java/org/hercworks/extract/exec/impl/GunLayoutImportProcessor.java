@@ -25,7 +25,7 @@ public class GunLayoutImportProcessor extends GenericJsonProcessor {
 	
 	@Override
 	public boolean filterFile(FileItem file) {
-		if(file.getName().toLowerCase().contains("_"+FileType.GL.name()+".json")){
+		if(file.getName().toLowerCase().contains("."+FileType.GL.name().toLowerCase()+".json")){
 			filesToProcess.add(file);
 			return true;
 		}		

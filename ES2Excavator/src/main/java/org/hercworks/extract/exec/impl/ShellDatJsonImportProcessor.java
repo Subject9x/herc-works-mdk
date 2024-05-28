@@ -39,6 +39,7 @@ import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
+import org.hercworks.voln.FileType;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -63,7 +64,7 @@ public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 	@Override
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
-		if(file.getName().toLowerCase().contains(".json")) {
+		if(file.getName().toLowerCase().contains("."+FileType.GAM.name().toLowerCase()+".json")) {
 			if(FileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;

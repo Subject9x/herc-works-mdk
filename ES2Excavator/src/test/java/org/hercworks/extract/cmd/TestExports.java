@@ -7,13 +7,13 @@ import org.junit.Test;
 public class TestExports {
 
 	public static String[] wepDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT"};
-	public static String[] wepJsonArgs = new String[] {"-x","/UNPACK/WEAPONS.json"};
+	public static String[] wepJsonArgs = new String[] {"-x","/UNPACK/GAM/WEAPONS.GAM.json"};
 	
 	public static String[] hercsDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/HERCS.DAT"};
-	public static String[] hercsJsonArgs = new String[] {"-x","/UNPACK/HERCS.json"};
+	public static String[] hercsJsonArgs = new String[] {"-x","/UNPACK/GAM/HERCS.GAM.json"};
 	
 	public static String[] simHercDatArgs = new String[] {"-x","/UNPACK/SIMVOL0/dat/APOCA.DAT"};
-	public static String[] simHercJsonDatArgs = new String[] {"-x","/UNPACK/TOMAHAWK.json"};
+	public static String[] simHercJsonDatArgs = new String[] {"-x","/UNPACK/DAT/APOCA.DAT.json"};
 	
 	public static String[] hercInfDatArgs = new String[] {"-x","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] hercInfJsonArgs = new String[] {"-x","/UNPACK/HERC_INF.json"};
@@ -31,12 +31,18 @@ public class TestExports {
 	
 	@Test
 	public void exportHercSimDat() {
-//		CommandLineMain.main(simHercJsonDatArgs);
-//		CommandLineMain.main(new String[] {"-x", "/UNPACK/SIMVOL0/gl/ACHILLES.GL",
+		CommandLineMain.main(simHercJsonDatArgs);
+//		CommandLineMain.main(new String[] {"-x", 
+//				"/UNPACK/SIMVOL0/gl/ACHILLES.GL",
 //				"/UNPACK/SIMVOL0/gl/PITBULL.GL",
 //				"/UNPACK/SIMVOL0/gl/RAMSES.GL",
 //				"/UNPACK/SIMVOL0/gl/TOMAHAWK.GL"});
-		CommandLineMain.main(simHercDatArgs);
+//		CommandLineMain.main(new String[] {"-x", 
+//				"/UNPACK/gl/ACHILLES.GL.json",
+//				"/UNPACK/gl/PITBULL.GL.json",
+//				"/UNPACK/gl/RAMSES.GL.json",
+//				"/UNPACK/gl/TOMAHAWK.GL.json"});
+//		CommandLineMain.main(simHercDatArgs);
 	}
 	
 	@Test
@@ -62,18 +68,18 @@ public class TestExports {
 	@Test
 	public void testWeaponsDat() {
 		
-		CommandLineMain.main(wepDatArgs);
+//		CommandLineMain.main(wepDatArgs);
 		
-//		CommandLineMain.main(wepJsonArgs);
+		CommandLineMain.main(wepJsonArgs);
 		
 	}
 	
 	@Test
 	public void testHercs() {
 		
-		CommandLineMain.main(hercsDatArgs);
+//		CommandLineMain.main(hercsDatArgs);
 		
-//		CommandLineMain.main(hercsJsonArgs);
+		CommandLineMain.main(hercsJsonArgs);
 		
 		
 	}

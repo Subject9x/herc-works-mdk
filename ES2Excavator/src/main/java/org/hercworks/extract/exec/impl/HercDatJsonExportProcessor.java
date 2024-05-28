@@ -13,6 +13,7 @@ import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
 import org.hercworks.transfer.dto.file.sim.HercSimDatDTO;
 import org.hercworks.transfer.svc.impl.HercSimDataDTOServiceImpl;
+import org.hercworks.voln.FileType;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -29,14 +30,16 @@ public class HercDatJsonExportProcessor extends GenericJsonProcessor {
 	
 	@Override
 	public boolean filterFile(FileItem file) {
-		boolean filter = false;
+		if(file.getName().toLowerCase().contains(".json")) {
+			return false;
+		}
 		for(HercLUT herc : HercLUT.values()) {
-			if(file.getName().toLowerCase().contains(herc.getAbbrevDat().toLowerCase()+".dat")) {
+			if(file.getName().toLowerCase().contains(herc.getAbbrevDat().toLowerCase() + "." + FileType.DAT.name().toLowerCase())) {
 				filesToProcess.add(file);
-				filter = true;
+				return true;
 			}
 		}
-		return filter;
+		return false;
 	}
 	
 	@Override

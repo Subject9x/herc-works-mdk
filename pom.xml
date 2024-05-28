@@ -18,7 +18,7 @@
   	  	<es2.vol.version>0.0.3</es2.vol.version>
   	  	<es2.core.version>0.0.4</es2.core.version>
   	  	<es2.transfr.version>0.1.5</es2.transfr.version>
-  	  	<es2.excavate.version>0.1.10</es2.excavate.version>
+  	  	<es2.excavate.version>0.1.14</es2.excavate.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>9</maven.compiler.release>
 	</properties>

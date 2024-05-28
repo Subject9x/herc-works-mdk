@@ -3,7 +3,7 @@ package org.hercworks.extract.exec.impl;
 import java.io.IOException;
 
 import org.hercworks.core.data.file.dbsim.FlightModel;
-import org.hercworks.core.io.transform.common.FlightModelTransformer;
+import org.hercworks.core.io.transform.dbsim.FlightModelTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.GenericJsonProcessor;

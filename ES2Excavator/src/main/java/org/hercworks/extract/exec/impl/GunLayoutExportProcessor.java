@@ -25,6 +25,9 @@ public class GunLayoutExportProcessor extends GenericJsonProcessor {
 	
 	@Override
 	public boolean filterFile(FileItem file) {
+		if(file.getName().toLowerCase().contains(".json")) {
+			return false;
+		}
 		if(file.getName().toLowerCase().contains("/gl/")
 				&& file.getName().toLowerCase().contains("."+FileType.GL.name().toLowerCase())){
 			filesToProcess.add(file);

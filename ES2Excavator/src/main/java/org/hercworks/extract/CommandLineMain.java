@@ -72,8 +72,8 @@ public final class CommandLineMain {
 			
 			List<FileItem> skipList = new ArrayList<FileItem>();
 			for(FileItem file : cmd.getFileQueue()) {
-				if(!skipList.contains(file)) {
-					for(FileProcessor p : processors) {
+				for(FileProcessor p : processors) {
+					if(!skipList.contains(file)) {
 						if(p.filterFile(file)) {
 							skipList.add(file);
 						}

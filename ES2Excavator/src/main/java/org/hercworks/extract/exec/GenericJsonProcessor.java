@@ -59,15 +59,25 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 
 			byte[] data = transformerClass.objectToBytes(convert);
 			
-			File out = new File(targDirPath + "/" + ((DataFile)convert).getFileName() + "." + ((DataFile)convert).getExt().val());
+			String fileName = ((DataFile)convert).getFileName();
+			
+			String cleanFileName = new String(fileName.substring(0,
+					fileName.lastIndexOf(".")));
+			
+			String fullImportPath = targDirPath + "/" + cleanFileName + "." + ((DataFile)convert).getExt().val().toUpperCase();
+			
+			File out = new File(fullImportPath);
 			
 			FileOutputStream foss = new FileOutputStream(out);
 			foss.write(data);
 			foss.close();
 			
+			getLogger().console("+ Compilation complete for [" + fullImportPath +"]");
+			
 		} catch(Exception e) {
 			getLogger().console(e.getMessage());
 		}
+		getLogger().console("------------------------------------------------------------------------------------");
 	}
 	
 	public void exportJson(String file, ThreeSpaceByteTransformer transformerClass, Class<? extends DataFile> dataClass, GeneralDTOService dtoService, Class<? extends TransferObject> dtoClass) {
@@ -90,28 +100,38 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
 			}
 			else {
-				targDirPath = makeExportPath(this.unpackPath);
+				targDirPath = makeExportPath(this.unpackPath + "/" + ((DataFile)exportDat).getDir().name() + "/");
 			}
 			
 			if(targDirPath == null) {
 				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
+			}
+			
+			File targDir = new File(targDirPath);
+			if(!targDir.exists()) {
+				if(!targDir.mkdir()) {
+					getLogger().console("Error: could not make dir [" + targDirPath + "], exiting process");
+					return;
+				}
 			}
 
 			Object dto = dtoService.convertToDTO(((DataFile)exportDat));
 			
 			dto = dtoClass.cast(dto);
 			
-
-			File json = new File(targDirPath + "/" + ((DataFile)exportDat).getFileName() + ".json");
+			String fullExportPath = targDirPath + "/" + ((DataFile)exportDat).getFileName() + "." + ((DataFile)exportDat).getDir().name() + ".json";
+			
+			File json = new File(fullExportPath);
 			json.setWritable(true);
 			objectMapper.writeValue(json, dto);
-//			
+			
+			getLogger().console("+ Write complete to [" + fullExportPath +"]");
 			
 		} catch(Exception e) {
 			getLogger().console(e.getMessage());
 			return;
 		}
-		getLogger().console("+ Write complete.");
+		
 		getLogger().console("------------------------------------------------------------------------------------");
 	}
 	
