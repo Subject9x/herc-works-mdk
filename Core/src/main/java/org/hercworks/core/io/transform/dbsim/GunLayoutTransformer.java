@@ -76,7 +76,7 @@ public class GunLayoutTransformer extends ThreeSpaceByteTransformer{
 				out.write(writeShortLE(entry.getOffset()[2]));
 				out.write(entry.getUnk7_val());
 				out.write(entry.getHardpointId());
-				out.write(entry.getUnk8_val());
+				out.write(writeShortLE(entry.getUnk8_val()));
 			}
 		}
 		

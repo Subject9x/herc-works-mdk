@@ -83,6 +83,8 @@ public class GunLayoutDTOServiceImpl implements GeneralDTOService {
 			hardpoints[i] = entry;
 		}
 		
+		data.setHardpoints(hardpoints);
+		
 		return data;
 	}
 }

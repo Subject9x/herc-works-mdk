@@ -31,17 +31,14 @@ public class TestExports {
 	
 	@Test
 	public void exportHercSimDat() {
-		CommandLineMain.main(simHercJsonDatArgs);
+//		CommandLineMain.main(simHercJsonDatArgs);
 //		CommandLineMain.main(new String[] {"-x", 
 //				"/UNPACK/SIMVOL0/gl/ACHILLES.GL",
 //				"/UNPACK/SIMVOL0/gl/PITBULL.GL",
 //				"/UNPACK/SIMVOL0/gl/RAMSES.GL",
 //				"/UNPACK/SIMVOL0/gl/TOMAHAWK.GL"});
-//		CommandLineMain.main(new String[] {"-x", 
-//				"/UNPACK/gl/ACHILLES.GL.json",
-//				"/UNPACK/gl/PITBULL.GL.json",
-//				"/UNPACK/gl/RAMSES.GL.json",
-//				"/UNPACK/gl/TOMAHAWK.GL.json"});
+		CommandLineMain.main(new String[] {"-x", 
+				"/UNPACK/gl/TOMAHAWK.GL.json"});
 //		CommandLineMain.main(simHercDatArgs);
 	}
 	
