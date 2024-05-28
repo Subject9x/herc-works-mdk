@@ -15,7 +15,7 @@
 
 	<properties>
 		<jdk.version>1.8</jdk.version>
-  	  	<es2.vol.version>0.0.1</es2.vol.version>
+  	  	<es2.vol.version>0.0.2</es2.vol.version>
   	  	<es2.core.version>0.0.3</es2.core.version>
   	  	<es2.transfr.version>0.1.5</es2.transfr.version>
   	  	<es2.excavate.version>0.1.10</es2.excavate.version>

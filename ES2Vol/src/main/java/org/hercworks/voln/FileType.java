@@ -42,6 +42,8 @@ public enum FileType{
 	HD2("hd2"),
 	HD3("hd3"),
 	HFN("hfn"),
+	HMI("hmi"),
+	HMX("hmx"),
 	MSN("msn"),
 	NAM("nam"),
 	OFS("ofs"),
@@ -51,9 +53,11 @@ public enum FileType{
 	SNC("snc"),
 	SOS("sos"),
 	STR("str"),
+	TTM("ttm"),
 	VUE("vue"),
 	VOL("vol"),
-	WLD("wld");
+	WLD("wld"),
+	WAV("wav");
 	
 	private String val;
 	
