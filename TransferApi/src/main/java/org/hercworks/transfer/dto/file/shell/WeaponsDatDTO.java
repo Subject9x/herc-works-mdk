@@ -3,7 +3,7 @@ package org.hercworks.transfer.dto.file.shell;
 import java.util.List;
 
 import org.hercworks.transfer.dto.file.TransferObject;
-import org.hercworks.transfer.dto.shell.struct.WeaponsDatItem;
+import org.hercworks.transfer.dto.struct.shell.WeaponsDatItem;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;

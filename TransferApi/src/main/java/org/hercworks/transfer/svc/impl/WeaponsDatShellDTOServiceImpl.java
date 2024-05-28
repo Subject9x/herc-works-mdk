@@ -8,7 +8,7 @@ import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.dto.shell.struct.WeaponsDatItem;
+import org.hercworks.transfer.dto.struct.shell.WeaponsDatItem;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
@@ -36,7 +36,7 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 			item.setName(name);
 			item.setSalvageCost(entry.getSalvageCost());
 			item.setStartUnlock(entry.getStartUnlock());
-			item.setUnk2(entry.getUnk2());
+			item.setAutobuildPriority(entry.getAutobuildPriority());
 			entries[i] = item;
 		}
 		dto.setWeapons(entries);
@@ -74,7 +74,7 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 			entry.setName(Bytes.from(item.getName().getBytes()).append((byte)0).array());
 			entry.setSalvageCost(item.getSalvageCost());
 			entry.setStartUnlock(item.getStartUnlock());
-			entry.setUnk2(item.getUnk2());
+			entry.setAutobuildPriority(item.getAutobuildPriority());
 		}
 		
 		data.setStartingWeapons(new UiWeaponEntry[srcDto.getStartingList().size()]);

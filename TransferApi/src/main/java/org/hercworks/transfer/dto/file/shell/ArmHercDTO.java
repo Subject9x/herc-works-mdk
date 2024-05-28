@@ -5,8 +5,8 @@ import java.util.Map;
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.transfer.dto.file.TransferObject;
-import org.hercworks.transfer.dto.shell.struct.UiHardpointDTO;
-import org.hercworks.transfer.dto.shell.struct.UiImageDTO;
+import org.hercworks.transfer.dto.struct.shell.UiHardpointDTO;
+import org.hercworks.transfer.dto.struct.shell.UiImageDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;

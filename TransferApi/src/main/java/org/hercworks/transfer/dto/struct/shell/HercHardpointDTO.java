@@ -1,4 +1,4 @@
-package org.hercworks.transfer.dto.shell.struct;
+package org.hercworks.transfer.dto.struct.shell;
 
 import org.hercworks.core.data.struct.WeaponLUT;
 

@@ -9,7 +9,7 @@ import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.InitHercDTO;
-import org.hercworks.transfer.dto.shell.struct.HercHardpointDTO;
+import org.hercworks.transfer.dto.struct.shell.HercHardpointDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;

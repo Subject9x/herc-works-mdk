@@ -8,8 +8,8 @@ import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiHardpointGraphic;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
-import org.hercworks.transfer.dto.shell.struct.UiHardpointDTO;
-import org.hercworks.transfer.dto.shell.struct.UiImageDTO;
+import org.hercworks.transfer.dto.struct.shell.UiHardpointDTO;
+import org.hercworks.transfer.dto.struct.shell.UiImageDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 

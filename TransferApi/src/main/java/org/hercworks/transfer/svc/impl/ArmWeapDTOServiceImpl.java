@@ -6,7 +6,7 @@ import org.hercworks.core.data.struct.vshell.hercs.UiHardpointGraphic;
 import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA.RFlag;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
-import org.hercworks.transfer.dto.shell.struct.ArmWeapIconDTO;
+import org.hercworks.transfer.dto.struct.shell.ArmWeapIconDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 

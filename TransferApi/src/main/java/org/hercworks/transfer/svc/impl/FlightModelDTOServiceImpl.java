@@ -1,6 +1,6 @@
 package org.hercworks.transfer.svc.impl;
 
-import org.hercworks.core.data.file.FlightModel;
+import org.hercworks.core.data.file.dbsim.FlightModel;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.sim.FlightModelDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;

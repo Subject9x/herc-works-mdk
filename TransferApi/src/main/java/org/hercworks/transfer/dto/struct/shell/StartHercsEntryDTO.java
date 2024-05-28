@@ -1,4 +1,4 @@
-package org.hercworks.transfer.dto.shell.struct;
+package org.hercworks.transfer.dto.struct.shell;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;

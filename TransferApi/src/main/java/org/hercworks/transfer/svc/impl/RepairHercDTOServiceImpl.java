@@ -10,7 +10,7 @@ import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA;
 import org.hercworks.core.data.struct.vshell.hercs.UiImageDBA.RFlag;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
-import org.hercworks.transfer.dto.shell.struct.UiImageDTO;
+import org.hercworks.transfer.dto.struct.shell.UiImageDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;

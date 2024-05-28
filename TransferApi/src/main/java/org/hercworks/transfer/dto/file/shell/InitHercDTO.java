@@ -3,7 +3,7 @@ package org.hercworks.transfer.dto.file.shell;
 import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.transfer.dto.file.TransferObject;
-import org.hercworks.transfer.dto.shell.struct.HercHardpointDTO;
+import org.hercworks.transfer.dto.struct.shell.HercHardpointDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
