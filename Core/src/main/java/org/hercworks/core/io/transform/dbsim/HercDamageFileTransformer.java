@@ -4,10 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.hercworks.core.data.file.dbsim.HercSimDamage;
-import org.hercworks.core.data.file.dbsim.HercSimDamage.ExternalComponentEntry;
 import org.hercworks.core.data.file.dbsim.HercSimDamage.HercPiece;
+import org.hercworks.core.data.file.dbsim.HercSimDamage.InternalsHealth;
 import org.hercworks.core.data.file.dbsim.HercSimDamage.InternalsTarget;
 import org.hercworks.core.data.struct.herc.HercInternals;
+import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
@@ -31,63 +32,73 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 		setBytes(inputArray);
 		
 		data.setInternalsTotal(indexShortLE());
-		data.getInternals().put(HercInternals.SERVOS_LEG_LEFT, indexShortLE());
-		data.getInternals().put(HercInternals.SERVOS_LEG_RIGHT, indexShortLE());
-		data.getInternals().put(HercInternals.SENSOR_ARRAY, indexShortLE());
-		data.getInternals().put(HercInternals.TARG_COMP, indexShortLE());
-		data.getInternals().put(HercInternals.SHIELD_GEN, indexShortLE());
-		data.getInternals().put(HercInternals.ENGINE, indexShortLE());
-		data.getInternals().put(HercInternals.HYDRAULICS, indexShortLE());
-		data.getInternals().put(HercInternals.STABILIZERS, indexShortLE());
-		data.getInternals().put(HercInternals.LIFE_SUPPRT, indexShortLE());
-		data.getInternals().put(HercInternals.PILOT, indexShortLE());
 		
-		for(int i=0; i< 22 - data.getInternals().size(); i++) {
+		data.setInternals(new InternalsHealth[data.getInternalsTotal()]);
+		for(int i = 0; i < data.getInternalsTotal(); i++) {
+			short val = indexShortLE();
+			
+			if(i < 10) {
+				InternalsHealth system = data.newInternalsHealth();
+				system.setId((short)i);
+				system.setArmor(val);
+				if(val != 0) {
+					system.setName(HercInternals.getById((short)i));	
+				}
+				data.getInternals()[i] = system;
+			}
+		}
+		
+		for(int i=0; i< 22 - data.getInternals().length; i++) {
 			skip(2);
 		}
 		
-		//COCKPIT\FRONT
-		data.getComponentData().add(parseHercPiece(data));
+		short totalComponents = indexShortLE();
 		
-		//COCKPIT\REAR
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//SHOULDER\LEFT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//SHOULDER\RIGHT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//WEPN_BRACK\LEFT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//WEPN_BRACK\RIGHT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//TORSO
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//LEG\LEFT\UPPER
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//LEG\RIGHT\UPPER
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//LEG\LEFT\LOWER
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//LEG\RIGHT\LOWER
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//FOOT\LEFT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		//FOOT\RIGHT
-		data.getComponentData().add(parseHercPiece(data));
-		
-		for(int i=0; i<16; i++) {
-			data.getHardpoints()[i] = parseExternalModule(data);
+		//non-skimmer, non-spider hercs have 29
+		data.setComponentData(new HercPiece[totalComponents]);
+		for(int i = 0; i < 29; i++) {
+			data.getComponentData()[i] = parseHercPiece(data);
 		}
+		
+//		//COCKPIT\FRONT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//COCKPIT\REAR
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//SHOULDER\LEFT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//SHOULDER\RIGHT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//WEPN_BRACK\LEFT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//WEPN_BRACK\RIGHT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//TORSO
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//LEG\LEFT\UPPER
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//LEG\RIGHT\UPPER
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//LEG\LEFT\LOWER
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//LEG\RIGHT\LOWER
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//FOOT\LEFT
+//		data.getComponentData().add(parseHercPiece(data));
+//		
+//		//FOOT\RIGHT
+//		data.getComponentData().add(parseHercPiece(data));
+		
 		
 		return data;
 	}
@@ -98,26 +109,39 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
 		HercSimDamage data = (HercSimDamage)source;
+
+		int diff = 0;
+		if(data.getFileName().toLowerCase().contains(HercLUT.SKIMMER.getAbbrevDat().toLowerCase())) {
+			out.write(writeShortLE((short)1));
+		}
+		else{
+			out.write(writeShortLE((short)22));
+			diff = 22 - data.getInternals().length;
+		}
 		
-		out.write(writeShortLE(data.getInternalsTotal()));
+		for(int i = 0; i < data.getInternalsTotal(); i++) {
+			out.write(writeShortLE(data.getInternals()[i].getArmor()));
+		}
 		
-		int diff = 22 - data.getInternals().size();
-		for(HercInternals e : HercInternals.values()) {
-			if(data.getInternals().containsKey(e)) {
-				out.write(writeShortLE(data.getInternals().get(e)));
+		for(int i = 0; i < diff; i++) {
+			out.write(writeShortLE((short)0));
+		}
+		
+		out.write(writeShortLE((short)data.getComponentData().length));
+		
+		for(int p = 0; p < data.getComponentData().length; p++) {
+			HercPiece piece = data.getComponentData()[p]; 
+			out.write(writeShortLE(piece.getArmor()));
+			out.write(writeShortLE(piece.getDebrisFlags()));
+			out.write(piece.getBoneId());
+			out.write(piece.getUnk_val());
+			out.write(writeShortLE((short)piece.getMappedInternals().length));
+			
+			for(int i = 0; i < piece.getMappedInternals().length; i++) {
+				short chance = (short) (piece.getMappedInternals()[i].getCritChance() * 100);
+				out.write(writeShortLE(chance));
+				out.write(writeShortLE(piece.getMappedInternals()[i].getInternalsId().getId()));
 			}
-		}
-		
-		for(int i=0; i < diff; i++) {
-			out.write((short)0);
-		}
-		
-		if(data.getComponentData() != null && !data.getComponentData().isEmpty()) {
-			data.getComponentData().forEach((c)->{writeHercPiece(c, out);});
-		}
-		
-		for(int i=0; i < 16; i++) {
-			writeExternalComponent(data.getHardpoints()[i], out );
 		}
 		
 		return out.toByteArray();
@@ -130,54 +154,14 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 		piece.setDebrisFlags(indexShortLE());
 		piece.setBoneId(indexByte());
 		piece.setUnk_val(indexByte());
+		
 		piece.setMappedInternals(new InternalsTarget[indexShortLE()]);
 		for(int i=0; i < piece.getMappedInternals().length; i++) {
 			InternalsTarget internalComp = data.newInternalsTarget();
-			internalComp.setUnk_val14(indexShortLE());
+			internalComp.setCritChance(indexShortLE());
 			internalComp.setId(HercInternals.getById(indexShortLE()));
 			piece.getMappedInternals()[i] = internalComp;
 		}
 		return piece;
-	}
-	
-	private ExternalComponentEntry parseExternalModule(HercSimDamage data) {
-		ExternalComponentEntry mod = data.newExternalComponentEntry();
-		mod.setUnk_first(indexShortLE());
-		mod.setUnk_flag1(indexShortLE());
-		mod.setDebrisOrgBoneId(indexShortLE());
-		mod.setPossibleSpacer(indexShortLE());
-		return mod;
-	}
-	
-	
-	private void writeHercPiece(HercPiece piece, ByteArrayOutputStream out) {
-		try {
-			out.write(writeShortLE(piece.getArmor()));
-			out.write(writeShortLE(piece.getDebrisFlags()));
-			out.write(piece.getBoneId());
-			out.write(piece.getUnk_val());
-			out.write(writeShortLE((short)piece.getMappedInternals().length));
-			
-			for(int i=0; i<piece.getMappedInternals().length; i++) {
-				out.write(writeShortLE(piece.getMappedInternals()[i].getUnk_val14()));
-				out.write(writeShortLE(piece.getMappedInternals()[i].getInternalsId().getId()));
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void writeExternalComponent(ExternalComponentEntry entry, ByteArrayOutputStream out ) {
-		try {
-			out.write(writeShortLE(entry.getUnk_first()));
-			out.write(writeShortLE(entry.getUnk_flag1()));
-			out.write(writeShortLE(entry.getDebrisOrgBoneId()));
-			out.write(writeShortLE(entry.getPossibleSpacer()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

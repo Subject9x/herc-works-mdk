@@ -63,7 +63,12 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 			dba.getImages().add(dbm);
 			imageCount++;
 			
-			skip(1);	//spacer byte
+			if(index+1 < actualBytes) {
+				byte space = indexByte();
+				if(space != 0x00) {
+					index = index - 1;
+				}	
+			}
 		}
 		
 		return dba;

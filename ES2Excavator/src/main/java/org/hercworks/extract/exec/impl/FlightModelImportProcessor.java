@@ -27,7 +27,7 @@ public class FlightModelImportProcessor extends GenericJsonProcessor {
 	@Override
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
-		if(file.getName().toLowerCase().contains("."+FileType.FM.val()+".json")) {
+		if(file.getName().toLowerCase().contains("."+FileType.FM.val().toLowerCase()+".json")) {
 			if(FileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;

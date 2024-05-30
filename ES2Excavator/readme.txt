@@ -26,6 +26,9 @@ File Options
 	+ .DBM - requires a .DPL file as a second file, unpacks DBM to .png.
 	+ .DBA - unpack internal .DBM files.
 		+ IF provided .DPL, will ALSO export colorized .DBMs as .png
+	+ .FM - flight model data from /SIMVOL0/FM/
+	+ .GL - GunLayout data from /SIMVOL0/GL/
+	+ .DMG - Damage Def file /SIMVOL0/DMG/
 	+ .DAT - see below
 
 Export to JSON
@@ -38,7 +41,7 @@ Export to JSON
 		+ Razor, Spider, Skimmer are not support YET, these don't confirm to the 216-size herc data file that other hercs do.
 
 	+ after making your edits, feed the JSON file back into the cmd line.
-		+ This will generate a corresponding .DAT file that has your new changes.
+		+ This will generate a corresponding Game File that has your new changes.
 		+ place new file in <es2 root>/GAM/
 			+ run ES2.exe
 	

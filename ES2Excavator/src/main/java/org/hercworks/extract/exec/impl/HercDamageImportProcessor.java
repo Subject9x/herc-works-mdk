@@ -2,21 +2,21 @@ package org.hercworks.extract.exec.impl;
 
 import java.io.IOException;
 
-import org.hercworks.core.data.file.dbsim.FlightModel;
-import org.hercworks.core.io.transform.dbsim.FlightModelTransformer;
+import org.hercworks.core.data.file.dbsim.HercSimDamage;
+import org.hercworks.core.io.transform.dbsim.HercDamageFileTransformer;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
-import org.hercworks.extract.util.FileMatch;
-import org.hercworks.transfer.dto.file.sim.FlightModelDTO;
-import org.hercworks.transfer.svc.impl.FlightModelDTOServiceImpl;
+import org.hercworks.transfer.dto.file.sim.HercDmgDTO;
+import org.hercworks.transfer.svc.impl.HercSimDmgDTOServiceImpl;
 import org.hercworks.voln.FileType;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class FlightModelExportProcessor extends GenericJsonProcessor {
-	
+
+public class HercDamageImportProcessor extends GenericJsonProcessor{
+
 	@Override
 	public void init(ExcavatorCmdLine cmdLine, Logger logger) throws IOException  {
 		super.init(cmdLine, logger);
@@ -26,14 +26,9 @@ public class FlightModelExportProcessor extends GenericJsonProcessor {
 	
 	@Override
 	public boolean filterFile(FileItem file) {
-		if(file.getName().toLowerCase().contains(".json")) {
-			return false;
-		}
-		if(file.getName().toLowerCase().contains("."+FileType.FM.val().toLowerCase())) {
-			if(FileMatch.getByPattern(file.getName()) != null) {
-				filesToProcess.add(file);
-				return true;
-			}
+		if(file.getName().toLowerCase().contains("."+FileType.DMG.name().toLowerCase()+".json")) {
+			filesToProcess.add(file);
+			return true;
 		}
 		return false;
 	}
@@ -41,7 +36,7 @@ public class FlightModelExportProcessor extends GenericJsonProcessor {
 	@Override
 	public void processFiles() {
 		for(FileItem file : filesToProcess) {
-			exportJson(file.getName(), new FlightModelTransformer(), FlightModel.class, new FlightModelDTOServiceImpl(), FlightModelDTO.class);
+			importJson(file.getName(), new HercDamageFileTransformer(), HercSimDamage.class, new HercSimDmgDTOServiceImpl(), HercDmgDTO.class);
 		}
 	}
 }

@@ -10,6 +10,8 @@ import org.hercworks.extract.exec.impl.DynamixFileProcessor;
 import org.hercworks.extract.exec.impl.FlightModelExportProcessor;
 import org.hercworks.extract.exec.impl.GunLayoutExportProcessor;
 import org.hercworks.extract.exec.impl.GunLayoutImportProcessor;
+import org.hercworks.extract.exec.impl.HercDamageExportProcessor;
+import org.hercworks.extract.exec.impl.HercDamageImportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonExportProcessor;
 import org.hercworks.extract.exec.impl.HercDatJsonImportProcessor;
 import org.hercworks.extract.exec.impl.ShellDatJsonExportProcessor;
@@ -30,8 +32,9 @@ public final class CommandLineMain {
 	private static FileProcessor[] processors  = new FileProcessor[] {
 					 new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), 
 					new ShellDatJsonExportProcessor(), new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor(), 
-					new FlightModelExportProcessor(),
-					new GunLayoutImportProcessor(), new GunLayoutExportProcessor()};
+					new FlightModelExportProcessor(), new HercDamageExportProcessor(),
+					new GunLayoutImportProcessor(), new GunLayoutExportProcessor(),
+					new HercDamageImportProcessor()};
 	
 	public static void main(String[] args) {
 		String version = System.getProperty("java.version");

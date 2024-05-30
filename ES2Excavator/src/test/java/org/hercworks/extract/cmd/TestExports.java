@@ -27,6 +27,22 @@ public class TestExports {
 	public static String[] argsExportAll = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT","/UNPACK/SHELL0/GAM/HERCS.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/INI_OUTL.DAT","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
 	
+	@Test
+	public void exportDBA() {
+		CommandLineMain.main(new String[] {"-x", "-p", 
+				"/UNPACK/shell0/dba/TOM_WEP.DBA",
+				"/UNPACK/shell0/dpl/arming.DPL"}); 
+//				"/UNPACK/simvol0/dba/TOMAHAWK.DBA",
+//				"/UNPACK/simvol0/dpl/World0.DPL"});
+	}
+	
+	@Test
+	public void exportHercSimDmg() {
+//		CommandLineMain.main(new String[] {"-x", 
+//		"/UNPACK/simvol0/dmg/TOMAHAWK.DMG"});
+		CommandLineMain.main(new String[] {"-x", 
+		"/UNPACK/dmg/TOMAHAWK.DMG.json"});
+	}
 	
 	
 	@Test
@@ -37,8 +53,8 @@ public class TestExports {
 //				"/UNPACK/SIMVOL0/gl/PITBULL.GL",
 //				"/UNPACK/SIMVOL0/gl/RAMSES.GL",
 //				"/UNPACK/SIMVOL0/gl/TOMAHAWK.GL"});
-		CommandLineMain.main(new String[] {"-x", 
-				"/UNPACK/gl/TOMAHAWK.GL.json"});
+//		CommandLineMain.main(new String[] {"-x", 
+//				"/UNPACK/dmg/TOMAHAWK.GL.json"});
 //		CommandLineMain.main(simHercDatArgs);
 	}
 	

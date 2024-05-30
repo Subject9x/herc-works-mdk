@@ -57,12 +57,13 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
 			}
 
-			byte[] data = transformerClass.objectToBytes(convert);
-			
+			//make file name accessible to the transformer
 			String fileName = ((DataFile)convert).getFileName();
-			
 			String cleanFileName = new String(fileName.substring(0,
 					fileName.lastIndexOf(".")));
+			
+			byte[] data = transformerClass.objectToBytes(convert);
+			
 			
 			String fullImportPath = targDirPath + "/" + cleanFileName + "." + ((DataFile)convert).getExt().val().toUpperCase();
 			
