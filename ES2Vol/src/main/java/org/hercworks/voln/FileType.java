@@ -5,6 +5,7 @@ package org.hercworks.voln;
  * very handy.
  */
 public enum FileType{
+	BIN("bin"),
 	BND("bnd"),
 	COL("col"),
 	CYC("cyc"),
