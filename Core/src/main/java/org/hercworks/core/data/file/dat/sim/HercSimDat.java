@@ -8,7 +8,7 @@ import org.hercworks.voln.DataFile;
  * 	0 - UINT16 - SPEED\TURNING
  *  2 - INT16  - SPEED\REVERSE
  *  4 - UINT16 - SPEED\FORWARD
- *  6 - UINT16 - ? - making it negative causes unbounded accelerating reverse direction
+ *  6 - UINT16 - SPEED\ACCEL_DECEL - both values
  *  8-	UINT16 - SPEED\TURNING\DECELERATION
  *  10-	UINT16 - CAMERA\BONE_ID
  *  12- UINT16 - INPUT\FLAG\TURN\RAZR_OR_HERC
@@ -107,8 +107,7 @@ public class HercSimDat extends DataFile {
 	private short speedTurn;
 	private short speedReverse;
 	private short speedForward;
-	
-	private short unk6_Val30 = (short)30;
+	private short speedAccelDecel;
 	
 	private short decelTurning;
 	
@@ -127,7 +126,7 @@ public class HercSimDat extends DataFile {
 	
 	private short inputTorsoRazrFlag;
 	private short torsoTwistSpeed;
-	private short unk30_Val1000;
+	private short torsoRotateAccel;
 	private short torsoTwistDegreeMax;
 	private short inputFlagsTorso;
 	private short torsoPitchMaxRate;
@@ -222,8 +221,8 @@ public class HercSimDat extends DataFile {
 		return speedForward;
 	}
 
-	public short getUnk6_Val30() {
-		return unk6_Val30;
+	public short getSpeedAccelDecel() {
+		return speedAccelDecel;
 	}
 
 	public short getDecelTurning() {
@@ -270,8 +269,8 @@ public class HercSimDat extends DataFile {
 		return torsoTwistSpeed;
 	}
 
-	public short getUnk30_Val1000() {
-		return unk30_Val1000;
+	public short getTorsoRotateAccel() {
+		return torsoRotateAccel;
 	}
 
 	public short getTorsoTwistDegreeMax() {
@@ -470,8 +469,8 @@ public class HercSimDat extends DataFile {
 		this.speedForward = speedForward;
 	}
 
-	public void setUnk6_Val30(short unk6_Val30) {
-		this.unk6_Val30 = unk6_Val30;
+	public void setSpeedAccelDecel(short speedAccelDecel) {
+		this.speedAccelDecel = speedAccelDecel;
 	}
 
 	public void setDecelTurning(short decelTurning) {
@@ -518,8 +517,8 @@ public class HercSimDat extends DataFile {
 		this.torsoTwistSpeed = torsoTwistSpeed;
 	}
 
-	public void setUnk30_Val1000(short unk30_Val1000) {
-		this.unk30_Val1000 = unk30_Val1000;
+	public void setTorsoRotateAccel(short torsoRotateAccel) {
+		this.torsoRotateAccel = torsoRotateAccel;
 	}
 
 	public void setTorsoTwistDegreeMax(short torsoTwistDegreeMax) {

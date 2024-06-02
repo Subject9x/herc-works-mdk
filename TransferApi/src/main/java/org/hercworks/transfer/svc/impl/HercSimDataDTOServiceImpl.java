@@ -1,5 +1,7 @@
 package org.hercworks.transfer.svc.impl;
 
+import java.util.LinkedHashMap;
+
 import org.hercworks.core.data.file.dat.sim.HercSimDat;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.sim.HercSimDatDTO;
@@ -18,11 +20,13 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		HercSimDatDTO dto = new HercSimDatDTO();
 		
-		dto.setSpeedTurn(src.getSpeedTurn());
-		dto.setSpeedReverse(src.getSpeedReverse());
-		dto.setSpeedForward(src.getSpeedForward());
-		dto.setUnk6_Val30(src.getUnk6_Val30());
-		dto.setDecelTurning(src.getDecelTurning());
+		//Speed config block-------------------------------------------------------------------------------------
+		dto.getSpeedValues().put("turn", String.valueOf(src.getSpeedTurn()));
+		dto.getSpeedValues().put("reverse", String.valueOf(src.getSpeedReverse()));
+		dto.getSpeedValues().put("forward", String.valueOf(src.getSpeedForward()));
+		dto.getSpeedValues().put("accel_and_decel", String.valueOf(src.getSpeedAccelDecel()));
+		dto.getSpeedValues().put("turning_decel", String.valueOf(src.getDecelTurning()));
+		//-----------------------------------------------------------------------------------------------------
 		
 		dto.setCameraBoneId(src.getCameraBoneId());
 		
@@ -36,17 +40,24 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dto.setAiAimTargOffset(src.getAiAimTargOffset());
 		
-		dto.setInputTorsoRazrFlag(src.getInputTorsoRazrFlag());
-		dto.setTorsoTwistSpeed(src.getTorsoTwistSpeed());
+		//Torso config block---------------------------------------------------------------------------
+		dto.getTorsoConfig().put("razor_override", String.valueOf(src.getInputTorsoRazrFlag()));
 		
-		dto.setUnk30_Val1000(src.getUnk30_Val1000());
+		LinkedHashMap<String, String> rotateSpeed = new LinkedHashMap<String, String>();
+		rotateSpeed.put("rotate_speed", dto.fixedShortToFloatString(src.getTorsoTwistSpeed()));
+		rotateSpeed.put("accel_rate",  dto.fixedShortToFloatString(src.getTorsoRotateAccel()));
+		rotateSpeed.put("angle_max",  dto.fixedShortToFloatString(src.getTorsoTwistDegreeMax()));
+		dto.getTorsoConfig().put("rotation", rotateSpeed);
+
+		dto.getTorsoConfig().put("input_flags", String.valueOf(src.getInputFlagsTorso()));
 		
-		dto.setTorsoTwistDegreeMax(src.getTorsoTwistDegreeMax());
-		dto.setInputFlagsTorso(src.getInputFlagsTorso());
-		dto.setTorsoPitchMaxRate(src.getTorsoPitchMaxRate());
-		dto.setTorsoPitchRate(src.getTorsoPitchRate());
-		dto.setTorsoPitchMax(src.getTorsoPitchMax());
-		dto.setTorsoPitchMin(src.getTorsoPitchMin());
+		LinkedHashMap<String, String> torsoPitch = new LinkedHashMap<String, String>();
+		torsoPitch.put("rate_max",  dto.fixedShortToFloatString(src.getTorsoPitchMaxRate()));
+		torsoPitch.put("rate",  dto.fixedShortToFloatString(src.getTorsoPitchRate()));
+		torsoPitch.put("angle_max",  dto.fixedShortToFloatString(src.getTorsoPitchMax()));
+		torsoPitch.put("angle_min",  dto.fixedShortToFloatString(src.getTorsoPitchMin()));
+		dto.getTorsoConfig().put("pitch", torsoPitch);
+		//---------------------------------------------------------------------------------------------
 		
 		dto.setUnk44MoveAnimRate(src.getUnk44_MoveAnimRate());
 		
@@ -85,7 +96,6 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dto.setCameraYAxisAdj(src.getCameraYAxisAdj());
 		dto.setCameraXAxisAdj(src.getCameraXAxisAdj());
-		
 		dto.setCameraExtOrgOffset(src.getCameraExtOrgOffset());
 		
 		dto.setUnk108_camExtVal1(src.getUnk108_camExtVal1());
@@ -136,15 +146,18 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 
 	@Override
 	public DataFile fromDTO(TransferObject source) {
+		HercSimDatDTO dto = (HercSimDatDTO)source;
 		HercSimDat dat = new HercSimDat();
 		dat.setExt(FileType.DAT);
-		HercSimDatDTO dto = (HercSimDatDTO)source;
+		dat.setDir(FileType.DAT);
 		
-		dat.setSpeedTurn((short)dto.getSpeedTurn());
-		dat.setSpeedReverse((short)dto.getSpeedReverse());
-		dat.setSpeedForward((short)dto.getSpeedForward());
-		dat.setUnk6_Val30((short)dto.getUnk6_Val30());
-		dat.setDecelTurning((short)dto.getDecelTurning());
+		//Speed config block------------------------------------------------------------------------------------
+		dat.setSpeedTurn(Short.valueOf(dto.getSpeedValues().get("turn")));
+		dat.setSpeedReverse(Short.valueOf(dto.getSpeedValues().get("reverse")));
+		dat.setSpeedForward(Short.valueOf(dto.getSpeedValues().get("forward")));
+		dat.setSpeedAccelDecel(Short.valueOf(dto.getSpeedValues().get("accel_and_decel")));
+		dat.setDecelTurning(Short.valueOf(dto.getSpeedValues().get("turning_decel")));
+		//-----------------------------------------------------------------------------------------------------
 		
 		dat.setCameraBoneId((short)dto.getCameraBoneId());
 		
@@ -158,17 +171,24 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dat.setAiAimTargOffset((short)dto.getAiAimTargOffset());
 		
-		dat.setInputTorsoRazrFlag((short)dto.getInputTorsoRazrFlag());
-		dat.setTorsoTwistSpeed((short)dto.getTorsoTwistSpeed());
+		//Torso config block------------------------------------------------------------------------------------
+		dat.setInputTorsoRazrFlag(Short.valueOf((String)dto.getTorsoConfig().get("razor_override")));
 		
-		dat.setUnk30_Val1000((short)dto.getUnk30_Val1000());
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, String> rotateSpeed = (LinkedHashMap<String, String>)dto.getTorsoConfig().get("rotation");	
+		dat.setTorsoTwistSpeed(dto.floatStringToFixedShort(rotateSpeed.get("rotate_speed")));
+		dat.setTorsoRotateAccel(dto.floatStringToFixedShort(rotateSpeed.get("accel_rate")));
+		dat.setTorsoTwistDegreeMax(dto.floatStringToFixedShort(rotateSpeed.get("angle_max")));
 		
-		dat.setTorsoTwistDegreeMax((short)dto.getTorsoTwistDegreeMax());
-		dat.setInputFlagsTorso((short)dto.getInputFlagsTorso());
-		dat.setTorsoPitchMaxRate((short)dto.getTorsoPitchMaxRate());
-		dat.setTorsoPitchRate((short)dto.getTorsoPitchRate());
-		dat.setTorsoPitchMax((short)dto.getTorsoPitchMax());
-		dat.setTorsoPitchMin((short)dto.getTorsoPitchMin());
+		dat.setInputFlagsTorso(Short.valueOf((String)dto.getTorsoConfig().get("input_flags")));
+		
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, String> torsoPitch = (LinkedHashMap<String, String>)dto.getTorsoConfig().get("pitch");	
+		dat.setTorsoPitchMaxRate(dto.floatStringToFixedShort(torsoPitch.get("rate_max")));
+		dat.setTorsoPitchRate(dto.floatStringToFixedShort(torsoPitch.get("rate")));
+		dat.setTorsoPitchMax(dto.floatStringToFixedShort(torsoPitch.get("angle_max")));
+		dat.setTorsoPitchMin(dto.floatStringToFixedShort(torsoPitch.get("angle_min")));
+		//-------------------------------------------------------------------------------------------------------
 		
 		dat.setUnk44_MoveAnimRate((short)dto.getUnk44MoveAnimRate());
 		

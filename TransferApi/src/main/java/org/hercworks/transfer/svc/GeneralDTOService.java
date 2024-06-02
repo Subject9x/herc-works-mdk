@@ -8,5 +8,4 @@ public interface GeneralDTOService {
 	public TransferObject convertToDTO(DataFile source);
 	
 	public DataFile fromDTO(TransferObject source);
-	
 }

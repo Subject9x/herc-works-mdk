@@ -1,5 +1,8 @@
 package org.hercworks.transfer.dto.file.sim;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.hercworks.transfer.dto.file.TransferObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,22 +11,10 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("simdata")
 public class HercSimDatDTO extends TransferObject {
-
-	@JsonProperty(value = "speed_turn", index = 1)
-	private int speedTurn;
 	
-	@JsonProperty(value = "speed_reverse", index = 2)
-	private int speedReverse;
+	@JsonProperty(value = "speed", index = 0)
+	private Map<String, String> speedValues = new LinkedHashMap<String, String>();
 	
-	@JsonProperty(value = "speed_forward", index = 3)
-	private int speedForward;
-
-	@JsonProperty(value = "unk6_val30", index = 4)
-	private int unk6_Val30 = 30;
-
-	@JsonProperty(value = "turn_decel_rate", index = 5)
-	private int decelTurning;
-
 	@JsonProperty(value = "camera_boneId", index = 6)
 	private int cameraBoneId;
 
@@ -48,33 +39,9 @@ public class HercSimDatDTO extends TransferObject {
 	@JsonProperty(value = "ai_aim_targ_offset", index = 13)
 	private int aiAimTargOffset;
 
-	@JsonProperty(value = "input_torso_razrFlag", index = 14)
-	private int inputTorsoRazrFlag = 0;
-
-	@JsonProperty(value = "torsoTwistSpeed", index = 15)
-	private int torsoTwistSpeed;
-
-	@JsonProperty(value = "unk30_Val1000", index = 16)
-	private int unk30_Val1000 = 1000;
-
-	@JsonProperty(value = "torsoTwistDegreeMax", index = 17)
-	private int torsoTwistDegreeMax;
+	@JsonProperty(value = "torso_config", index = 14)
+	private Map<String, Object> torsoConfig = new LinkedHashMap<String, Object>();
 	
-	@JsonProperty(value = "inputFlagsTorso", index = 18)
-	private int inputFlagsTorso;
-
-	@JsonProperty(value = "torsoPitchMaxRate", index = 19)
-	private int torsoPitchMaxRate;
-	
-	@JsonProperty(value = "torsoPitchRate", index = 20)
-	private int torsoPitchRate;
-
-	@JsonProperty(value = "torsoPitchMax", index = 21)
-	private int torsoPitchMax;
-	
-	@JsonProperty(value = "torsoPitchMin", index = 22)
-	private int torsoPitchMin;
-
 	@JsonProperty(value = "unk44_move_anim_rate", index = 23)
 	private int unk44MoveAnimRate;
 	
@@ -195,25 +162,9 @@ public class HercSimDatDTO extends TransferObject {
 	private String debrisFile;
 	
 	public HercSimDatDTO() {}
-
-	public int getSpeedTurn() {
-		return speedTurn;
-	}
-
-	public int getSpeedReverse() {
-		return speedReverse;
-	}
-
-	public int getSpeedForward() {
-		return speedForward;
-	}
-
-	public int getUnk6_Val30() {
-		return unk6_Val30;
-	}
-
-	public int getDecelTurning() {
-		return decelTurning;
+	
+	public Map<String, String> getSpeedValues() {
+		return speedValues;
 	}
 
 	public int getCameraBoneId() {
@@ -248,41 +199,45 @@ public class HercSimDatDTO extends TransferObject {
 		return aiAimTargOffset;
 	}
 
-	public int getInputTorsoRazrFlag() {
-		return inputTorsoRazrFlag;
+	public Map<String, Object> getTorsoConfig() {
+		return torsoConfig;
 	}
-
-	public int getTorsoTwistSpeed() {
-		return torsoTwistSpeed;
-	}
-
-	public int getUnk30_Val1000() {
-		return unk30_Val1000;
-	}
-
-	public int getTorsoTwistDegreeMax() {
-		return torsoTwistDegreeMax;
-	}
-
-	public int getInputFlagsTorso() {
-		return inputFlagsTorso;
-	}
-
-	public int getTorsoPitchMaxRate() {
-		return torsoPitchMaxRate;
-	}
-
-	public int getTorsoPitchRate() {
-		return torsoPitchRate;
-	}
-
-	public int getTorsoPitchMax() {
-		return torsoPitchMax;
-	}
-
-	public int getTorsoPitchMin() {
-		return torsoPitchMin;
-	}
+	
+//	public int getInputTorsoRazrFlag() {
+//		return inputTorsoRazrFlag;
+//	}
+//
+//	public int getTorsoTwistSpeed() {
+//		return torsoTwistSpeed;
+//	}
+//
+//	public int getTorsoRotateAccel() {
+//		return torsoRotateAccel;
+//	}
+//
+//	public int getTorsoTwistDegreeMax() {
+//		return torsoTwistDegreeMax;
+//	}
+//	
+//	public int getInputFlagsTorso() {
+//		return inputFlagsTorso;
+//	}
+//
+//	public int getTorsoPitchMaxRate() {
+//		return torsoPitchMaxRate;
+//	}
+//
+//	public int getTorsoPitchRate() {
+//		return torsoPitchRate;
+//	}
+//
+//	public int getTorsoPitchMax() {
+//		return torsoPitchMax;
+//	}
+//
+//	public int getTorsoPitchMin() {
+//		return torsoPitchMin;
+//	}
 
 	public int getUnk44MoveAnimRate() {
 		return unk44MoveAnimRate;
@@ -444,24 +399,8 @@ public class HercSimDatDTO extends TransferObject {
 		return debrisFile;
 	}
 
-	public void setSpeedTurn(int speedTurn) {
-		this.speedTurn = speedTurn;
-	}
-
-	public void setSpeedReverse(int speedReverse) {
-		this.speedReverse = speedReverse;
-	}
-
-	public void setSpeedForward(int speedForward) {
-		this.speedForward = speedForward;
-	}
-
-	public void setUnk6_Val30(int unk6_Val30) {
-		this.unk6_Val30 = unk6_Val30;
-	}
-
-	public void setDecelTurning(int decelTurning) {
-		this.decelTurning = decelTurning;
+	public void setSpeedValues(Map<String, String> speedValues) {
+		this.speedValues = speedValues;
 	}
 
 	public void setCameraBoneId(int cameraBoneId) {
@@ -496,41 +435,45 @@ public class HercSimDatDTO extends TransferObject {
 		this.aiAimTargOffset = aiAimTargOffset;
 	}
 
-	public void setInputTorsoRazrFlag(int inputTorsoRazrFlag) {
-		this.inputTorsoRazrFlag = inputTorsoRazrFlag;
+	public void setTorsoConfig(Map<String, Object> torsoConfig) {
+		this.torsoConfig = torsoConfig;
 	}
 
-	public void setTorsoTwistSpeed(int torsoTwistSpeed) {
-		this.torsoTwistSpeed = torsoTwistSpeed;
-	}
-
-	public void setUnk30_Val1000(int unk30_Val1000) {
-		this.unk30_Val1000 = unk30_Val1000;
-	}
-
-	public void setTorsoTwistDegreeMax(int torsoTwistDegreeMax) {
-		this.torsoTwistDegreeMax = torsoTwistDegreeMax;
-	}
-
-	public void setInputFlagsTorso(int inputFlagsTorso) {
-		this.inputFlagsTorso = inputFlagsTorso;
-	}
-
-	public void setTorsoPitchMaxRate(int torsoPitchMaxRate) {
-		this.torsoPitchMaxRate = torsoPitchMaxRate;
-	}
-
-	public void setTorsoPitchRate(int torsoPitchRate) {
-		this.torsoPitchRate = torsoPitchRate;
-	}
-
-	public void setTorsoPitchMax(int torsoPitchMax) {
-		this.torsoPitchMax = torsoPitchMax;
-	}
-
-	public void setTorsoPitchMin(int torsoPitchMin) {
-		this.torsoPitchMin = torsoPitchMin;
-	}
+//	public void setInputTorsoRazrFlag(int inputTorsoRazrFlag) {
+//		this.inputTorsoRazrFlag = inputTorsoRazrFlag;
+//	}
+//
+//	public void setTorsoTwistSpeed(int torsoTwistSpeed) {
+//		this.torsoTwistSpeed = torsoTwistSpeed;
+//	}
+//
+//	public void setTorsoRotateAccel(int unk30_Val1000) {
+//		this.torsoRotateAccel = unk30_Val1000;
+//	}
+//
+//	public void setTorsoTwistDegreeMax(int torsoTwistDegreeMax) {
+//		this.torsoTwistDegreeMax = torsoTwistDegreeMax;
+//	}
+//
+//	public void setInputFlagsTorso(int inputFlagsTorso) {
+//		this.inputFlagsTorso = inputFlagsTorso;
+//	}
+//
+//	public void setTorsoPitchMaxRate(int torsoPitchMaxRate) {
+//		this.torsoPitchMaxRate = torsoPitchMaxRate;
+//	}
+//
+//	public void setTorsoPitchRate(int torsoPitchRate) {
+//		this.torsoPitchRate = torsoPitchRate;
+//	}
+//
+//	public void setTorsoPitchMax(int torsoPitchMax) {
+//		this.torsoPitchMax = torsoPitchMax;
+//	}
+//
+//	public void setTorsoPitchMin(int torsoPitchMin) {
+//		this.torsoPitchMin = torsoPitchMin;
+//	}
 
 	public void setUnk44MoveAnimRate(int unk44MoveAnimRate) {
 		this.unk44MoveAnimRate = unk44MoveAnimRate;

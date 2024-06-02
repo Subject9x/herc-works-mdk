@@ -31,7 +31,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		data.setSpeedTurn(indexShortLE());
 		data.setSpeedReverse(indexShortLE());
 		data.setSpeedForward(indexShortLE());
-		data.setUnk6_Val30(indexShortLE());
+		data.setSpeedAccelDecel(indexShortLE());
 		data.setDecelTurning(indexShortLE());
 
 		data.setCameraBoneId(indexShortLE());
@@ -49,7 +49,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		data.setInputTorsoRazrFlag(indexShortLE());
 		data.setTorsoTwistSpeed(indexShortLE());
 		
-		data.setUnk30_Val1000(indexShortLE());
+		data.setTorsoRotateAccel(indexShortLE());
 		
 		data.setTorsoTwistDegreeMax(indexShortLE());
 		data.setInputFlagsTorso(indexShortLE());
@@ -146,7 +146,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		out.write(writeShortLE(data.getSpeedTurn()));
 		out.write(writeShortLE(data.getSpeedReverse()));
 		out.write(writeShortLE(data.getSpeedForward()));
-		out.write(writeShortLE(data.getUnk6_Val30()));
+		out.write(writeShortLE(data.getSpeedAccelDecel()));
 		out.write(writeShortLE(data.getDecelTurning()));
 		
 		out.write(writeShortLE(data.getCameraBoneId()));
@@ -164,7 +164,7 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		
 		out.write(writeShortLE(data.getInputTorsoRazrFlag()));
 		out.write(writeShortLE(data.getTorsoTwistSpeed()));
-		out.write(writeShortLE(data.getUnk30_Val1000()));
+		out.write(writeShortLE(data.getTorsoRotateAccel()));
 		out.write(writeShortLE(data.getTorsoTwistDegreeMax()));
 		out.write(writeShortLE(data.getInputFlagsTorso()));
 		out.write(writeShortLE(data.getTorsoPitchMaxRate()));

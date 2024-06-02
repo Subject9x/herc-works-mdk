@@ -32,9 +32,9 @@ public class GunLayoutDTOServiceImpl implements GeneralDTOService {
 			entry.setUnk4_0or_5000(hardpoint.getUnk4_0or_5000());
 			entry.setUnk5_Neg8000(hardpoint.getUnk5_Neg8000());
 			entry.setUnk6_16000(hardpoint.getUnk6_16000());
-			entry.getOffset()[0] = hardpoint.getOffset()[0];
-			entry.getOffset()[1] = hardpoint.getOffset()[1];
-			entry.getOffset()[2] = hardpoint.getOffset()[2];
+			entry.getOffset()[0] = dto.fixedShortToFloatString(hardpoint.getOffset()[0]);
+			entry.getOffset()[1] = dto.fixedShortToFloatString(hardpoint.getOffset()[1]);
+			entry.getOffset()[2] = dto.fixedShortToFloatString(hardpoint.getOffset()[2]);
 			entry.setUnk7_val(hardpoint.getUnk7_val());
 			entry.setHardpointId(hardpoint.getHardpointId());
 			entry.setUnk8_val(hardpoint.getUnk8_val());
@@ -73,9 +73,9 @@ public class GunLayoutDTOServiceImpl implements GeneralDTOService {
 			entry.setUnk4_0or_5000((short)hardpoint.getUnk4_0or_5000());
 			entry.setUnk5_Neg8000((short)hardpoint.getUnk5_Neg8000());
 			entry.setUnk6_16000((short)hardpoint.getUnk6_16000());
-			entry.getOffset()[0] = (short)hardpoint.getOffset()[0];
-			entry.getOffset()[1] = (short)hardpoint.getOffset()[1];
-			entry.getOffset()[2] = (short)hardpoint.getOffset()[2];
+			entry.getOffset()[0] = dto.floatStringToFixedShort(hardpoint.getOffset()[0]);
+			entry.getOffset()[1] = dto.floatStringToFixedShort(hardpoint.getOffset()[1]);
+			entry.getOffset()[2] = dto.floatStringToFixedShort(hardpoint.getOffset()[2]);
 			entry.setUnk7_val((byte)hardpoint.getUnk7_val());
 			entry.setHardpointId((byte)hardpoint.getHardpointId());
 			entry.setUnk8_val((short)hardpoint.getUnk8_val());

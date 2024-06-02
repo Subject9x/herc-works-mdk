@@ -34,8 +34,7 @@ public class GunLayoutEntryDTO {
 	private int unk6_16000;
 
 	@JsonProperty(value = "offset_vector", index = 10, defaultValue = "[0,0,0]")
-	
-	private int[] offset = new int[3];
+	private String[] offset = new String[3];
 
 	@JsonProperty(value = "unk7_val", index = 11)
 	private int unk7_val;
@@ -45,7 +44,6 @@ public class GunLayoutEntryDTO {
 
 	@JsonProperty(value = "unk8_val", index = 13)
 	private int unk8_val;
-	
 	
 	public GunLayoutEntryDTO() {}
 	
@@ -85,7 +83,7 @@ public class GunLayoutEntryDTO {
 		return unk6_16000;
 	}
 
-	public int[] getOffset() {
+	public String[] getOffset() {
 		return offset;
 	}
 
@@ -137,7 +135,7 @@ public class GunLayoutEntryDTO {
 		this.unk6_16000 = unk6_16000;
 	}
 
-	public void setOffset(int[] offset) {
+	public void setOffset(String[] offset) {
 		this.offset = offset;
 	}
 
