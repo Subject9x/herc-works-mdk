@@ -133,7 +133,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 	
 	private FileType checkFileTypes(String arg) {
 		for(FileType t : FileType.values()) {
-			if(arg.toLowerCase().contains(t.val())) {
+			if(arg.toLowerCase().contains("."+t.val().toLowerCase())) {
 				return t;
 			}
 		}

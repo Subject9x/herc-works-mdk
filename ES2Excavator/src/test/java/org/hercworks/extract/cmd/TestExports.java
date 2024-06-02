@@ -27,11 +27,27 @@ public class TestExports {
 	public static String[] argsExportAll = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT","/UNPACK/SHELL0/GAM/HERCS.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/INI_OUTL.DAT","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
 	
+	
+	
+	@Test
+	public void testPDGFile() {
+		CommandLineMain.main(new String[] {"-x", 
+		"/UNPACK/pdg/OUTLAW.PDG.json",
+		"/UNPACK/pdg/TOMAHAWK.PDG.json",
+		"/UNPACK/pdg/RAMSES.PDG.json",
+		"/UNPACK/pdg/ACHILLES.PDG.json",
+		"/UNPACK/pdg/DIABLO.PDG.json",
+		"/UNPACK/pdg/SPIDER.PDG.json",
+		"/UNPACK/pdg/RAZOR.PDG.json",
+		
+		}); 
+	}
+	
 	@Test
 	public void exportDBA() {
 		CommandLineMain.main(new String[] {"-x", "-p", 
-				"/UNPACK/shell0/dba/TOM_WEP.DBA",
-				"/UNPACK/shell0/dpl/arming.DPL"}); 
+				"/UNPACK/simvol0/dba/apoca.dba",
+				"/UNPACK/simvol0/dpl/World0.DPL"}); 
 //				"/UNPACK/simvol0/dba/TOMAHAWK.DBA",
 //				"/UNPACK/simvol0/dpl/World0.DPL"});
 	}
@@ -40,8 +56,8 @@ public class TestExports {
 	public void exportHercSimDmg() {
 //		CommandLineMain.main(new String[] {"-x", 
 //		"/UNPACK/simvol0/dmg/TOMAHAWK.DMG"});
-		CommandLineMain.main(new String[] {"-x", 
-		"/UNPACK/dmg/TOMAHAWK.DMG.json"});
+//		CommandLineMain.main(new String[] {"-x", 
+//		"/UNPACK/dmg/TOMAHAWK.DMG.json"});
 	}
 	
 	
