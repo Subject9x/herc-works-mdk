@@ -22,7 +22,7 @@ import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
-import org.hercworks.extract.util.FileMatch;
+import org.hercworks.extract.util.ShellFileMatch;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
@@ -31,14 +31,14 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.HercInfoDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.InitHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.RepairHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.TrainingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.FileType;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -65,7 +65,7 @@ public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
 		if(file.getName().toLowerCase().contains("."+FileType.GAM.name().toLowerCase()+".json")) {
-			if(FileMatch.getByPattern(file.getName()) != null) {
+			if(ShellFileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;
 			}
@@ -76,7 +76,7 @@ public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 	@Override
 	public void processFiles() {
 		for(FileItem file : filesToProcess) {
-			FileMatch match = FileMatch.getByPattern(file.getName()); 
+			ShellFileMatch match = ShellFileMatch.getByPattern(file.getName()); 
 						
 			switch(match) {
 				case WEAPONS:

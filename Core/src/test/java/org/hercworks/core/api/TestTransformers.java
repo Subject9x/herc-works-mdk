@@ -4,19 +4,9 @@ import org.junit.Test;
 
 public class TestTransformers {
 
-	
 	@Test
-	public void testDBM() {
+	public void testPDG() {
 		
-	}
-	
-	@Test
-	public void testDBA() {
-		
-	}
-	
-	@Test
-	public void testDPL() {
 		
 	}
 	

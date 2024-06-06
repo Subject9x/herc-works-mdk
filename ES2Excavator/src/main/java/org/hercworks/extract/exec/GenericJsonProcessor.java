@@ -51,10 +51,17 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			}
 			else {
 				targDirPath = makeExportPath(this.unpackPath);
+				
+				//TODO : make configurable by user
+				String exportModDir = makeExportPath(targDirPath+"/MOD/" + ((DataFile)convert).getExt().val().toUpperCase() +"/");
+				
+				if(exportModDir != null) {
+					targDirPath = exportModDir;
+				}
 			}
 			
 			if(targDirPath == null) {
-				throw new IOException("ERROR - target dir path was null.\n rootPath=[" + getAppPath() + "]");
+				throw new IOException("ERROR - target dir path("+ targDirPath + ") was null.\n rootPath=[" + getAppPath() + "]");
 			}
 
 			//make file name accessible to the transformer
@@ -73,7 +80,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			foss.write(data);
 			foss.close();
 			
-			getLogger().console("+ Compilation complete for [" + fullImportPath +"]");
+			getLogger().console("+ Compilation complete for [" + out.getAbsolutePath() +"]");
 			
 		} catch(Exception e) {
 			getLogger().console(e.getMessage());
@@ -101,7 +108,14 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
 			}
 			else {
+				
+				String exportJsonDir = "";
+				
 				targDirPath = makeExportPath(this.unpackPath + "/" + ((DataFile)exportDat).getDir().name() + "/");
+				
+				
+				
+				
 			}
 			
 			if(targDirPath == null) {

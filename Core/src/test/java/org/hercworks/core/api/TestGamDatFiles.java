@@ -8,6 +8,7 @@ import org.hercworks.voln.io.VolFileReader;
 import org.hercworks.voln.io.VolFileWriter;
 import org.junit.Test;
 
+@Deprecated
 public class TestGamDatFiles {
 
 	private static Voln getVol(String volDir) throws Exception {

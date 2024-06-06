@@ -27,117 +27,95 @@ public class TestExports {
 	public static String[] argsExportAll = new String[] {"-x","/UNPACK/SHELL0/GAM/WEAPONS.DAT","/UNPACK/SHELL0/GAM/HERCS.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/TRN_HERC.DAT","/UNPACK/SHELL0/GAM/INI_OUTL.DAT","/UNPACK/SHELL0/GAM/HERC_INF.DAT"};
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
 	
+	private static String pathSimVol = "/unpack/simvol0/";
+	private static String pathUnpack = "/unpack/";
 	
 	
 	@Test
-	public void testPDGFile() {
-		CommandLineMain.main(new String[] {"-x", 
-		"/UNPACK/pdg/OUTLAW.PDG.json",
-		"/UNPACK/pdg/TOMAHAWK.PDG.json",
-		"/UNPACK/pdg/RAMSES.PDG.json",
-		"/UNPACK/pdg/ACHILLES.PDG.json",
-		"/UNPACK/pdg/DIABLO.PDG.json",
-		"/UNPACK/pdg/SPIDER.PDG.json",
-		"/UNPACK/pdg/RAZOR.PDG.json",
-		
-		}); 
+	public void simExportAll() {
+		CommandLineMain.main(new String[] {
+				"-x",
+				pathSimVol + "pdg/OUTLAW.PDG",
+				pathSimVol + "pdg/TOMAHAWK.PDG",
+				pathSimVol + "pdg/RAMSES.PDG",
+				pathSimVol + "pdg/ACHILLES.PDG",
+				pathSimVol + "pdg/DIABLO.PDG",
+				pathSimVol + "pdg/SPIDER.PDG",
+				pathSimVol + "pdg/RAZOR.PDG",
+				
+				pathSimVol + "gl/OUTLAW.GL",
+				pathSimVol + "gl/TOMAHAWK.GL",
+				pathSimVol + "gl/RAMSES.GL",
+				pathSimVol + "gl/ACHILLES.GL",
+				pathSimVol + "gl/DIABLO.GL",
+				pathSimVol + "gl/SPIDER.GL",
+				pathSimVol + "gl/RAZOR.GL",
+				
+				pathSimVol + "FM/RAZOR.FM",
+				
+				pathSimVol + "dat/OUTLAW.DAT",
+				pathSimVol + "dat/TOMAHAWK.DAT",
+				pathSimVol + "dat/RAMSES.DAT",
+				pathSimVol + "dat/ACHILLES.DAT",
+				pathSimVol + "dat/DIABLO.DAT",
+				pathSimVol + "dat/SPIDER.DAT",
+				pathSimVol + "dat/RAZOR.DAT",
+				
+				pathSimVol + "dat/PROJ.DAT",
+				pathSimVol + "dat/BULLETS.DAT",
+				pathSimVol + "dat/ROCKETS.DAT",
+				pathSimVol + "dat/BEAM.DAT",
+				
+		});
 	}
 	
 	@Test
-	public void exportDBA() {
-		CommandLineMain.main(new String[] {"-x", "-p", 
-				"/UNPACK/simvol0/dba/apoca.dba",
-				"/UNPACK/simvol0/dpl/World0.DPL"}); 
-//				"/UNPACK/simvol0/dba/TOMAHAWK.DBA",
-//				"/UNPACK/simvol0/dpl/World0.DPL"});
+	public void simImportAll() {
+		CommandLineMain.main(new String[] {
+				"-x",
+				pathUnpack + "pdg/OUTLAW.PDG.json",
+				pathUnpack + "pdg/TOMAHAWK.PDG.json",
+				pathUnpack + "pdg/RAMSES.PDG.json",
+				pathUnpack + "pdg/ACHILLES.PDG.json",
+				pathUnpack + "pdg/DIABLO.PDG.json",
+				pathUnpack + "pdg/SPIDER.PDG.json",
+				pathUnpack + "pdg/RAZOR.PDG.json",
+				
+				pathUnpack + "gl/OUTLAW.GL.json",
+				pathUnpack + "gl/TOMAHAWK.GL.json",
+				pathUnpack + "gl/RAMSES.GL.json",
+				pathUnpack + "gl/ACHILLES.GL.json",
+				pathUnpack + "gl/DIABLO.GL.json",
+				pathUnpack + "gl/SPIDER.GL.json",
+				pathUnpack + "gl/RAZOR.GL.json",
+				
+				pathUnpack + "FM/RAZOR.FM.json",
+				
+				pathUnpack + "dat/OUTLAW.DAT.json",
+				pathUnpack + "dat/TOMAHAWK.DAT.json",
+				pathUnpack + "dat/RAMSES.DAT.json",
+				pathUnpack + "dat/ACHILLES.DAT.json",
+				pathUnpack + "dat/DIABLO.DAT.json",
+				pathUnpack + "dat/SPIDER.DAT.json",
+				pathUnpack + "dat/RAZOR.DAT.json",
+				
+				pathUnpack + "dat/PROJ.DAT.json",
+				pathUnpack + "dat/BULLETS.DAT.json",
+				pathUnpack + "dat/ROCKETS.DAT.json",
+				pathUnpack + "dat/BEAM.DAT.json",
+				
+		});
 	}
+	
 	
 	@Test
-	public void exportHercSimDmg() {
-//		CommandLineMain.main(new String[] {"-x", 
-//		"/UNPACK/simvol0/dmg/TOMAHAWK.DMG"});
-//		CommandLineMain.main(new String[] {"-x", 
-//		"/UNPACK/dmg/TOMAHAWK.DMG.json"});
+	public void shellExportAll() {
+		
 	}
-	
-	
+
 	@Test
-	public void exportHercSimDat() {
-//		CommandLineMain.main(simHercJsonDatArgs);
-//		CommandLineMain.main(new String[] {"-x", 
-//				"/UNPACK/SIMVOL0/gl/ACHILLES.GL",
-//				"/UNPACK/SIMVOL0/gl/PITBULL.GL",
-//				"/UNPACK/SIMVOL0/gl/RAMSES.GL",
-//				"/UNPACK/SIMVOL0/gl/TOMAHAWK.GL"});
-//		CommandLineMain.main(new String[] {"-x", 
-//				"/UNPACK/dmg/TOMAHAWK.GL.json"});
-//		CommandLineMain.main(simHercDatArgs);
-	}
-	
-	@Test
-	public void exportSave() {
-//		CommandLineMain.main(new String[] {"-x", "/GAME_0.sav"});	
-	}
-	
-	@Test
-	public void exportRepair() {
-//		CommandLineMain.main(new String[] {"-x", "/UNPACK/RPR_OUTL.json"});	
-	}
-	
-	@Test
-	public void exportAll() {
-//		CommandLineMain.main(argsExportAll);	
-	}
-	
-	@Test
-	public void importAll() {
-//		CommandLineMain.main(argsImportAll);	
-	}
-	
-	@Test
-	public void testWeaponsDat() {
-		
-//		CommandLineMain.main(wepDatArgs);
-		
-		CommandLineMain.main(wepJsonArgs);
+	public void shellImportAll() {
 		
 	}
-	
-	@Test
-	public void testHercs() {
-		
-//		CommandLineMain.main(hercsDatArgs);
-		
-		CommandLineMain.main(hercsJsonArgs);
-		
-		
-	}
-	
-	@Test
-	public void testHercInf() {
-		
-		CommandLineMain.main(hercInfDatArgs);
-		
-//		CommandLineMain.main(hercInfJsonArgs);
-		
-	}
-	
-	@Test
-	public void testInitHer() {
-		
-		CommandLineMain.main(hercInitDatArgs);
-		
-//		CommandLineMain.main(hercInitJsonArgs);
-		
-	}
-	
-	@Test
-	public void testTrainHercs() {
-		
-		CommandLineMain.main(trainHercDatArgs);
-//		
-//		CommandLineMain.main(trainHercJsonArgs);
-		
-	}
-	
 }
+

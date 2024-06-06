@@ -25,7 +25,7 @@ import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.GenericJsonProcessor;
 import org.hercworks.extract.util.FileItem;
-import org.hercworks.extract.util.FileMatch;
+import org.hercworks.extract.util.ShellFileMatch;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
@@ -36,15 +36,16 @@ import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
-import org.hercworks.transfer.svc.impl.ArmHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.HercInfoDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.InitHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.RepairHercDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.TrainingHercsDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.HercInfoDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.InitHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.RepairHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.TrainingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -69,8 +70,16 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 	@Override
 	public boolean filterFile(FileItem file) {
 		boolean filter = false;
-		if(file.getName().contains(".DAT") || file.getName().contains(".sav")) {
-			if(FileMatch.getByPattern(file.getName()) != null) {
+		String fileName = file.getName().toLowerCase();
+		if(fileName.contains(".json")) {
+			return false;
+		}
+		//filter out non-shell DAT files.
+		if(!file.getName().contains(FileType.GAM.name().toLowerCase())) {
+			return false;
+		}
+		if(file.getName().contains("."+FileType.DAT.name().toLowerCase()) || file.getName().contains("."+FileType.SAV.name().toLowerCase())) {
+			if(ShellFileMatch.getByPattern(file.getName()) != null) {
 				filesToProcess.add(file);
 				filter = true;
 			}
@@ -81,7 +90,7 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 	@Override
 	public void processFiles() {
 		for(FileItem file : filesToProcess) {
-			FileMatch match = FileMatch.getByPattern(file.getName()); 
+			ShellFileMatch match = ShellFileMatch.getByPattern(file.getName()); 
 			if(match != null) {
 				switch(match) {
 					case WEAPONS:

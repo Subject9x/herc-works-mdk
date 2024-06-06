@@ -23,6 +23,8 @@ import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.util.FileItem;
+import org.hercworks.extract.util.FileMatcher;
+import org.hercworks.extract.util.impl.DynFileMatcher;
 import org.hercworks.voln.FileType;
 import org.hercworks.voln.Voln;
 import org.hercworks.voln.io.VolFileReader;
@@ -30,10 +32,10 @@ import org.hercworks.voln.io.VolFileWriter;
 
 public class DynamixFileProcessor extends FileProcessor{
 	
+	private FileMatcher fileMatch = new DynFileMatcher();
+	
 	@Override
 	public boolean filterFile(FileItem file) {
-		
-		boolean filter = false;
 		//we know this should have an associated file type, ignoring nulls is intentional.
 		
 		FileType fileType = file.getType();
@@ -41,25 +43,12 @@ public class DynamixFileProcessor extends FileProcessor{
 		if(fileType == null) {
 			return false;
 		}
-		if(fileType.equals(FileType.VOL)) {
-			filter = true;
-		}
-		else if(fileType.equals(FileType.DBA)
-				|| fileType.val().contains("db")
-				|| fileType.val().contains("hb")) {
-			filter = true;
-		}
-		else if(fileType.equals(FileType.DPL)) {
-			filter = true;
-		}
-		else if(fileType.equals(FileType.DBM)) {
-			filter = true;
-		}
-	
-		if(filter) {
+		if(fileMatch.matchFile(file.getName())) {
 			filesToProcess.add(file);
+			return true;
 		}
-		return filter;
+		
+		return false;
 	}
 	
 	@Override
@@ -96,7 +85,7 @@ public class DynamixFileProcessor extends FileProcessor{
 			
 			File targDir = new File(targDirPath + "//");
 			
-			VolFileWriter.unpackVol(volFile, targDir.getPath());
+			VolFileWriter.unpackVol(volFile, targDir.getAbsolutePath());
 			
 			getLogger().console("Vol [" + volName +"] unpacked successfully.");
 		} catch (Exception e) {

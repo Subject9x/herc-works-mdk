@@ -18,7 +18,7 @@ import org.hercworks.core.data.file.sav.PlayerSave;
  */
 public class PilotEntry {
 
-	
+	private short squadmateId;
 	private String name;
 	private short bayId;
 	private byte unk1_uint8;
@@ -34,7 +34,6 @@ public class PilotEntry {
 	private short totalKillBldng;
 	private short missionCount;
 	private short unk5_uint16;
-	private short squadmateId;
 	
 	public PilotEntry() {}
 

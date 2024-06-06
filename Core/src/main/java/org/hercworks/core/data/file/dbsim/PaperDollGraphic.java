@@ -11,19 +11,16 @@ import org.hercworks.voln.DataFile;
  * 		The herc/flyers get a .PDG file, which defines 3 views and each view uses a form of 'drawSubImage(x,y,x1,y1)'.
  * 			These use the .DBA files in /SIMVOL0/DBA/{herc}.DBA which house the 3 view forms of wireframes.
  * 
- * 0- UINT32 - 3 Image views - Weapons / Armor / Internals - based on 2 DBA frames, and 1 frame is recolored.
- * 4- UINT32 - DBA\LOWRES\HERC_EXTERNAL\ORIGIN\X
- * 8- UINT32 - DBA\LOWRES\HERC_EXTERNAL\ORIGIN\X
- * 12- UINT32 - DBA\LOWRES\HERC_EXTERNAL\DRAWSIZE\WIDTH
- * 16- UINT32 - DBA\LOWRES\HERC_EXTERNAL\DRAWSIZE\HEIGHT
- * 20- UINT32 - unknown, varies somewhat - Ramses/tomahawk/outlaw = 11, Samson = 13, Pitbull = 17, affects Low-Res Y position if Internals DBA
+ * 0- UINT32 - 3 Image views - Structure / Internals / F5-HUD View - based on 3 DBA frames, and 1 frame is recolored.
+ * SEQ0 - View Struct
+ * 	SEQ0_1 - UINT32 - IMAGE\ORIGIN\X
  * 
- * 	SEQ0_0 - Regions Internal
+ * 	SEQ0_0 - Regions
  * 		SEQ0_0- UINT32 - index
- * 		SEQ0_1- UINT32 - x
- * 		SEQ0_2- UINT32 - y
- *  	SEQ0_3- UINT32 - width
- *  	SEQ0_4- UINT32 - height
+ * 		SEQ0_1- UINT32 - OFS\LEFT
+ * 		SEQ0_2- UINT32 - OFS\TOP
+ *  	SEQ0_3- UINT32 - OFS\RIGHT
+ *  	SEQ0_4- UINT32 - OFS\BOTTOM
  *  	SEQ0_5- UINT32 - unknown
  *      SEQ0_6- UINT32 - unknown / spacer
  * 

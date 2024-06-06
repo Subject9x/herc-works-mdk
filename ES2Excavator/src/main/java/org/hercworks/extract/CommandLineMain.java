@@ -7,17 +7,10 @@ import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.Logger;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.exec.impl.DynamixFileProcessor;
-import org.hercworks.extract.exec.impl.FlightModelExportProcessor;
-import org.hercworks.extract.exec.impl.GunLayoutExportProcessor;
-import org.hercworks.extract.exec.impl.GunLayoutImportProcessor;
-import org.hercworks.extract.exec.impl.HercDamageExportProcessor;
-import org.hercworks.extract.exec.impl.HercDamageImportProcessor;
-import org.hercworks.extract.exec.impl.HercDatJsonExportProcessor;
-import org.hercworks.extract.exec.impl.HercDatJsonImportProcessor;
-import org.hercworks.extract.exec.impl.PaperDollExportProcessor;
-import org.hercworks.extract.exec.impl.PaperDollImportProcessor;
 import org.hercworks.extract.exec.impl.ShellDatJsonExportProcessor;
 import org.hercworks.extract.exec.impl.ShellDatJsonImportProcessor;
+import org.hercworks.extract.exec.impl.SimDatExportProcessor;
+import org.hercworks.extract.exec.impl.SimDatImportProcessor;
 import org.hercworks.extract.util.FileItem;
 
 /**
@@ -33,11 +26,8 @@ public final class CommandLineMain {
 	//new DBACompilerProcessor(),
 	private static FileProcessor[] processors  = new FileProcessor[] {
 					new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), 
-					new ShellDatJsonExportProcessor(), new HercDatJsonExportProcessor(), new HercDatJsonImportProcessor(), 
-					new FlightModelExportProcessor(), new HercDamageExportProcessor(),
-					new GunLayoutImportProcessor(), new GunLayoutExportProcessor(),
-					new HercDamageImportProcessor(), new PaperDollExportProcessor(),
-					new PaperDollImportProcessor()};
+					new ShellDatJsonExportProcessor(), new SimDatExportProcessor(),
+					new SimDatImportProcessor()};
 	
 	public static void main(String[] args) {
 		String version = System.getProperty("java.version");

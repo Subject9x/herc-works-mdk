@@ -71,13 +71,12 @@ public abstract class FileProcessor extends LoggingUtil{
 	
 	protected String makeExportPath(String fullTargPath){
 		
-		getLogger().consoleDebug("DEBUG - targDir=[" + fullTargPath +"]");
-		
 		File dir = new File(fullTargPath);
+		getLogger().consoleDebug("DEBUG - fullTargPath=[" + dir.getAbsolutePath() +"]");
 		
 		if(!dir.exists()) {
 			if(!dir.mkdir()) {
-				getLogger().console("ERROR - cannot make target directory.[" + fullTargPath +"]");
+				getLogger().console("ERROR - cannot make target directory.[" + dir.getAbsolutePath() +"]");
 				return null;
 			}
 		}

@@ -30,6 +30,7 @@ public final class ExcavatorCmdLine extends LoggingUtil{
 		DBG("x", "-x"),
 		DPL("p","-p"),
 		SRC("s", "-s"),
+		INST("i", "-i"),
 		MKDBA("cdba", "-cdba");
 		
 		private String val;

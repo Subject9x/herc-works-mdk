@@ -20,9 +20,9 @@ import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.impl.ArmWeapDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.StartingHercsDTOServiceImpl;
-import org.hercworks.transfer.svc.impl.WeaponsDatShellDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.FileType;
 import org.junit.Test;
 

@@ -43,7 +43,8 @@ public enum WeaponLUT {
 	TARG(29, "TARG"),  
 	SHLD(30, "SHLD"),  
 	TURB(31, "TURB"),  
-	ENRG(32, "ENRG");  
+	ENRG(32, "ENRG"),
+	NONE(33, "N/A");	//this appears in player save inventory space!?  
 	
 	private int id;
 	private String name;
