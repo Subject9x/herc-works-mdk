@@ -1,7 +1,5 @@
 package org.hercworks.core.data.struct.vshell.hercs;
 
-import java.util.Arrays;
-
 import org.hercworks.core.data.file.sav.PlayerSave;
 
 /**
@@ -20,13 +18,19 @@ public class ShellHercPart {
 
 	private short id;
 	private String label;
-	private short[] values = new short[4];
+	private short health = (short)0;
 	
 	public ShellHercPart() {}
 	
 	public ShellHercPart(short id, String label) {
 		this.id = id;
 		this.label = label;
+	}
+	
+	public ShellHercPart(short id, String label, short health) {
+		this.id = id;
+		this.label = label;
+		this.health = health;
 	}
 
 	public short getId() {
@@ -45,16 +49,16 @@ public class ShellHercPart {
 		this.label = label;
 	}
 
-	public short[] getValues() {
-		return values;
+	public short getHealth() {
+		return health;
 	}
 
-	public void setValues(short[] values) {
-		this.values = values;
+	public void setHealth(short health) {
+		this.health = health;
 	}
 
 	@Override
 	public String toString() {
-		return "ShellHercPart [id=" + id + ", label=" + label + ", values=" + Arrays.toString(values) + "]";
+		return "ShellHercPart [id=" + id + ", label=" + label + ", health=" + health + "]";
 	}
 }

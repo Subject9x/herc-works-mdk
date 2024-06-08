@@ -35,7 +35,7 @@ public class InitHercDTOServiceImpl implements GeneralDTOService{
 			hardpoint.setHardpoint(id);
 			hardpoint.setItem(WeaponLUT.getById(entry.getItemId()));
 			hardpoint.setHealthPercent(entry.getHealthPercent());
-			hardpoint.setMissileNum(entry.getMissileEnum());
+			hardpoint.setMissileType(entry.getMissileType());
 			
 			hardpoints[idx] = hardpoint;
 			idx++;
@@ -65,7 +65,7 @@ public class InitHercDTOServiceImpl implements GeneralDTOService{
 			UiWeaponEntry entry = new UiWeaponEntry();
 			entry.setItemId((short)slotDTO.getItem().getId());
 			entry.setHealthPercent(slotDTO.getHealthPercent());
-			entry.setMissileEnum(slotDTO.getMissileNum());
+			entry.setMissileType(slotDTO.getMissileType());
 			herc.getHardpoints().put(slotDTO.getHardpoint(), entry);
 		}
 		return object;

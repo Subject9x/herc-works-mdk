@@ -1,6 +1,6 @@
 package org.hercworks.core.data.struct.vshell.sav;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.hercworks.core.data.file.sav.PlayerSave;
@@ -17,23 +17,14 @@ public class HercBayEntry {
 	
 	private HercLUT id;
 	private short nameId;
-	
-	
 	private Map<HercExternals, ShellHercPart> healthExternals;
 	private Map<HercInternals, ShellHercPart> healthInternals;
-	
-	private ShellHercPart unk1_afterServos;
-	
-	private List<ShellHercPart> healthHardpoints;
-	
-	private ShellHercPart unk2_afterHardpoints;
-	
+	private ShellHercPart[] healthHardpoints = new ShellHercPart[10];
 	private short buildPercent;
 	private short buildStepNum;
 	private short hardpointMax;
 	private short activeSockets;
-	
-	private ShellWeaponEntry[] weapons;
+	private Map<Short, ShellWeaponEntry> weapons = new HashMap<Short, ShellWeaponEntry>();
 	
 	public HercBayEntry() {}
 
@@ -53,18 +44,10 @@ public class HercBayEntry {
 		return healthInternals;
 	}
 
-	public ShellHercPart getUnk1_afterServos() {
-		return unk1_afterServos;
-	}
-
-	public List<ShellHercPart> getHealthHardpoints() {
+	public ShellHercPart[] getHealthHardpoints() {
 		return healthHardpoints;
 	}
 
-	public ShellHercPart getUnk2_afterHardpoints() {
-		return unk2_afterHardpoints;
-	}
-	
 	public short getBuildPercent() {
 		return buildPercent;
 	}
@@ -81,7 +64,7 @@ public class HercBayEntry {
 		return activeSockets;
 	}
 
-	public ShellWeaponEntry[] getWeapons() {
+	public Map<Short, ShellWeaponEntry> getWeapons() {
 		return weapons;
 	}
 
@@ -101,16 +84,8 @@ public class HercBayEntry {
 		this.healthInternals = healthInternals;
 	}
 
-	public void setUnk1_afterServos(ShellHercPart unk1_afterServos) {
-		this.unk1_afterServos = unk1_afterServos;
-	}
-
-	public void setHealthHardpoints(List<ShellHercPart> healthHardpoints) {
+	public void setHealthHardpoints(ShellHercPart[] healthHardpoints) {
 		this.healthHardpoints = healthHardpoints;
-	}
-	
-	public void setUnk2_afterHardpoints(ShellHercPart unk2_afterHardpoints) {
-		this.unk2_afterHardpoints = unk2_afterHardpoints;
 	}
 
 	public void setBuildPercent(short buildPercent) {
@@ -129,7 +104,7 @@ public class HercBayEntry {
 		this.activeSockets = activeSockets;
 	}
 
-	public void setWeapons(ShellWeaponEntry[] weapons) {
+	public void setWeapons(Map<Short, ShellWeaponEntry> weapons) {
 		this.weapons = weapons;
 	}
 }

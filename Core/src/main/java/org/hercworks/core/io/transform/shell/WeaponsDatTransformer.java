@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
@@ -48,7 +49,7 @@ public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 			UiWeaponEntry item = new UiWeaponEntry();
 			item.setItemId(indexShortLE());
 			item.setHealthPercent(indexShortLE());
-			item.setMissileEnum(indexShortLE());
+			item.setMissileType(MissileType.getById((int)indexShortLE()));
 			data.getStartingWeapons()[i] = item;
 		}
 		
@@ -79,7 +80,7 @@ public class WeaponsDatTransformer extends ThreeSpaceByteTransformer{
 			UiWeaponEntry item = data.getStartingWeapons()[i];
 			objectBytes.write(writeShortLE(item.getItemId()));
 			objectBytes.write(writeShortLE(item.getHealthPercent()));
-			objectBytes.write(writeShortLE(item.getMissileEnum()));
+			objectBytes.write(writeShortLE((short)item.getMissileType().getId()));
 		}
 		
 		return objectBytes.toByteArray();

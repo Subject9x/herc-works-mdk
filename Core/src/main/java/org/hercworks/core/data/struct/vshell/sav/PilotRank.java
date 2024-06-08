@@ -35,6 +35,15 @@ public enum PilotRank {
     public static PilotRank getById(short id) {
         return ENUM_MAP.get(id);
     }
+    
+    public static PilotRank getByName(String name) {
+    	for(PilotRank rank : PilotRank.values()) {
+    		if(name.toLowerCase().equals(rank.getLabel().toLowerCase())){
+    			return rank;
+    		}
+    	}
+    	return PilotRank.ROOKIE;
+    }
 
 	public short getId() {
 		return id;

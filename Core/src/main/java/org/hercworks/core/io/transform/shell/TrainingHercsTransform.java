@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
@@ -44,7 +45,7 @@ public class TrainingHercsTransform extends ThreeSpaceByteTransformer{
 				short id = indexShortLE();
 				entry.setItemId(indexShortLE());
 				entry.setHealthPercent(indexShortLE());
-				entry.setMissileEnum(indexShortLE());
+				entry.setMissileType(MissileType.getById(indexShortLE()));
 				herc.getHardpoints().put(id, entry);
 			}
 			training.getData().add(herc);
@@ -69,7 +70,7 @@ public class TrainingHercsTransform extends ThreeSpaceByteTransformer{
 				out.write(writeShortLE(id));
 				out.write(writeShortLE(entry.getItemId()));
 				out.write(writeShortLE(entry.getHealthPercent()));
-				out.write(writeShortLE(entry.getMissileEnum()));
+				out.write(writeShortLE((short)entry.getMissileType().getId()));
 			}
 		}
 		

@@ -43,8 +43,8 @@ public enum WeaponLUT {
 	TARG(29, "TARG"),  
 	SHLD(30, "SHLD"),  
 	TURB(31, "TURB"),  
-	ENRG(32, "ENRG"),
-	NONE(33, "N/A");	//this appears in player save inventory space!?  
+	ENRG(32, "ENRG");
+	//NONE(33, "N/A");	//this appears in player save inventory space!?  
 	
 	private int id;
 	private String name;
@@ -73,5 +73,14 @@ public enum WeaponLUT {
 	
     public static WeaponLUT getById(int id) {
         return ENUM_MAP.get(id);
+    }
+    
+    public static WeaponLUT getByName(String name) {
+    	for(WeaponLUT weapon : ENUM_MAP.values()) {
+    		if(name.equals(weapon.getName())) {
+    			return weapon;
+    		}
+    	}
+    	return null;
     }
 }

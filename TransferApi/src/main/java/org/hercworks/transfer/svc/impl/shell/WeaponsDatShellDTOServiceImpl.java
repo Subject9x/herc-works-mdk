@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
@@ -48,7 +49,7 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 			String[] line = new String[3];
 			line[0] = WeaponLUT.getById(entry.getItemId()).getName();
 			line[1] = String.valueOf(entry.getHealthPercent());
-			line[2] = String.valueOf(entry.getMissileEnum());
+			line[2] = String.valueOf(entry.getMissileType());
 			startList.add(line);
 		}
 		dto.setStartingList(startList);
@@ -85,7 +86,7 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 			
 			entry.setItemId((short)WeaponLUT.valueOf(line[0]).getId());
 			entry.setHealthPercent(Short.valueOf(line[1]));
-			entry.setMissileEnum(Short.valueOf(line[2]));
+			entry.setMissileType(MissileType.valueOf(line[2]));
 			
 			data.getStartingWeapons()[i] = entry;
 		}

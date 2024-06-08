@@ -1,5 +1,6 @@
 package org.hercworks.transfer.dto.struct.shell;
 
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.WeaponLUT;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +19,7 @@ public class HercHardpointDTO {
 	private short healthPercent;
 	
 	@JsonProperty(value = "msl_num", index = 4)
-	private short missileNum;
+	private MissileType missileType;
 	
 	public HercHardpointDTO() {}
 
@@ -34,8 +35,8 @@ public class HercHardpointDTO {
 		return healthPercent;
 	}
 
-	public short getMissileNum() {
-		return missileNum;
+	public MissileType getMissileType() {
+		return missileType;
 	}
 
 	public void setHardpoint(short hardpoint) {
@@ -50,7 +51,7 @@ public class HercHardpointDTO {
 		this.healthPercent = healthPercent;
 	}
 
-	public void setMissileNum(short missileNum) {
-		this.missileNum = missileNum;
+	public void setMissileType(MissileType missileType) {
+		this.missileType = missileType;
 	}
 }

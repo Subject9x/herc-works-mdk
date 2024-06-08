@@ -1,5 +1,6 @@
 package org.hercworks.core.data.struct.vshell.sav;
 
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 
@@ -12,7 +13,7 @@ public class ShellWeaponEntry {
 	private WeaponLUT id;
 	private short nameId;
 	private short[] health = new short[2];
-	private short missileNum;
+	private MissileType missileType;
 	
 	public ShellWeaponEntry() {}
 
@@ -28,8 +29,8 @@ public class ShellWeaponEntry {
 		return health;
 	}
 
-	public short getMissileNum() {
-		return missileNum;
+	public MissileType getMissileType() {
+		return missileType;
 	}
 
 	public void setId(WeaponLUT id) {
@@ -44,7 +45,7 @@ public class ShellWeaponEntry {
 		this.health = health;
 	}
 
-	public void setMissileNum(short missileNum) {
-		this.missileNum = missileNum;
+	public void setMissileType(MissileType missileType) {
+		this.missileType = missileType;
 	}
 }

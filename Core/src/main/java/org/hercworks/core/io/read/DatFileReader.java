@@ -4,6 +4,7 @@ import java.nio.ByteOrder;
 import java.util.HashMap;
 
 import org.hercworks.core.data.file.dat.shell.InitHerc;
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercData;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.voln.DataFile;
@@ -68,7 +69,8 @@ public final class DatFileReader {
 			hardpoint.setHealthPercent(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
 			i += 2;
 			
-			hardpoint.setMissileEnum(Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort());
+			short mslType = Bytes.from(data, i, 2).byteOrder(ByteOrder.LITTLE_ENDIAN).toShort();
+			hardpoint.setMissileType(MissileType.getById((int)mslType));
 		}
 		
 		return iniStats;

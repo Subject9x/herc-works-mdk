@@ -39,7 +39,16 @@ public enum HercInternals {
     public static HercInternals getById(short id) {
         return ENUM_MAP.get(id);
     }
-	
+    
+    public static HercInternals getByName(String name) {
+    	for(HercInternals internal : HercInternals.values()) {
+    		if(name.toLowerCase().equals(internal.getLabel().toLowerCase())) {
+    			return internal;
+    		}
+    	}
+    	return null;
+    }
+    
 	public String getLabel() {
 		return label;
 	}

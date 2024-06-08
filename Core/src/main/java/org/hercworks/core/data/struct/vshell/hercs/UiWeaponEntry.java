@@ -1,5 +1,6 @@
 package org.hercworks.core.data.struct.vshell.hercs;
 
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.util.ByteOps;
 
 /**
@@ -15,14 +16,14 @@ public class UiWeaponEntry {
 
 	private short itemId;
 	private short healthPercent;
-	private short missileEnum;
+	private MissileType missileType;
 	
 	public UiWeaponEntry() {}
 	
-	public UiWeaponEntry(short itemId, short healthPercent, short missileEnum) {
+	public UiWeaponEntry(short itemId, short healthPercent, MissileType missileType) {
 		this.itemId = itemId;
 		this.healthPercent = healthPercent;
-		this.missileEnum = missileEnum;
+		this.missileType = missileType;
 	}
 
 	public byte[] toByte() {
@@ -30,7 +31,7 @@ public class UiWeaponEntry {
 		
 		ByteOps.shortLEToByteArr(data, 0, getItemId());
 		ByteOps.shortLEToByteArr(data, 2, getHealthPercent());
-		ByteOps.shortLEToByteArr(data, 4, getMissileEnum());
+		ByteOps.shortLEToByteArr(data, 4, (short)getMissileType().getId());
 		
 		return data;
 	}
@@ -43,8 +44,8 @@ public class UiWeaponEntry {
 		return healthPercent;
 	}
 
-	public short getMissileEnum() {
-		return missileEnum;
+	public MissileType getMissileType() {
+		return missileType;
 	}
 	
 	public void setItemId(short itemId) {
@@ -55,7 +56,7 @@ public class UiWeaponEntry {
 		this.healthPercent = healthPercent;
 	}
 
-	public void setMissileEnum(short missileEnum) {
-		this.missileEnum = missileEnum;
+	public void setMissileType(MissileType missileType) {
+		this.missileType = missileType;
 	}
 }

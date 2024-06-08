@@ -60,6 +60,15 @@ public enum HercLUT {
         return ENUM_MAP.get(id);
     }
 	
+    public static HercLUT getByName(String name) {
+    	for(HercLUT herc : HercLUT.values()) {
+    		if(name.toLowerCase().equals(herc.getName().toLowerCase())) {
+    			return herc;
+    		}
+    	}
+    	return null;
+    }
+    
 	public String getName() {
 		return name;
 	}
