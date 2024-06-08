@@ -9,6 +9,7 @@ import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
 import org.hercworks.transfer.dto.struct.shell.ArmWeapIconDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class ArmWeapDTOServiceImpl implements GeneralDTOService{
 
@@ -56,6 +57,8 @@ public class ArmWeapDTOServiceImpl implements GeneralDTOService{
 		ArmWeapDTO srcData = (ArmWeapDTO)source;
 		
 		ArmWeap armWeap = new ArmWeap(srcData.getTotalWeapons());
+		armWeap.setExt(FileType.DAT);
+		armWeap.setDir(FileType.GAM);
 		
 		for(int i=0; i < srcData.getTotalWeapons(); i++) {
 			UiHardpointGraphic graphic = new UiHardpointGraphic();

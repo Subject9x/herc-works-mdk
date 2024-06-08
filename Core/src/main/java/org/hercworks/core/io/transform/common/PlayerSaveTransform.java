@@ -1,12 +1,12 @@
 package org.hercworks.core.io.transform.common;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.hercworks.core.data.file.sav.PlayerSave;
+import org.hercworks.core.data.struct.MissileType;
 import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.herc.HercExternals;
 import org.hercworks.core.data.struct.herc.HercInternals;
@@ -14,6 +14,7 @@ import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.hercs.ShellHercPart;
 import org.hercworks.core.data.struct.vshell.sav.HercBayEntry;
 import org.hercworks.core.data.struct.vshell.sav.Inventory;
+import org.hercworks.core.data.struct.vshell.sav.Inventory.InventoryItem;
 import org.hercworks.core.data.struct.vshell.sav.PilotEntry;
 import org.hercworks.core.data.struct.vshell.sav.PilotRank;
 import org.hercworks.core.data.struct.vshell.sav.ShellWeaponEntry;
@@ -40,36 +41,34 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		save.setExt(FileType.SAV);
 		save.setDir(FileType.SAV);
 		
-		save.setUnk1_uint16(indexShortLE());
-		save.setSpacer1(indexByte());
-		
 		//INVENTORY SEGMENT - 33 entries, matches total weapons in game, ERROR/cut weapon id's ARE included here, but zeroed out.
-		System.out.println("Parsing Inventory Segment----------------");
+		System.out.println("Parsing Inventory Segment----------------" + index);
 		Inventory inventory = new Inventory();
-		inventory.setItems(new Inventory.Entry[32]);
-		for(int i=0; i < 32; i++) {
+		inventory.setItems(new Inventory.InventoryItem[WeaponLUT.values().length]);
+		for(int i=0; i < WeaponLUT.values().length; i++) {
+			System.out.println("	weapon at index=" + index);
 			byte flag = indexByte();
 			short quant = indexShortLE();
-			Inventory.Entry entry = inventory.newEntry();
-			entry.setId(WeaponLUT.getById((short)(i+1)));
+			Inventory.InventoryItem entry = inventory.newEntry();
+			entry.setId(WeaponLUT.getById((short)(i)));
 			entry.setUnlockFlag(flag);
 			entry.setQuantity(quant);
-			System.out.println("Weapon["+entry.getId().getName()+"]=" + entry.getQuantity());
-			if(quant > 0) {
-				ShellWeaponEntry[] items = new ShellWeaponEntry[quant];
-				for(int q=0; q < (int)quant; q++) {
-					ShellWeaponEntry weapon = new ShellWeaponEntry();
-					weapon.setId(WeaponLUT.getById(indexShortLE()));
-					weapon.setNameId(indexShortLE());
-					short[] hp = new short[2];
-					hp[0] = indexShortLE();
-					hp[1] = indexShortLE();
-					weapon.setHealth(hp);
-					weapon.setMissileNum(indexShortLE());
-					items[q] = weapon;
-				}
-				entry.setData(items);
+			System.out.println("		["+entry.getId().getName()+"]=" + entry.getQuantity());
+
+			ShellWeaponEntry[] items = new ShellWeaponEntry[quant];
+			for(int q=0; q < (int)quant; q++) {
+				ShellWeaponEntry weapon = new ShellWeaponEntry();
+				weapon.setId(WeaponLUT.getById(indexShortLE()));
+				weapon.setNameId(indexShortLE());
+				short[] hp = new short[2];
+				hp[0] = indexShortLE();
+				hp[1] = indexShortLE();
+				weapon.setHealth(hp);
+				weapon.setMissileType(MissileType.getById(indexShortLE()));
+				items[q] = weapon;
 			}
+			entry.setData(items);
+			
 			System.out.println("");
 			inventory.getItems()[i] = entry;
 		}
@@ -77,7 +76,7 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		System.out.println("->Invetory loaded, byte index:=" + index);
 		
 		//Workshop state
-		System.out.println("Parsing Workshop Segment----------------");
+ 		System.out.println("Parsing Workshop Segment----------------" + index);
 		save.setWorkshopSpace(indexShortLE());
 		for(int w=0; w<5; w++) {
 			indexShortLE();	//why would these ever be out of order?
@@ -86,66 +85,79 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		System.out.println("->Workshop loaded, byte index:=" + index);
 		
 		//Campaign flags, series of IN16's
-		System.out.println("Parsing Campaign Flags Segment----------------");
-		for(int f=0; f<78; f++) {
+		System.out.println("Parsing Campaign Flags Segment----------------" + index);
+		for(int f=0; f<77; f++) {
 			short flag = indexShortLE();
-			save.getUnk2_flags()[f] = flag;
+			save.getUnk4_stateFlags()[f] = flag;
 		}
 		System.out.println("->Campaign flags loaded, byte index:=" + index);
 		
 		//Squadmate segment
-		System.out.println("Parsing Squad Segment----------------");
+		System.out.println("Parsing Squad Segment----------------" + index);
 		PilotEntry[] squad = new PilotEntry[36];	//36 squadmates
 		for(int s=0; s < squad.length; s++) {
 			squad[s] = indexSquadmate();
 		}
 		save.setSquadmates(squad);
 		System.out.println("->Squadmates loaded, byte index:=" + index);
-	
-		//Pilot segment
-		System.out.println("Parsing Player Pilot Segment----------------");
-		short[] unk_short8 = new short[8];
-		for(int u=0; u < 8; u++) {
-			unk_short8[u] = indexShortLE();
-		}
 
+		//Unknown post-pilot, pre-player 9 short range.
+		System.out.println("Parsing Unknown pre-player Segment----------------" + index);
+		for(int r=0; r < save.getUnkRange_prePlayer().length; r++) {
+			save.getUnkRange_prePlayer()[r] = indexShortLE();
+			System.out.println("	" + save.getUnkRange_prePlayer()[r]);
+		}
+		System.out.println("->Parsed unknown segment, byte index:=" + index);
+		
+		//Pilot segment
+		System.out.println("Parsing Player Pilot Segment----------------" + index);
 		save.setPlayerPilot(indexPlayerPilot());
 		System.out.println("->Pilot Entry loaded, byte index:=" + index);
 		
 		//Herc bay Data
-		System.out.println("Parsing Herc Bay entries Segment----------------");
+		System.out.println("Parsing Herc Bay entries Segment----------------" + index);
 		short baySlots = indexShortLE();
-		Map<Short, HercBayEntry> hercBay = new HashMap<Short, HercBayEntry>();
 		for(int b=0; b < (int)baySlots; b++) {
 			short bayId = indexShortLE();
-			hercBay.put(bayId, indexHercEntry());
+			save.getHercBay().put(bayId, indexHercEntry());
 		}
-		save.setHercBay(hercBay);
+		System.out.println("->Parsed Herc Bay Segment----------------" + index);
 		
 		//Herc Unlock Flags 9 bytes
-		Map<HercLUT, Short> unlockedHercs = new HashMap<HercLUT, Short>();
-		for(HercLUT herc : HercLUT.values()) {
-			unlockedHercs.put(herc, indexShortLE());
+		System.out.println("Parsing Herc Unlocks Segment----------------" + index);
+		int l = 0;
+		while(l < HercLUT.ACHILLES.getId()) {
+			short val = indexShortLE();
+			save.getUnlockedHercs().put(HercLUT.getById((short)l), val);
+			System.out.println("		"+ HercLUT.getById((short)l).getName() +"=" +val);
+			l += 1;
 		}
-		save.setUnlockedHercs(unlockedHercs);
+		System.out.println("->Parsed Herc unlock Segment----------------" + index);
 		
 		//Total available salvage
+		System.out.println("Parsing Total available salvage   ----------------" + index);
 		save.setSalvageTotal(indexIntLE());
-		
-		
+		System.out.println("		Salvage= " + save.getSalvageTotal());
+		System.out.println("->Parsed available salvage----------------" + index);
+
+		//Total available salvage
+		System.out.println("Parsing unknown bytes   ----------------" + index);
+		ByteArrayOutputStream fragmentFlags = new ByteArrayOutputStream();
+		while(index < getBytes().length) {
+			fragmentFlags.write(indexByte());
+		}
+		save.setUnknownSaveValues(fragmentFlags.toByteArray());
+		System.out.println("->parsed unknown bytes "+ save.getUnknownSaveValues().length);
+		System.out.println("->parsed unknown bytes   ----------------" + index);
 		
 		return save;
 	}
-
-	@Override
-	public byte[] objectToBytes(DataFile source) throws ClassCastException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	private PilotEntry indexSquadmate() {
 		PilotEntry entry = new PilotEntry();
 
+		entry.setSquadmateId(indexShortLE());
+		
 		short nameLen = indexShortLE();
 		byte[] name = indexSegment(nameLen);
 		
@@ -166,7 +178,9 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		
 		entry.setMissionCount(indexShortLE());
 		entry.setUnk5_uint16(indexShortLE());
-		entry.setSquadmateId(indexShortLE());
+		
+		System.out.println("	id: " + entry.getSquadmateId());
+		System.out.println("	Pilot: " + entry.getName());
 		
 		return entry;
 	}
@@ -203,77 +217,205 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		herc.setNameId(indexShortLE());
 		
 		//Set Herc Externals health values.
-		Map<HercExternals, ShellHercPart> externals = new HashMap<HercExternals, ShellHercPart>();
+		herc.setHealthExternals(new HashMap<HercExternals, ShellHercPart>());
 		for(HercExternals e : HercExternals.values()) {
-			externals.put(e, new ShellHercPart(e.getId(), e.getLabel()));
+			herc.getHealthExternals().put(e, new ShellHercPart(e.getId(), e.getLabel(), indexShortLE()));
 		}
-		externals.get(HercExternals.COCKPIT).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.COCKPIT).getValues()[1] = indexShortLE();
-		externals.get(HercExternals.TORSO_LEFT).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.TORSO_RIGHT).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.TORSO_LEFT).getValues()[1] = indexShortLE();
-		externals.get(HercExternals.TORSO_RIGHT).getValues()[1] = indexShortLE();
-		externals.get(HercExternals.CHASSIS).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.LEG_LEFT).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.LEG_RIGHT).getValues()[0] = indexShortLE();
-		externals.get(HercExternals.LEG_LEFT).getValues()[1] = indexShortLE();
-		externals.get(HercExternals.LEG_RIGHT).getValues()[1] = indexShortLE();
-		externals.get(HercExternals.LEG_LEFT).getValues()[2] = indexShortLE();
-		externals.get(HercExternals.LEG_RIGHT).getValues()[2] = indexShortLE();
-		herc.setHealthExternals(externals);
 		
 		//Set Herc Internals health values.
-		Map<HercInternals, ShellHercPart> internals = new HashMap<HercInternals, ShellHercPart>();
-		for(HercInternals e : HercInternals.values()) {
-			internals.put(e, new ShellHercPart(e.getId(), e.getLabel()));
+		//TODO - struct here caps internals to just bipedal hercs.
+		herc.setHealthInternals(new HashMap<HercInternals, ShellHercPart>());
+		for(HercInternals internal : HercInternals.values()) {
+			if(internal.getId() < HercInternals.SERVOS_LEG_LEFT_REAR.getId()) {
+				herc.getHealthInternals().put(internal, new ShellHercPart(internal.getId(), internal.getLabel(), indexShortLE()));
+			}
 		}
-		internals.get(HercInternals.SERVOS_LEG_LEFT).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.SERVOS_LEG_RIGHT).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.SENSOR_ARRAY).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.TARG_COMP).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.SHIELD_GEN).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.ENGINE).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.HYDRAULICS).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.STABILIZERS).getValues()[0] = indexShortLE();
-		internals.get(HercInternals.LIFE_SUPPRT).getValues()[0] = indexShortLE();
-		herc.setHealthInternals(internals);
 		
-		ShellHercPart unk1_afterServos = new ShellHercPart((short)99, "unk1_afterServos");
-		unk1_afterServos.getValues()[0] = indexShortLE();
-		herc.setUnk1_afterServos(unk1_afterServos);
+		//TODO - is the Pilot actually tracked here?
+//		ShellHercPart unk1_afterServos = new ShellHercPart((short)99, "unk1_afterServos");
+//		unk1_afterServos.getValues()[0] = indexShortLE();
+//		herc.setUnk1_afterServos(unk1_afterServos);
 		
-		List<ShellHercPart> healthHardpoints = new ArrayList<ShellHercPart>();
-		for(int h=0; h < 9; h++) {
-			ShellHercPart hardpointHp = new ShellHercPart((short)h, "hardpoint_" + h);
-			hardpointHp.getValues()[0] = indexShortLE();
-			healthHardpoints.add(hardpointHp);
+		for(int h=0; h < herc.getHealthHardpoints().length; h++) {
+			ShellHercPart hardpointHp = new ShellHercPart((short)h, "hardpoint_" + h, indexShortLE());
+			herc.getHealthHardpoints()[h] = hardpointHp;
 		}
-		herc.setHealthHardpoints(healthHardpoints);
 		
-		ShellHercPart unk2_afterHardpoints = new ShellHercPart((short)99, "unk2_afterHardpoints");
-		unk2_afterHardpoints.getValues()[0] = indexShortLE();
-		herc.setUnk2_afterHardpoints(unk2_afterHardpoints);
+		//duh, OGRE has 10 hardpoints
+//		ShellHercPart unk2_afterHardpoints = new ShellHercPart((short)99, "unk2_afterHardpoints");
+//		unk2_afterHardpoints.getValues()[0] = indexShortLE();
+//		herc.setUnk2_afterHardpoints(unk2_afterHardpoints);
 		
 		herc.setBuildPercent(indexShortLE());
-		if(herc.getBuildPercent() != 0) {
-			herc.setBuildStepNum(indexShortLE());	
-		}
+		herc.setBuildStepNum(indexShortLE());	
+		
 		herc.setHardpointMax(indexShortLE());
 		herc.setActiveSockets(indexShortLE());
-		herc.setWeapons(new ShellWeaponEntry[herc.getActiveSockets()]);
-		if(herc.getActiveSockets() > 0) {
-			for(int h=0; h < herc.getWeapons().length; h++) {
-				ShellWeaponEntry weapon = new ShellWeaponEntry();
-				short socketId = indexShortLE();
-				weapon.setId(WeaponLUT.getById(indexShortLE()));
-				weapon.setNameId(indexShortLE());
-				weapon.getHealth()[0] = indexShortLE();
-				weapon.getHealth()[1] = indexShortLE();
-				weapon.setMissileNum(indexShortLE());
-				herc.getWeapons()[socketId] = weapon;
-			}
+		for(int h=0; h < herc.getActiveSockets(); h++) {
+			ShellWeaponEntry weapon = new ShellWeaponEntry();
+			short socketId = indexShortLE();
+			weapon.setId(WeaponLUT.getById(indexShortLE()));
+			weapon.setNameId(indexShortLE());
+			weapon.getHealth()[0] = indexShortLE();
+			weapon.getHealth()[1] = indexShortLE();
+			weapon.setMissileType(MissileType.getById(indexShortLE()));
+			herc.getWeapons().put(socketId, weapon);
 		}
 		
 		return herc;
 	}
+	@Override
+	public byte[] objectToBytes(DataFile source) throws ClassCastException, IOException {
+		
+		PlayerSave save = (PlayerSave)source;
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		//	INVENTORY SEGMENT - 33 entries, matches total weapons in game, ERROR/cut weapon id's ARE included here, but zeroed out.
+		System.out.println("Importing Inventory Segment----------------");
+		for(int i=0; i < save.getInventory().getItems().length; i++) {
+			InventoryItem item = save.getInventory().getItems()[i];
+			
+			out.write((byte)item.getUnlockFlag());
+			out.write(writeShortLE(item.getQuantity()));
+			for(int s=0; s < item.getData().length; s++) {
+				ShellWeaponEntry entry = item.getData()[s];
+				out.write(writeShortLE((short)entry.getId().getId()));
+				out.write(writeShortLE((short)entry.getNameId()));
+				out.write(writeShortLE(entry.getHealth()[0]));
+				out.write(writeShortLE(entry.getHealth()[0]));
+				out.write(writeShortLE((short)entry.getMissileType().getId()));
+			}
+		}
+		
+		//	WORKSHOP SLOTS
+		System.out.println("Importing Workshop Segment----------------");
+		out.write(writeShortLE(save.getWorkshopSpace()));
+		for(int w=0; w < 5; w++) {
+			out.write(writeShortLE((short)w));
+			out.write(writeShortLE((short)save.getWorkshopSlots()[w].getId()));
+		}
+		
+		//	CAMPAIGN FLAGS	
+		System.out.println("Importing Campaign Flags Segment----------------");
+		for(short f : save.getUnk4_stateFlags()) {
+			out.write(writeShortLE(f));
+		}
+		
+		//	PILOT DATA
+		System.out.println("Importing Squadmate Data Segment----------------");
+		for(PilotEntry pilot : save.getSquadmates()) {
+			writePilotData(pilot, out, false);
+		}
+		
+		//	UNKNOWN PILOT DATA
+		System.out.println("Importing Unknown Pilot Data Segment----------------");
+		for(short unk : save.getUnkRange_prePlayer()) {
+			out.write(writeShortLE(unk));
+		}
+		
+		//	PLAYER PILOT
+		System.out.println("Importing Player Pilot Segment----------------");
+		writePilotData(save.getPlayerPilot(), out, true);
+
+		//	HERC DATA
+		System.out.println("Importing Herc Bay Entries Segment----------------");
+		out.write(writeShortLE((short)save.getHercBay().size()));
+		for(int h=0; h < save.getHercBay().size(); h++) {
+			writeHercEntry((short)h, save.getHercBay().get((short)h), out);
+		}
+		
+		//	HERC UNLOCKS
+		System.out.println("Importing Herc Unlocks Segment----------------");
+		for(HercLUT herc : HercLUT.values()) {
+			if(herc.getId() < HercLUT.ACHILLES.getId()) {
+				out.write(writeShortLE((short)1));
+			}
+		}
+		
+		//	SALVAGE
+		System.out.println("Importing Salvage Segment----------------");
+		out.write(writeIntLE(save.getSalvageTotal()));
+		
+		//	UNKNOWN TAIL SEGMENT
+		System.out.println("Importing Unknown Bytes Segment----------------");
+		for(byte b : save.getUnknownSaveValues()) {
+			out.write(b);
+		}
+		
+		return out.toByteArray();
+	}
+
+	private void writePilotData(PilotEntry pilot, ByteArrayOutputStream outArr, boolean isPlayer) throws IOException {
+		
+		outArr.write(writeShortLE(pilot.getSquadmateId()));
+		
+		byte[] arr = Bytes.from(pilot.getName().toCharArray(), StandardCharsets.UTF_8).append((byte)0x00).array();
+		
+		outArr.write(writeShortLE((short)arr.length));
+		outArr.write(arr);
+		
+		outArr.write(writeShortLE(pilot.getBayId()));
+		outArr.write(pilot.getUnk1_uint8());
+		outArr.write(writeShortLE(pilot.getRank().getId()));
+		outArr.write(writeShortLE(pilot.getCrewRowNum()));
+		outArr.write(writeShortLE(pilot.getUnk2_uint16()));
+		outArr.write(writeShortLE(pilot.getProbablyHealth()));
+		outArr.write(writeShortLE(pilot.getKillsHercs()));
+		outArr.write(writeShortLE(pilot.getKillsFlyers()));
+		outArr.write(writeShortLE(pilot.getKillsBuilding()));
+		outArr.write(writeShortLE(pilot.getTotalKillHerc()));
+		outArr.write(writeShortLE(pilot.getTotalKillFlyer()));
+		outArr.write(writeShortLE(pilot.getTotalKillBldng()));
+		outArr.write(writeShortLE(pilot.getMissionCount()));
+		
+		if(!isPlayer) {
+			outArr.write(writeShortLE(pilot.getUnk5_uint16()));	
+		}
+		
+	}
+
+	private void writeHercEntry(short bayId, HercBayEntry herc, ByteArrayOutputStream outArr) throws IOException{
+		
+		outArr.write(writeShortLE(bayId));
+		outArr.write(writeShortLE(herc.getId().getId()));
+		outArr.write(writeShortLE(herc.getNameId()));
+		
+		for(HercExternals external : HercExternals.values()) {
+			outArr.write(writeShortLE(herc.getHealthExternals().get(external).getHealth()));
+		}
+		
+		for(HercInternals internal : HercInternals.values()) {
+			if(internal.getId() < HercInternals.SERVOS_LEG_LEFT_REAR.getId()) {
+				outArr.write(writeShortLE(herc.getHealthInternals().get(internal).getHealth()));	
+			}	
+		}
+		
+		for(ShellHercPart part : herc.getHealthHardpoints()) {
+			if(part == null) {
+				outArr.write(writeShortLE((short)100));
+			}
+			else {
+				outArr.write(writeShortLE(part.getHealth()));	
+			}
+			
+		}
+		
+		outArr.write(writeShortLE(herc.getBuildPercent()));
+		outArr.write(writeShortLE(herc.getBuildStepNum()));
+		
+		outArr.write(writeShortLE(herc.getHardpointMax()));
+		outArr.write(writeShortLE(herc.getActiveSockets()));
+		
+		for(int w=0; w < herc.getActiveSockets(); w++) {
+			ShellWeaponEntry weapon = herc.getWeapons().get((short)w);
+			outArr.write(writeShortLE((short)weapon.getId().getId()));
+			outArr.write(writeShortLE((short)weapon.getNameId()));
+			outArr.write(writeShortLE(weapon.getHealth()[0]));
+			outArr.write(writeShortLE(weapon.getHealth()[1]));
+			outArr.write(writeShortLE((short)weapon.getMissileType().getId()));
+			
+		}
+	}
+	
 }

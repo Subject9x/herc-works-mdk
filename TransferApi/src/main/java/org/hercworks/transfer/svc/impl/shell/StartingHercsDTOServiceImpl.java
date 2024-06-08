@@ -66,6 +66,7 @@ public class StartingHercsDTOServiceImpl implements GeneralDTOService{
 		
 		Hercs object = new Hercs((short)srcData.getHercs().size());
 		object.setExt(FileType.DAT);
+		object.setDir(FileType.GAM);
 		
 		for(int i=0; i < srcData.getHercs().size(); i++) {
 			StartHercsEntryDTO dtoHerc = srcData.getHercs().get(i);

@@ -28,6 +28,7 @@ public class TestExports {
 	public static String[] argsImportAll = new String[] {"-x","/UNPACK/WEAPONS.json","/UNPACK/HERCS.json","/UNPACK/TRN_HERC.json","/UNPACK/TRN_HERC.json","/UNPACK/INI_OUTL.json","/UNPACK/HERC_INF.json"};
 	
 	private static String pathSimVol = "/unpack/simvol0/";
+	private static String pathShellVol = "/unpack/shell0/";
 	private static String pathUnpack = "/unpack/";
 	
 	
@@ -35,32 +36,32 @@ public class TestExports {
 	public void simExportAll() {
 		CommandLineMain.main(new String[] {
 				"-x",
-				pathSimVol + "pdg/OUTLAW.PDG",
-				pathSimVol + "pdg/TOMAHAWK.PDG",
-				pathSimVol + "pdg/RAMSES.PDG",
-				pathSimVol + "pdg/ACHILLES.PDG",
-				pathSimVol + "pdg/DIABLO.PDG",
-				pathSimVol + "pdg/SPIDER.PDG",
-				pathSimVol + "pdg/RAZOR.PDG",
-				
-				pathSimVol + "gl/OUTLAW.GL",
-				pathSimVol + "gl/TOMAHAWK.GL",
-				pathSimVol + "gl/RAMSES.GL",
-				pathSimVol + "gl/ACHILLES.GL",
-				pathSimVol + "gl/DIABLO.GL",
-				pathSimVol + "gl/SPIDER.GL",
-				pathSimVol + "gl/RAZOR.GL",
-				
-				pathSimVol + "FM/RAZOR.FM",
-				
-				pathSimVol + "dat/OUTLAW.DAT",
-				pathSimVol + "dat/TOMAHAWK.DAT",
-				pathSimVol + "dat/RAMSES.DAT",
-				pathSimVol + "dat/ACHILLES.DAT",
-				pathSimVol + "dat/DIABLO.DAT",
-				pathSimVol + "dat/SPIDER.DAT",
-				pathSimVol + "dat/RAZOR.DAT",
-				
+//				pathSimVol + "pdg/OUTLAW.PDG",
+//				pathSimVol + "pdg/TOMAHAWK.PDG",
+//				pathSimVol + "pdg/RAMSES.PDG",
+//				pathSimVol + "pdg/ACHILLES.PDG",
+//				pathSimVol + "pdg/DIABLO.PDG",
+//				pathSimVol + "pdg/SPIDER.PDG",
+//				pathSimVol + "pdg/RAZOR.PDG",
+//				
+//				pathSimVol + "gl/OUTLAW.GL",
+//				pathSimVol + "gl/TOMAHAWK.GL",
+//				pathSimVol + "gl/RAMSES.GL",
+//				pathSimVol + "gl/ACHILLES.GL",
+//				pathSimVol + "gl/DIABLO.GL",
+//				pathSimVol + "gl/SPIDER.GL",
+//				pathSimVol + "gl/RAZOR.GL",
+//				
+//				pathSimVol + "FM/RAZOR.FM",
+//				
+//				pathSimVol + "dat/OUTLAW.DAT",
+//				pathSimVol + "dat/TOMAHAWK.DAT",
+//				pathSimVol + "dat/RAMSES.DAT",
+//				pathSimVol + "dat/ACHILLES.DAT",
+//				pathSimVol + "dat/DIABLO.DAT",
+//				pathSimVol + "dat/SPIDER.DAT",
+//				pathSimVol + "dat/RAZOR.DAT",
+//				
 				pathSimVol + "dat/PROJ.DAT",
 				pathSimVol + "dat/BULLETS.DAT",
 				pathSimVol + "dat/ROCKETS.DAT",
@@ -110,12 +111,36 @@ public class TestExports {
 	
 	@Test
 	public void shellExportAll() {
-		
+		CommandLineMain.main(new String[] {
+				"-x",
+				pathShellVol + "gam/weapons.dat",
+				pathShellVol + "gam/rpr_toma.dat",
+				pathShellVol + "gam/arm_toma.dat"
+				
+//				"/unpack/game_0.sav",
+//				"/unpack/game_1.sav",
+//				"/unpack/game_2.sav",
+//				"/unpack/game_3.sav",
+//				"/unpack/game_4.sav",
+//				"/unpack/game_5.sav",
+//				"/unpack/game_6.sav",
+//				"/unpack/game_7.sav",
+//				"/unpack/game_8.sav",
+//				"/unpack/game_9.sav"
+				
+		});
 	}
 
 	@Test
 	public void shellImportAll() {
-		
+		CommandLineMain.main(new String[] {
+				"-x",
+//				"/unpack/sav/game_0.sav.json",
+				pathUnpack + "gam/weapons.dat.json",
+				pathUnpack + "gam/rpr_toma.dat.json",
+				pathUnpack + "gam/arm_toma.dat.json"
+				
+		});
 	}
 }
 

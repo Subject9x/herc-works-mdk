@@ -10,6 +10,8 @@ import org.hercworks.core.data.file.dat.shell.InitHerc;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.file.sav.PlayerSave;
+import org.hercworks.core.io.transform.common.PlayerSaveTransform;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
@@ -31,6 +33,8 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
+import org.hercworks.transfer.dto.file.sys.sav.PlayerSaveFileDTO;
+import org.hercworks.transfer.svc.impl.PlayerSaveDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.HercInfoDTOServiceImpl;
@@ -63,14 +67,19 @@ public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 	
 	@Override
 	public boolean filterFile(FileItem file) {
-		boolean filter = false;
-		if(file.getName().toLowerCase().contains("."+FileType.GAM.name().toLowerCase()+".json")) {
-			if(ShellFileMatch.getByPattern(file.getName()) != null) {
-				filesToProcess.add(file);
-				filter = true;
-			}
+
+		String fileName = file.getName().toLowerCase();
+		if(!fileName.contains(".json")) {
+			return false;
 		}
-		return filter;
+		
+		if(ShellFileMatch.getByPattern(file.getName()) != null
+				|| fileName.contains(FileType.GAM.name().toLowerCase())) {
+			filesToProcess.add(file);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -105,6 +114,9 @@ public class ShellDatJsonImportProcessor extends GenericJsonProcessor{
 					break;
 				case TRAINING_HERCS:
 					importJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
+					break;
+				case SAVE_FILE:
+					importJson(file.getName(), new PlayerSaveTransform(), PlayerSave.class, new PlayerSaveDTOServiceImpl(), PlayerSaveFileDTO.class);
 					break;
 				default:
 					break;

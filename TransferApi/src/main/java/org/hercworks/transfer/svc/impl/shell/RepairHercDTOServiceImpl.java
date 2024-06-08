@@ -75,6 +75,7 @@ public class RepairHercDTOServiceImpl implements GeneralDTOService {
 		RepairHercDTO dto = (RepairHercDTO)source;
 		RprHerc repairHerc = new RprHerc();
 		repairHerc.setExt(FileType.DAT);
+		repairHerc.setDir(FileType.GAM);
 		
 		short bodImg = (short)dto.getBodyImages().size();
 		repairHerc.setBodyImgTotal(bodImg);

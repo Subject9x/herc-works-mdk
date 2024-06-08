@@ -53,7 +53,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(this.unpackPath);
 				
 				//TODO : make configurable by user
-				String exportModDir = makeExportPath(targDirPath+"/MOD/" + ((DataFile)convert).getExt().val().toUpperCase() +"/");
+				String exportModDir = makeExportPath(targDirPath+"/MOD/" + ((DataFile)convert).getDir().val().toUpperCase() +"/");
 				
 				if(exportModDir != null) {
 					targDirPath = exportModDir;
@@ -108,14 +108,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
 			}
 			else {
-				
-				String exportJsonDir = "";
-				
 				targDirPath = makeExportPath(this.unpackPath + "/" + ((DataFile)exportDat).getDir().name() + "/");
-				
-				
-				
-				
 			}
 			
 			if(targDirPath == null) {
@@ -134,7 +127,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			
 			dto = dtoClass.cast(dto);
 			
-			String fullExportPath = targDirPath + "/" + ((DataFile)exportDat).getFileName() + "." + ((DataFile)exportDat).getDir().name() + ".json";
+			String fullExportPath = targDirPath + "/" + ((DataFile)exportDat).getFileName() + "." + ((DataFile)exportDat).getExt().name() + ".json";
 			
 			File json = new File(fullExportPath);
 			json.setWritable(true);

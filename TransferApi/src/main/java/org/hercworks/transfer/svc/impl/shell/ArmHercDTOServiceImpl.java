@@ -12,6 +12,7 @@ import org.hercworks.transfer.dto.struct.shell.UiHardpointDTO;
 import org.hercworks.transfer.dto.struct.shell.UiImageDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class ArmHercDTOServiceImpl implements GeneralDTOService{
 
@@ -73,6 +74,9 @@ public class ArmHercDTOServiceImpl implements GeneralDTOService{
 		ArmHercDTO srcData = (ArmHercDTO)source;
 		
 		ArmHerc armData = new ArmHerc();
+		armData.setExt(FileType.DAT);
+		armData.setDir(FileType.GAM);
+		
 		UiHardpointGraphic topHercImg = new UiHardpointGraphic();
 		armData.setTopImgArrId(srcData.getTopImgArrId());
 		topHercImg.setOriginX(srcData.getHercTopImg().getOriginX());

@@ -52,6 +52,7 @@ public class InitHercDTOServiceImpl implements GeneralDTOService{
 		
 		InitHerc object = new InitHerc();
 		object.setExt(FileType.DAT);
+		object.setDir(FileType.GAM);
 		
 		object.setData(new ShellHercData());
 		ShellHercData herc = object.getData();

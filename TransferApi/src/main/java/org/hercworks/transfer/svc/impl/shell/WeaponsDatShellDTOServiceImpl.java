@@ -9,7 +9,7 @@ import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.vshell.hercs.UiWeaponEntry;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.dto.struct.shell.WeaponsDatItem;
+import org.hercworks.transfer.dto.struct.shell.WeaponsDatDTOItem;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
@@ -27,14 +27,13 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 		
 		dto.setTotal(srcData.getTotalCount());
 		
-		WeaponsDatItem[] entries = new WeaponsDatItem[srcData.getTotalCount()];
+		WeaponsDatDTOItem[] entries = new WeaponsDatDTOItem[srcData.getTotalCount()];
 		for(int i=0; i < srcData.getTotalCount(); i++) {
-			WeaponsDatItem item = new WeaponsDatItem();
+			WeaponsDatDTOItem item = new WeaponsDatDTOItem();
 			WeaponsDat.Entry entry = srcData.getData()[i];
 			
 			item.setId(entry.getId());
-			String name = new String(Bytes.from(entry.getName(), 0, entry.getNameLen()-1).array());
-			item.setName(name);
+			item.setWeaponId(WeaponLUT.getById(entry.getId()));
 			item.setSalvageCost(entry.getSalvageCost());
 			item.setStartUnlock(entry.getStartUnlock());
 			item.setAutobuildPriority(entry.getAutobuildPriority());
@@ -47,7 +46,7 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 			UiWeaponEntry entry = srcData.getStartingWeapons()[i];
 			
 			String[] line = new String[3];
-			line[0] = WeaponLUT.getById(entry.getItemId()).getName();
+			line[0] = WeaponLUT.getById(entry.getItemId()).toString();
 			line[1] = String.valueOf(entry.getHealthPercent());
 			line[2] = String.valueOf(entry.getMissileType());
 			startList.add(line);
@@ -63,16 +62,16 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 		WeaponsDatDTO srcDto = (WeaponsDatDTO)source;
 		
 		WeaponsDat data = new WeaponsDat(srcDto.getTotal());
-		
 		data.setExt(FileType.DAT);
+		data.setDir(FileType.GAM);
 		
 		for(int i=0; i < srcDto.getTotal(); i++) {
 			WeaponsDat.Entry entry = data.addEntry(i);
-			WeaponsDatItem item = srcDto.getWeapons()[i];
+			WeaponsDatDTOItem item = srcDto.getWeapons()[i];
 			
 			entry.setId(item.getId());
-			entry.setNameLen((byte)(item.getName().length()+1));
-			entry.setName(Bytes.from(item.getName().getBytes()).append((byte)0).array());
+			entry.setNameLen((byte)(item.getWeaponId().getName().length()+1));
+			entry.setName(Bytes.from(item.getWeaponId().getName().getBytes()).append((byte)0).array());
 			entry.setSalvageCost(item.getSalvageCost());
 			entry.setStartUnlock(item.getStartUnlock());
 			entry.setAutobuildPriority(item.getAutobuildPriority());

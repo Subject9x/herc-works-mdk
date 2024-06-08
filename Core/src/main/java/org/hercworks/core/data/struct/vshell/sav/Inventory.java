@@ -18,31 +18,31 @@ import org.hercworks.core.data.struct.WeaponLUT;
  */
 public class Inventory {
 
-	private Entry[] items;
+	private InventoryItem[] items;
 	
 	public Inventory() {}
 
-	public Entry newEntry() {
-		return new Entry();
+	public InventoryItem newEntry() {
+		return new InventoryItem();
 	}
 	
-	public Entry[] getItems() {
+	public InventoryItem[] getItems() {
 		return items;
 	}
 
-	public void setItems(Entry[] items) {
+	public void setItems(InventoryItem[] items) {
 		this.items = items;
 	}
 	
-	public class Entry{
+	public class InventoryItem{
 		private WeaponLUT id;
 		private short unlockFlag;
 		private short quantity;
 		private ShellWeaponEntry[] data;
 		
-		public Entry() {}
+		public InventoryItem() {}
 		
-		public Entry(int total) {
+		public InventoryItem(int total) {
 			this.quantity = (short)total;
 			this.data = new ShellWeaponEntry[total];
 		}
@@ -79,6 +79,4 @@ public class Inventory {
 			this.data = data;
 		}
 	}
-	
-	
 }

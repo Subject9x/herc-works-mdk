@@ -35,7 +35,9 @@ import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
+import org.hercworks.transfer.dto.file.sys.sav.PlayerSaveFileDTO;
 import org.hercworks.transfer.svc.GeneralDTOService;
+import org.hercworks.transfer.svc.impl.PlayerSaveDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.HercInfoDTOServiceImpl;
@@ -69,22 +71,19 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 	
 	@Override
 	public boolean filterFile(FileItem file) {
-		boolean filter = false;
+
 		String fileName = file.getName().toLowerCase();
 		if(fileName.contains(".json")) {
 			return false;
 		}
-		//filter out non-shell DAT files.
-		if(!file.getName().contains(FileType.GAM.name().toLowerCase())) {
-			return false;
+		
+		if(ShellFileMatch.getByPattern(file.getName()) != null
+				|| fileName.contains(FileType.GAM.name().toLowerCase())) {
+			filesToProcess.add(file);
+			return true;
 		}
-		if(file.getName().contains("."+FileType.DAT.name().toLowerCase()) || file.getName().contains("."+FileType.SAV.name().toLowerCase())) {
-			if(ShellFileMatch.getByPattern(file.getName()) != null) {
-				filesToProcess.add(file);
-				filter = true;
-			}
-		}
-		return filter;
+		
+		return false;
 	}
 	
 	@Override
@@ -121,7 +120,7 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 						exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);
 						break;
 					case SAVE_FILE:
-						exportTest(file.getName(), new PlayerSaveTransform(), PlayerSave.class, null, null);
+						exportJson(file.getName(), new PlayerSaveTransform(), PlayerSave.class, new PlayerSaveDTOServiceImpl(), PlayerSaveFileDTO.class);
 						break;
 					default:
 						break;

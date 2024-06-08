@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.sav;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.hercworks.core.data.struct.WeaponLUT;
@@ -7,7 +8,6 @@ import org.hercworks.core.data.struct.herc.HercLUT;
 import org.hercworks.core.data.struct.vshell.sav.HercBayEntry;
 import org.hercworks.core.data.struct.vshell.sav.Inventory;
 import org.hercworks.core.data.struct.vshell.sav.PilotEntry;
-import org.hercworks.core.data.struct.vshell.sav.Workshop;
 import org.hercworks.voln.DataFile;
 
 
@@ -18,48 +18,37 @@ import org.hercworks.voln.DataFile;
  *  2- UINT8 - spacer, possibly unknown value
  *  3- UINT8 - begin {@linkplain Inventory} segment
  *  
- *  3+X - UINT16 - begin {@linkplain Workshop} segment
+ *  3+X - UINT16 -
  *  
  *  
  * 
  */
 public class PlayerSave extends DataFile {
 
-	private short unk1_uint16;
-	private byte spacer1;
 	private Inventory inventory;
 	private short workshopSpace;
 	private WeaponLUT[] workshopSlots = new WeaponLUT[5];
-	private short[] unk2_flags = new short[78];
+	
+	//0x00 - uint16 - ?
+	//0x02 - uint16 - mission number
+	
+	private short[] unk4_stateFlags = new short[78];
 	private PilotEntry[] squadmates;
+	private short[] unkRange_prePlayer = new short[9];
 	private PilotEntry playerPilot;
-	private Map<Short, HercBayEntry> hercBay;
-	private Map<HercLUT, Short> unlockedHercs;
+	private Map<Short, HercBayEntry> hercBay = new LinkedHashMap<Short, HercBayEntry>();
+	private Map<HercLUT, Short> unlockedHercs = new LinkedHashMap<HercLUT, Short>();
 	private int salvageTotal;
+	private byte[] unknownSaveValues;	//massive chunk of save values after relevant data
 	
 	public PlayerSave() {}
 	
-	public short getUnk1_uint16() {
-		return unk1_uint16;
+	public short[] getUnk4_stateFlags() {
+		return unk4_stateFlags;
 	}
 
-	public byte getSpacer1() {
-		return spacer1;
-	}
-	public void setUnk1_uint16(short unk1_uint16) {
-		this.unk1_uint16 = unk1_uint16;
-	}
-	
-	public short[] getUnk2_flags() {
-		return unk2_flags;
-	}
-
-	public void setUnk2_flags(short[] unk2_flags) {
-		this.unk2_flags = unk2_flags;
-	}
-
-	public void setSpacer1(byte spacer1) {
-		this.spacer1 = spacer1;
+	public void setUnk4_stateFlags(short[] unk2_flags) {
+		this.unk4_stateFlags = unk2_flags;
 	}
 
 	public Inventory getInventory() {
@@ -124,5 +113,21 @@ public class PlayerSave extends DataFile {
 
 	public void setSalvageTotal(int salvageTotal) {
 		this.salvageTotal = salvageTotal;
+	}
+
+	public byte[] getUnknownSaveValues() {
+		return unknownSaveValues;
+	}
+
+	public void setUnknownSaveValues(byte[] unknownSaveValues) {
+		this.unknownSaveValues = unknownSaveValues;
+	}
+	
+	public short[] getUnkRange_prePlayer() {
+		return unkRange_prePlayer;
+	}
+
+	public void setUnkRange_prePlayer(short[] unkRange_prePlayer) {
+		this.unkRange_prePlayer = unkRange_prePlayer;
 	}
 }

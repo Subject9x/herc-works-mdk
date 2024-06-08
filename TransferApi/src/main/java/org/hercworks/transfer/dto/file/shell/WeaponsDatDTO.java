@@ -3,7 +3,7 @@ package org.hercworks.transfer.dto.file.shell;
 import java.util.List;
 
 import org.hercworks.transfer.dto.file.TransferObject;
-import org.hercworks.transfer.dto.struct.shell.WeaponsDatItem;
+import org.hercworks.transfer.dto.struct.shell.WeaponsDatDTOItem;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -15,7 +15,7 @@ public class WeaponsDatDTO extends TransferObject {
 	private short total;
 	
 	@JsonProperty(value = "", index = 2)
-	private WeaponsDatItem[] weapons;
+	private WeaponsDatDTOItem[] weapons;
 	
 	@JsonProperty(value = "", index = 4)
 	private List<String[]> startingList;
@@ -26,7 +26,7 @@ public class WeaponsDatDTO extends TransferObject {
 		return total;
 	}
 
-	public WeaponsDatItem[] getWeapons() {
+	public WeaponsDatDTOItem[] getWeapons() {
 		return weapons;
 	}
 
@@ -38,7 +38,7 @@ public class WeaponsDatDTO extends TransferObject {
 		this.total = total;
 	}
 
-	public void setWeapons(WeaponsDatItem[] weapons) {
+	public void setWeapons(WeaponsDatDTOItem[] weapons) {
 		this.weapons = weapons;
 	}
 

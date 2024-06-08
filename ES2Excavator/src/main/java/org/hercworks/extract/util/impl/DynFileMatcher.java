@@ -26,7 +26,7 @@ public class DynFileMatcher implements FileMatcher {
 		file = file.toLowerCase();
 		
 		for(FileType t : types) {
-			if(file.contains(t.name().toLowerCase())) {
+			if(file.contains("."+t.name().toLowerCase())) {
 				return true;
 			}
 		}

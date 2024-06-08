@@ -25,9 +25,9 @@ public final class CommandLineMain {
 	
 	//new DBACompilerProcessor(),
 	private static FileProcessor[] processors  = new FileProcessor[] {
-					new DynamixFileProcessor(), new ShellDatJsonImportProcessor(), 
-					new ShellDatJsonExportProcessor(), new SimDatExportProcessor(),
-					new SimDatImportProcessor()};
+					new DynamixFileProcessor(), 
+					new ShellDatJsonImportProcessor(), new ShellDatJsonExportProcessor(), 
+					new SimDatExportProcessor(),new SimDatImportProcessor()};
 	
 	public static void main(String[] args) {
 		String version = System.getProperty("java.version");

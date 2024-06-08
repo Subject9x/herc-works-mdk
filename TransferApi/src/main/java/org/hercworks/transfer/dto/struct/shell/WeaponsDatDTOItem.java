@@ -1,16 +1,18 @@
 package org.hercworks.transfer.dto.struct.shell;
 
+import org.hercworks.core.data.struct.WeaponLUT;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("")
-public class WeaponsDatItem {
+public class WeaponsDatDTOItem {
 
 	@JsonProperty(value = "weapon_id", index = 1)
 	private short id;
 	
 	@JsonProperty(value = "name", index = 2)
-	private String name;
+	private WeaponLUT weaponId;
 	
 	@JsonProperty(value = "cost", index = 3)
 	private short salvageCost;	//* 100 to convert to tons
@@ -21,14 +23,14 @@ public class WeaponsDatItem {
 	@JsonProperty(value = "auto-build_priority", index = 5)
 	private short autobuildPriority;
 	
-	public WeaponsDatItem() {}
+	public WeaponsDatDTOItem() {}
 
 	public short getId() {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public WeaponLUT getWeaponId() {
+		return weaponId;
 	}
 
 	public short getSalvageCost() {
@@ -47,8 +49,8 @@ public class WeaponsDatItem {
 		this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setWeaponId(WeaponLUT weaponId) {
+		this.weaponId = weaponId;
 	}
 
 	public void setSalvageCost(short salvageCost) {
