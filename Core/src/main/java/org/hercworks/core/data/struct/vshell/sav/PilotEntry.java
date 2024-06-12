@@ -21,7 +21,7 @@ public class PilotEntry {
 	private short squadmateId;
 	private String name;
 	private short bayId;
-	private byte unk1_uint8;
+	private byte active;
 	private PilotRank rank;
 	private short crewRowNum;
 	private short unk2_uint16;
@@ -45,8 +45,8 @@ public class PilotEntry {
 		return bayId;
 	}
 
-	public byte getUnk1_uint8() {
-		return unk1_uint8;
+	public byte getActive() {
+		return active;
 	}
 
 	public PilotRank getRank() {
@@ -85,8 +85,8 @@ public class PilotEntry {
 		this.bayId = bayId;
 	}
 
-	public void setUnk1_uint8(byte unk1_uint8) {
-		this.unk1_uint8 = unk1_uint8;
+	public void setActive(byte active) {
+		this.active = active;
 	}
 
 	public void setRank(PilotRank rank) {

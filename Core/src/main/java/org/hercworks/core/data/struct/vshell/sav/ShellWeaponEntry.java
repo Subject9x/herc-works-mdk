@@ -12,7 +12,8 @@ public class ShellWeaponEntry {
 
 	private WeaponLUT id;
 	private short nameId;
-	private short[] health = new short[2];
+	private short healthArmor;
+	private short healthInteral;
 	private MissileType missileType;
 	
 	public ShellWeaponEntry() {}
@@ -23,10 +24,6 @@ public class ShellWeaponEntry {
 
 	public short getNameId() {
 		return nameId;
-	}
-
-	public short[] getHealth() {
-		return health;
 	}
 
 	public MissileType getMissileType() {
@@ -41,11 +38,23 @@ public class ShellWeaponEntry {
 		this.nameId = nameId;
 	}
 
-	public void setHealth(short[] health) {
-		this.health = health;
-	}
-
 	public void setMissileType(MissileType missileType) {
 		this.missileType = missileType;
+	}
+
+	public short getHealthArmor() {
+		return healthArmor;
+	}
+
+	public short getHealthInteral() {
+		return healthInteral;
+	}
+
+	public void setHealthArmor(short healthArmor) {
+		this.healthArmor = healthArmor;
+	}
+
+	public void setHealthInternal(short healthInteral) {
+		this.healthInteral = healthInteral;
 	}
 }

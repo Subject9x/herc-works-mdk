@@ -5,30 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum HercExternals {
-
-	/**
-	 * Byte order in herc data
-	 * cockpit 1
-	 * cockpit 2
-	 * 
-	 * torso-left 1
-	 * torso-right 1
-	 * 
-	 * torso-left 2
-	 * torso-right 2
-	 * 
-	 * chassis 1
-	 * 
-	 * leg-left-1
-	 * leg-right-1
-	 * 
-	 * leg-left-2
-	 * leg-right-2
-	 * 
-	 * leg-left-3
-	 * leg-right-3
-	 */
-
+	
 	COCKPIT_FRONT((short)0, "Cockpit Front"),
 	COCKPIT_REAR((short)1, "Cockpit Rear"),
 	TORSO_LEFT_FRONT((short)2, "Left Torso"),
