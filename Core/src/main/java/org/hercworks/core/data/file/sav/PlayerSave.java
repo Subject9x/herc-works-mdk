@@ -30,9 +30,11 @@ public class PlayerSave extends DataFile {
 	private WeaponLUT[] workshopSlots = new WeaponLUT[5];
 	
 	//0x00 - uint16 - ?
-	//0x02 - uint16 - mission number
+	//0x02 - uint16 - mission number - just cosmetic! VSHELL grabs correct script.dat for actual mission.
+	//
+	//somewhere in this range: .DPL index num for briefing map
+	private short[] unk4_stateFlags = new short[77];
 	
-	private short[] unk4_stateFlags = new short[78];
 	private PilotEntry[] squadmates;
 	private short[] unkRange_prePlayer = new short[9];
 	private PilotEntry playerPilot;
