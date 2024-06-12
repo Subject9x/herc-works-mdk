@@ -18,8 +18,8 @@ public class PlayerSavePilotDataDTO {
 	@JsonProperty(value = "assigned_herc_bay", index = 2)
 	private int bayId;
 
-	@JsonProperty(value = "unk1_uint8", index = 3)
-	private int unk1_uint8;
+	@JsonProperty(value = "active", index = 3)
+	private boolean activeFlag;
 
 	@JsonProperty(value = "rank", index = 4)
 	private String rank;
@@ -59,8 +59,8 @@ public class PlayerSavePilotDataDTO {
 		return bayId;
 	}
 
-	public int getUnk1_uint8() {
-		return unk1_uint8;
+	public boolean getActiveFlag() {
+		return activeFlag;
 	}
 
 	public String getRank() {
@@ -107,8 +107,8 @@ public class PlayerSavePilotDataDTO {
 		this.bayId = bayId;
 	}
 
-	public void setUnk1_uint8(int unk1_uint8) {
-		this.unk1_uint8 = unk1_uint8;
+	public void setActiveFlag(boolean activeFlag) {
+		this.activeFlag = activeFlag;
 	}
 
 	public void setRank(String rank) {

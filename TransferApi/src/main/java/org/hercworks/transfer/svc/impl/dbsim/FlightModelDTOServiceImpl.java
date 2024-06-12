@@ -45,6 +45,7 @@ public class FlightModelDTOServiceImpl implements GeneralDTOService {
 		
 		FlightModel fm = new FlightModel();
 		fm.setExt(FileType.FM);
+		fm.setDir(FileType.FM);
 		
 		FlightModelDTO dto = (FlightModelDTO)source;
 		

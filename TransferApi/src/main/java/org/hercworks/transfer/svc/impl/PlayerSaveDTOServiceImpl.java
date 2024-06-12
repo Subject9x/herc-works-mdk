@@ -47,10 +47,11 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 			for(int q=0; q < itemDTO.getData().length; q++) {
 				ShellWeaponEntry entry = item.getData()[q];
 				WeaponEntryDTO weapon = new WeaponEntryDTO();
-				
+
+				weapon.setArmor(entry.getHealthArmor());
+				weapon.setStructure(entry.getHealthInteral());
 				weapon.setMissileType(entry.getMissileType());
-				//TODO - I'm not sure why weapons get 2 64 00 (100) percentage values here.
-				weapon.setHealth((entry.getHealth()[0] + entry.getHealth()[1]) / 2);
+				
 				itemDTO.getData()[q] = weapon;
 			}
 			
@@ -112,7 +113,7 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 		pilotDTO.setSquadmateId(data.getSquadmateId());
 		pilotDTO.setName(data.getName());
 		pilotDTO.setBayId(data.getBayId());
-		pilotDTO.setUnk1_uint8(data.getUnk1_uint8());
+		pilotDTO.setActiveFlag(data.getActive()==(byte)1 ? true : false);
 		pilotDTO.setRank(data.getRank().getLabel());
 		pilotDTO.setCrewRowNum(data.getCrewRowNum());
 		pilotDTO.setUnk2_uint16(data.getUnk2_uint16());
@@ -166,13 +167,12 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 		int idx = 0;	//harpdoint list actually can be any order.
 		for(Short wepSlot : entry.getWeapons().keySet()) {
 			ShellWeaponEntry weapon = entry.getWeapons().get(wepSlot);
-			
 			HercHardpointDTO wpnDTO = new HercHardpointDTO();
-			wpnDTO.setHardpoint(wepSlot);
 			
-			short hp = (short)((weapon.getHealth()[0] + weapon.getHealth()[1]) /2);
-			wpnDTO.setHealthPercent(hp);
+			wpnDTO.setHardpoint(wepSlot);
 			wpnDTO.setItem(weapon.getId());
+			wpnDTO.setArmor(weapon.getHealthArmor());
+			wpnDTO.setStructure(weapon.getHealthInteral());
 			wpnDTO.setMissileType(weapon.getMissileType());
 			
 			hercDTO.getWeapons()[idx] = wpnDTO;
@@ -217,11 +217,8 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 					entryStock.setId(weapon);
 					entryStock.setMissileType(dtoStock.getMissileType());
 					entryStock.setNameId((short)weapon.getId());
-					
-					// new short[2];
-					int half = dtoStock.getHealth() / 2;
-					int half2 = dtoStock.getHealth() - half;
-					entryStock.setHealth(new short[] {(short)half, (short)half2});
+					entryStock.setHealthArmor((short)dtoStock.getArmor());
+					entryStock.setHealthInternal((short)dtoStock.getStructure());
 					
 					entry.getData()[q] = entryStock;
 				}
@@ -300,7 +297,9 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 		 pilot.setSquadmateId((short)dtoPilot.getSquadmateId());
 		 pilot.setName(dtoPilot.getName());
 		 pilot.setBayId((short)dtoPilot.getBayId());
-		 pilot.setUnk1_uint8((byte)dtoPilot.getUnk1_uint8());
+		 
+		 pilot.setActive((byte)(dtoPilot.getActiveFlag() ? 1 : 0));
+		 
 		 pilot.setRank(PilotRank.getByName(dtoPilot.getRank()));
 		 pilot.setCrewRowNum((short)dtoPilot.getCrewRowNum());
 		 pilot.setUnk2_uint16((short)dtoPilot.getUnk2_uint16());
@@ -323,6 +322,7 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 	private HercBayEntry importHercBayEntry(HercBayEntry hercBay, HercBayEntryDTO hercDTO) {
 		
 		hercBay.setId(HercLUT.getByName(hercDTO.getId()));
+		hercBay.setNameId(hercBay.getId().getId());
 		hercBay.setHardpointMax(hercBay.getId().getHardpointMax());
 		
 		hercBay.setHealthExternals(new HashMap<HercExternals, ShellHercPart>());
@@ -355,8 +355,8 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 		hercBay.setBuildPercent((short)hercDTO.getBuildPercent());
 		hercBay.setBuildStepNum((short)hercDTO.getBuildStepNum());
 		hercBay.setActiveSockets((short)hercDTO.getWeapons().length);
-		
 		hercBay.setWeapons(new HashMap<Short, ShellWeaponEntry>());
+		
 		for(int w=0; w < hercBay.getActiveSockets(); w++) {
 			HercHardpointDTO hardpointDTO = hercDTO.getWeapons()[w];
 			ShellWeaponEntry weapon = new ShellWeaponEntry();
@@ -364,11 +364,8 @@ public class PlayerSaveDTOServiceImpl implements GeneralDTOService {
 			weapon.setId(hardpointDTO.getItem());
 			weapon.setMissileType(hardpointDTO.getMissileType());
 			weapon.setNameId((short)hardpointDTO.getItem().getId());
-			
-			short perc = (short)(hardpointDTO.getHealthPercent() / 2);
-			short half = (short)(hardpointDTO.getHealthPercent() - perc);
-			
-			weapon.setHealth(new short[] {perc, half});
+			weapon.setHealthArmor((short)hardpointDTO.getArmor());
+			weapon.setHealthInternal((short)hardpointDTO.getStructure());
 			
 			hercBay.getWeapons().put((short)w, weapon);
 		}

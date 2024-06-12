@@ -54,6 +54,7 @@ public class GunLayoutDTOServiceImpl implements GeneralDTOService {
 		
 		GunLayout data = new GunLayout();
 		data.setExt(FileType.GL);
+		data.setDir(FileType.GL);
 		
 		data.setTotalGuns((short)dto.getHardpoints().length);
 		
