@@ -21,6 +21,28 @@ import org.hercworks.voln.DataFile;
  *  22- UINT16 - ?
  *  24- UINT16 - ?
  *  26- UINT16 - ?
+ *  
+ *  
+ *  150- UINT16 - ammo count for ATC20
+ *  
+ *  SEQ
+ *     
+ *      x-6 - UINT16 - unknown
+ *  	x-4 - UINT16 - unknown
+ *  	x-2 - UINT16 ammo consumed per shot
+ *  	x - UINT16 - ammo count
+ *      X+2 - UINT16 - unknown
+ *      X+4 - UINT16 - projectile ID
+ *      X+6 - INT16 - PROJ\OFS\X
+ *      X+8 - INT16 - PROJ\OFS\Y
+ *      X+8 - INT16 - PROJ\OFS\Z
+ *      X+12 - INT16- ORG\OFS\X
+ *      X+14 - INT16- ORG\OFS\Y
+ *      X+16 - INT16- ORG\OFS\Z
+ *      x+18 - INT16 - fire rate
+ *      
+ *      
+ *  
  */
 public class Weapons extends DataFile{
 

@@ -1,0 +1,87 @@
+WEAPONS.DAT
+-------------------------------
+2 Data lists:
+	+ first list is ALL weapons in the game.
+	+ List 1: 
+		"weapon_id": DO NOT MODIFY.
+		"name": DO NOT MODIFY.
+		"cost": salvage cost is [Fixed-point] Integers, no decimals.
+		"startUnlock": determines of weapon is available on-start of new campaign.
+		"unknown2": DO NOT MODIFY at this time.
+	
+	+ Second list is the Player's STARTING inventory on-start of a new campaign.
+	+ MODIFY this however you'd like!
+	List 2:
+		[
+			"NAME",	- must match a valid weapon name from the game (name from above might not match completely).
+			"HEALTH",	- 1 to 100, sets the starting health value of the item.
+			"UNKNOWN", - unknown! play around with this number to see if anything changes.
+		],
+	
+
+HERCS.DAT
+-------------------------------
++ This sets the starting herc-list for the player on a new campaign.
++ This also configures each starting herc's weapons.
+	{
+		"bayId": 0 to 8
+		"hercId": herc name, must match an existing playable herc in the game.
+		"healthRatio": 1 to 100, some unknown starting health value.
+		"buildCompleteLevel": level of 'completeness' - Hercs can take several missions to 'build', 
+			0 = herc built and ready.
+			> 0 = herc is under construction, this cannot EXCEED the herc's TOTAL build-turns (these are coupled to a .DBA file which has the images).
+				can be LESS than total though!.
+			
+		"hardpoints": [
+			{
+				"hardpoint": 0 to <Herc Max - 1>
+				"item": must match weapon name in game.
+				"hp_perc": 0 - 100, current damage ratio on the weapon.
+				"msl_num": 5
+					1 = missile type 1 - WARN: only set these for actual missile weapons.
+					2 = missile type 2
+					3 = missile type 3
+					4 = missile type 4
+					5 = NO MISSILE - most weapons have this!
+			},
+		]
+	},
+	
+	
+HERC_INF.DAT
+-------------------------------
++ Editable herc data used by VSHELL.
+
+{
+	"herc_id": id and name are bound together as a pair, change one, you must change the other to match.
+	"name": see above.
+	"display_weight": integer, display-only.
+	"display_speed": Integer 0 - X, I believe this is just for display only, DBSIM herc data is stored elsewhere.
+	"total_hardpoints": 0 - X, WARN - we can't make NEW hardpoints, DO NOT MODIFY
+	"salvage_cost": [Fixed-point] integer, 0 to X. This is 1:1 for game's notion of 'salvage tons'.
+	"unknown_flag": unknown at this time.
+	"build_phases": number of missions this will take to build, the original TOTAL is based on .DBA files which have frames bound to this value.
+					You CAN set this to LOWER for faster build time.
+	"on_start": 0 or 1, herc is available on the start of a new campaign.
+}
+
+ARM_<Herc>.DAT - Example ARM_RAPT.DAT
+-------------------------------
+Herc hardpoint config is a bit more complicated. The image data is bound to the hardpoint listing.
+1) Hardpoint validation starts with WHICH weapons are on the list, a weapon removed from the list means it cannot be mounted in any hardpoint.
+2) For-each weapon, you must list the hardpoints that it is valid for, as seen below.
+		"ATC50": [
+			{
+				"hardpoint": 2 - X (hardpoint max), WARN: for some reason hardpoint listing starts at 2! not 0!
+				X,Y are the screen coords for drawing the weapon's DBM image.
+				"x": 2D pixel location, this is the offset from the arming screens top-left corner of the herc display.
+				"y": 2D pixel location, this is the offset from the arming screens top-left corner of the herc display. 
+				
+				Outline is just that, the red outline when you select a weapon, this needs its own coords.
+				"outline_x":  2D pixel location, this is the offset from the arming screens top-left corner of the herc display.
+				"outline_y":  2D pixel location, this is the offset from the arming screens top-left corner of the herc display.
+				
+				"frame": DBA frame number, the specific DBA is per-Herc. Example: ARM_RAPT.DAT -> RAPT_WEP.DBA, RAPT_OUT.DBA
+				"draw_flag": NORMAL, FLIP_X, FLIP_Y, FLIP_XY
+			},
+I recommend you start small by editing the OUTLAW or MAVERICK which have low-hardpoint counts.

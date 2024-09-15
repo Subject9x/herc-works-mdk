@@ -44,11 +44,11 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		save.setDir(FileType.SAV);
 		
 		//INVENTORY SEGMENT - 33 entries, matches total weapons in game, ERROR/cut weapon id's ARE included here, but zeroed out.
-//		System.out.println("Parsing Inventory Segment----------------" + index);
+		System.out.println("Parsing Inventory Segment----------------" + index);
 		Inventory inventory = new Inventory();
 		inventory.setItems(new Inventory.InventoryItem[WeaponLUT.values().length]);
 		for(int i=0; i < WeaponLUT.values().length; i++) {
-			System.out.println("	weapon at index=" + index);
+			System.out.println("	weapon at @" + index);
 			byte flag = indexByte();
 			short quant = indexShortLE();
 			Inventory.InventoryItem entry = inventory.newEntry();
@@ -61,10 +61,12 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 			for(int q=0; q < (int)quant; q++) {
 				ShellWeaponEntry weapon = new ShellWeaponEntry();
 				weapon.setId(WeaponLUT.getById(indexShortLE()));
+				System.out.println("			id@" + index + " = " + weapon.getId());
 				weapon.setNameId(indexShortLE());
 				weapon.setHealthArmor(indexShortLE());
 				weapon.setHealthInternal(indexShortLE());
 				weapon.setMissileType(MissileType.getById(indexShortLE()));
+				System.out.println("					missileType@" + index);
 				items[q] = weapon;
 			}
 			entry.setData(items);
@@ -73,58 +75,59 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 			inventory.getItems()[i] = entry;
 		}
 		save.setInventory(inventory);
-//		System.out.println("->Invetory loaded, byte index:=" + index);
+		System.out.println("->Invetory loaded, byte index:=" + index);
 		
 		//Workshop state
-// 		System.out.println("Parsing Workshop Segment----------------" + index);
+ 		System.out.println("Parsing Workshop Segment----------------" + index);
 		save.setWorkshopSpace(indexShortLE());
+		System.out.println("			workspaces@" + index + " = " + save.getWorkshopSpace());
 		for(int w=0; w < save.getWorkshopSlots().length; w++) {
 			indexShortLE();	//why would these ever be out of order?
 			save.getWorkshopSlots()[w] = WeaponLUT.getById((int)indexShortLE());
 		}
-//		System.out.println("->Workshop loaded, byte index:=" + index);
+		System.out.println("->Workshop loaded, byte index:=" + index);
 		
 		//Campaign flags, series of IN16's
-//		System.out.println("Parsing Campaign Flags Segment----------------" + index);
+		System.out.println("Parsing Campaign Flags Segment----------------" + index);
 		int marker = index;
 		for(int f=0; f < save.getUnk4_stateFlags().length; f++) {
 			save.getUnk4_stateFlags()[f] = indexShortLE();
 		}
-//		System.out.println("->Campaign flags loaded, byte index:=" + index +", size = " + (index  - marker) + " bytes");
+		System.out.println("->Campaign flags loaded, byte index:=" + index +", size = " + (index  - marker) + " bytes");
 		
 		//Squadmate segment
-//		System.out.println("Parsing Squad Segment----------------" + index);
+		System.out.println("Parsing Squad Segment----------------" + index);
 		PilotEntry[] squad = new PilotEntry[36];	//36 squadmates
 		for(int s=0; s < squad.length; s++) {
 			squad[s] = indexSquadmate();
 		}
 		save.setSquadmates(squad);
-//		System.out.println("->Squadmates loaded, byte index:=" + index);
+		System.out.println("->Squadmates loaded, byte index:=" + index);
 
 		//Unknown post-pilot, pre-player 9 short range.
-//		System.out.println("Parsing Unknown pre-player Segment----------------" + index);
+		System.out.println("Parsing Unknown pre-player Segment----------------" + index);
 		for(int r=0; r < save.getUnkRange_prePlayer().length; r++) {
 			save.getUnkRange_prePlayer()[r] = indexShortLE();
 			System.out.println("	" + save.getUnkRange_prePlayer()[r]);
 		}
-//		System.out.println("->Parsed unknown segment, byte index:=" + index);
+		System.out.println("->Parsed unknown segment, byte index:=" + index);
 		
 		//Pilot segment
-//		System.out.println("Parsing Player Pilot Segment----------------" + index);
+		System.out.println("Parsing Player Pilot Segment----------------" + index);
 		save.setPlayerPilot(indexPlayerPilot());
 //		System.out.println("->Pilot Entry loaded, byte index:=" + index);
 		
 		//Herc bay Data
-//		System.out.println("Parsing Herc Bay entries Segment----------------" + index);
+		System.out.println("Parsing Herc Bay entries Segment----------------" + index);
 		short baySlots = indexShortLE();
 		for(int b=0; b < (int)baySlots; b++) {
 			short bayId = indexShortLE();
 			save.getHercBay().put(bayId, indexHercEntry());
 		}
-//		System.out.println("->Parsed Herc Bay Segment----------------" + index);
+		System.out.println("->Parsed Herc Bay Segment----------------" + index);
 		
 		//Herc Unlock Flags 9 bytes
-//		System.out.println("Parsing Herc Unlocks Segment----------------" + index);
+		System.out.println("Parsing Herc Unlocks Segment----------------" + index);
 		int l = 0;
 		while(l < HercLUT.ACHILLES.getId()) {
 			short val = indexShortLE();
@@ -132,23 +135,23 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 			System.out.println("		"+ HercLUT.getById((short)l).getName() +"=" +val);
 			l += 1;
 		}
-//		System.out.println("->Parsed Herc unlock Segment----------------" + index);
+		System.out.println("->Parsed Herc unlock Segment----------------" + index);
 		
 		//Total available salvage
-//		System.out.println("Parsing Total available salvage   ----------------" + index);
+		System.out.println("Parsing Total available salvage   ----------------" + index);
 		save.setSalvageTotal(indexIntLE());
 		System.out.println("		Salvage= " + save.getSalvageTotal());
-//		System.out.println("->Parsed available salvage----------------" + index);
+		System.out.println("->Parsed available salvage----------------" + index);
 
 		//Total available salvage
-//		System.out.println("Parsing unknown bytes   ----------------" + index);
+		System.out.println("Parsing unknown bytes   ----------------" + index);
 		ByteArrayOutputStream fragmentFlags = new ByteArrayOutputStream();
 		while(index < getBytes().length) {
 			fragmentFlags.write(indexByte());
 		}
 		save.setUnknownSaveValues(fragmentFlags.toByteArray());
-//		System.out.println("->parsed unknown bytes "+ save.getUnknownSaveValues().length);
-//		System.out.println("->parsed unknown bytes   ----------------" + index);
+		System.out.println("->parsed unknown bytes "+ save.getUnknownSaveValues().length);
+		System.out.println("->parsed unknown bytes   ----------------" + index);
 		
 		return save;
 	}
@@ -157,30 +160,59 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		PilotEntry entry = new PilotEntry();
 
 		entry.setSquadmateId(indexShortLE());
+		System.out.println("			Pilot@" + index + " = " + entry.getSquadmateId());
+		System.out.println("			id: " + entry.getSquadmateId());
 		
 		short nameLen = indexShortLE();
+		System.out.println("			name@" + index);
 		byte[] name = indexSegment(nameLen);
 		
 		entry.setName(new String(Bytes.from(name).toCharArray()).substring(0, nameLen - 1));
+		System.out.println("				Pilot: " + entry.getName());
+		
 		entry.setBayId(indexShortLE());
+		System.out.println("			bayid @" + (index - 2) + " = " + entry.getBayId());
+		
 		entry.setActive(indexByte());
+		System.out.println("			setActive @" + (index - 1) + " = " + entry.getActive());
+		
 		entry.setRank(PilotRank.getById(indexShortLE()));
+		System.out.println("			Rank @" + (index - 2) + " = " + entry.getRank());
+		
 		entry.setCrewRowNum(indexShortLE());
+		System.out.println("			setCrewRowNum @" + (index - 2) + " = " + entry.getCrewRowNum());
+		
 		entry.setUnk2_uint16(indexShortLE());
+		System.out.println("			setUnk2_uint16 @" + (index - 2) + " = " + entry.getUnk2_uint16());
+		
 		entry.setProbablyHealth(indexShortLE());
+		System.out.println("			setProbablyHealth @" + (index - 2) + " = " + entry.getProbablyHealth());
 
 		entry.setKillsHercs(indexShortLE());
+		System.out.println("			setKillsHercs @" + (index - 2) + " = " + entry.getKillsHercs());
+		
 		entry.setKillsFlyers(indexShortLE());
+		System.out.println("			setKillsFlyers @" + (index - 2) + " = " + entry.getKillsFlyers());
+		
 		entry.setKillsBuilding(indexShortLE());
+		System.out.println("			setKillsBuilding @" + (index - 2) + " = " + entry.getKillsBuilding());
+		
 		entry.setTotalKillHerc(indexShortLE());
+		System.out.println("			setTotalKillHerc @" + (index - 2) + " = " + entry.getTotalKillHerc());
+		
 		entry.setTotalKillFlyer(indexShortLE());
+		System.out.println("			setTotalKillFlyer @" + (index - 2) + " = " + entry.getTotalKillFlyer());
+		
 		entry.setTotalKillBldng(indexShortLE());
+		System.out.println("			setTotalKillBldng @" + (index - 2) + " = " + entry.getTotalKillBldng());
 		
 		entry.setMissionCount(indexShortLE());
-		entry.setUnk5_uint16(indexShortLE());
+		System.out.println("			setMissionCount @" + (index - 2) + " = " + entry.getMissionCount());
 		
-		System.out.println("	id: " + entry.getSquadmateId());
-		System.out.println("	Pilot: " + entry.getName());
+		entry.setUnk5_uint16(indexShortLE());
+		System.out.println("			setUnk5_uint16 @" + (index - 2) + " = " + entry.getUnk5_uint16());
+		System.out.println("=======================================================================================");
+		
 		
 		return entry;
 	}
@@ -189,24 +221,50 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 	private PilotEntry indexPlayerPilot() {
 		PilotEntry entry = new PilotEntry();
 
+		System.out.println("	Player Pilot @" + index);
 		short nameLen = indexShortLE();
 		byte[] name = indexSegment(nameLen);
 		
 		entry.setName(new String(Bytes.from(name).toCharArray()).substring(0, nameLen - 1));
 		entry.setBayId(indexShortLE());
-		entry.setActive(indexByte());
-		entry.setRank(PilotRank.getById(indexShortLE()));
-		entry.setCrewRowNum(indexShortLE());
-		entry.setUnk2_uint16(indexShortLE());
-		entry.setProbablyHealth(indexShortLE());
-		entry.setKillsHercs(indexShortLE());
-		entry.setKillsFlyers(indexShortLE());
-		entry.setKillsBuilding(indexShortLE());
-		entry.setTotalKillHerc(indexShortLE());
-		entry.setTotalKillFlyer(indexShortLE());
-		entry.setTotalKillBldng(indexShortLE());
-		entry.setMissionCount(indexShortLE());
+		System.out.println("			bayid @" + (index - 2) + " = " + entry.getBayId());
 		
+		entry.setActive(indexByte());
+		System.out.println("			setActive @" + (index - 1) + " = " + entry.getActive());
+		
+		entry.setRank(PilotRank.getById(indexShortLE()));
+		System.out.println("			Rank @" + (index - 2) + " = " + entry.getRank());
+		
+		entry.setCrewRowNum(indexShortLE());
+		System.out.println("			setCrewRowNum @" + (index - 2) + " = " + entry.getCrewRowNum());
+		
+		entry.setUnk2_uint16(indexShortLE());
+		System.out.println("			setUnk2_uint16 @" + (index - 2) + " = " + entry.getUnk2_uint16());
+		
+		entry.setProbablyHealth(indexShortLE());
+		System.out.println("			setProbablyHealth @" + (index - 2) + " = " + entry.getProbablyHealth());
+		
+		entry.setKillsHercs(indexShortLE());
+		System.out.println("			setKillsHercs @" + (index - 2) + " = " + entry.getKillsHercs());
+		
+		entry.setKillsFlyers(indexShortLE());
+		System.out.println("			setKillsFlyers @" + (index - 2) + " = " + entry.getKillsFlyers());
+		
+		entry.setKillsBuilding(indexShortLE());
+		System.out.println("			setKillsBuilding @" + (index - 2) + " = " + entry.getKillsBuilding());
+		
+		entry.setTotalKillHerc(indexShortLE());
+		System.out.println("			setTotalKillHerc @" + (index - 2) + " = " + entry.getTotalKillHerc());
+		
+		entry.setTotalKillFlyer(indexShortLE());
+		System.out.println("			setTotalKillFlyer @" + (index - 2) + " = " + entry.getTotalKillFlyer());
+		
+		entry.setTotalKillBldng(indexShortLE());
+		System.out.println("			setTotalKillBldng @" + (index - 2) + " = " + entry.getTotalKillBldng());
+		
+		entry.setMissionCount(indexShortLE());
+		System.out.println("			setMissionCount @" + (index - 2) + " = " + entry.getMissionCount());
+		System.out.println("=======================================================================================");
 		return entry;
 	}
 	
@@ -272,8 +330,7 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
 		//	INVENTORY SEGMENT - 33 entries, matches total weapons in game, ERROR/cut weapon id's ARE included here, but zeroed out.
-//		System.out.println("Importing Inventory Segment---------------- @0x"+dbgBuffer);
-//		System.out.println("	-> byte length=" + save.getInventory().getItems().length * 2);
+		System.out.println("Importing Inventory Segment---------------- @0x"+dbgBuffer);
 		for(int i=0; i < save.getInventory().getItems().length; i++) {
 			InventoryItem item = save.getInventory().getItems()[i];
 			
@@ -292,7 +349,7 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		}
 		
 		//	WORKSHOP SLOTS
-//		System.out.println("Importing Workshop Segment---------------- @0x"+dbgBuffer);
+		System.out.println("Importing Workshop Segment---------------- @0x"+dbgBuffer);
 		out.write(writeShortLE(save.getWorkshopSpace())); dbgBuffer+=2;
 		for(int w=0; w < save.getWorkshopSlots().length; w++) {
 			out.write(writeShortLE((short)w)); dbgBuffer+=2;
@@ -300,37 +357,37 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		}
 		
 		//	CAMPAIGN FLAGS	
-//		System.out.println("Importing Campaign Flags Segment---------------- @0x"+dbgBuffer);
+		System.out.println("Importing Campaign Flags Segment---------------- @0x"+dbgBuffer);
 		for(short f : save.getUnk4_stateFlags()) {
 			out.write(writeShortLE(f));  dbgBuffer+=2;
 		}
 		
 		//	PILOT DATA
-//		System.out.println("Importing Squadmate Data Segment---------------- @0x"+dbgBuffer);
+		System.out.println("Importing Squadmate Data Segment---------------- @0x"+dbgBuffer);
 		for(PilotEntry pilot : save.getSquadmates()) {
 			writePilotData(pilot, out, false);
 		}
 		out.flush();
 		
 		//	UNKNOWN PILOT DATA
-//		System.out.println("Importing Unknown Pilot Data Segment---------------- @0x"+dbgBuffer);
+		System.out.println("Importing Unknown Pilot Data Segment---------------- @0x"+dbgBuffer);
 		for(short unk : save.getUnkRange_prePlayer()) {
 			out.write(writeShortLE(unk)); dbgBuffer+=2;
 		}
 		
 		//	PLAYER PILOT
-//		System.out.println("Importing Player Pilot Segment---------------- @0x"+dbgBuffer);
+		System.out.println("Importing Player Pilot Segment---------------- @0x"+dbgBuffer);
 		writePilotData(save.getPlayerPilot(), out, true);
 
 		//	HERC DATA
-//		System.out.println("Importing Herc Bay Entries Segment----------------@0x"+dbgBuffer);
+		System.out.println("Importing Herc Bay Entries Segment----------------@0x"+dbgBuffer);
 		out.write(writeShortLE((short)save.getHercBay().size()));
 		for(int h=0; h < save.getHercBay().size(); h++) {
 			writeHercEntry((short)h, save.getHercBay().get((short)h), out);
 		}
 		
 		//	HERC UNLOCKS
-//		System.out.println("Importing Herc Unlocks Segment----------------@0x"+dbgBuffer);
+		System.out.println("Importing Herc Unlocks Segment----------------@0x"+dbgBuffer);
 		for(HercLUT herc : HercLUT.values()) {
 			if(herc.getId() < HercLUT.ACHILLES.getId()) {
 				out.write(writeShortLE((short)1)); dbgBuffer+=2;
@@ -338,11 +395,11 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		}
 		
 		//	SALVAGE
-//		System.out.println("Importing Salvage Segment----------------@0x"+dbgBuffer);
+		System.out.println("Importing Salvage Segment----------------@0x"+dbgBuffer);
 		out.write(writeIntLE(save.getSalvageTotal())); dbgBuffer+=4;
 		
 		//	UNKNOWN TAIL SEGMENT
-//		System.out.println("Importing Unknown Bytes Segment----------------@0x"+dbgBuffer);
+		System.out.println("Importing Unknown Bytes Segment----------------@0x"+dbgBuffer);
 		for(byte b : save.getUnknownSaveValues()) {
 			out.write(b); dbgBuffer+=1;
 		}
