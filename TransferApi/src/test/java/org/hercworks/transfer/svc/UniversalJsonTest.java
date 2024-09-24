@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.hercworks.core.data.file.dat.shell.ArmWeap;
+import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
-import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
+import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
-import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
+import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
-import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
 import org.hercworks.voln.FileType;
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class UniversalJsonTest {
-
+	
 	@Test
 	public void testJson() {
 		
@@ -95,7 +95,7 @@ public class UniversalJsonTest {
 			Path resourceDirectory = Paths.get("src","test","resources");
 			String absolutePath = resourceDirectory.toFile().getAbsolutePath();
 			
-			File dat = new File(absolutePath + "/ARM_WEAP.DAT");
+			File dat = new File(absolutePath + "/ARM_MAVR.DAT");
 //			
 			assertTrue(dat.exists());
 			assertTrue(!dat.isDirectory());
@@ -104,31 +104,31 @@ public class UniversalJsonTest {
 			byte[] bytes = fizz.readAllBytes();
 			fizz.close();
 //			
-			ArmWeapTransformer transform = new ArmWeapTransformer();
- 			ArmWeap data = (ArmWeap) transform.bytesToObject(bytes);
+			ArmHercTransformer transform = new ArmHercTransformer();
+ 			ArmHerc data = (ArmHerc) transform.bytesToObject(bytes);
 //			
 			assertNotNull(data);
 //			
-			data.setFileName("HERC_INF");
+			data.setFileName("ARM_MAVR");
 			data.setExt(FileType.DAT);
 			data.setGameDirPath("/GAM/");
 //			
 //			
-			GeneralDTOService dtoSvc = new ArmWeapDTOServiceImpl();
+			GeneralDTOService dtoSvc = new ArmHercDTOServiceImpl();
 //			
-			ArmWeapDTO dto = (ArmWeapDTO)dtoSvc.convertToDTO(data);
+			ArmHercDTO dto = (ArmHercDTO)dtoSvc.convertToDTO(data);
 //			
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 			
-			File export = new File(resourceDirectory+ "/ARM_WEAP.json" );
+			File export = new File(resourceDirectory+ "/ARM_MAVR.json" );
 			objectMapper.writeValue(export, dto);
 			
-			File exportBytes = new File(resourceDirectory+ "/ARM_WEAP_2.DAT");
+			File exportBytes = new File(resourceDirectory+ "/ARM_MAVR_2.DAT");
 			
-			ArmWeapDTO readDTO = (ArmWeapDTO)objectMapper.readValue(export, ArmWeapDTO.class);
+			ArmHercDTO readDTO = (ArmHercDTO)objectMapper.readValue(export, ArmHercDTO.class);
 			
-			data = (ArmWeap)dtoSvc.fromDTO(readDTO);
+			data = (ArmHerc)dtoSvc.fromDTO(readDTO);
 			
 			FileOutputStream foss = new FileOutputStream(exportBytes);
 			foss.write(transform.objectToBytes(data));

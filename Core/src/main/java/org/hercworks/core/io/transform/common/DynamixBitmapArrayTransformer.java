@@ -2,8 +2,6 @@ package org.hercworks.core.io.transform.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteOrder;
-import java.util.LinkedHashSet;
 
 import org.hercworks.core.data.file.dyn.DynamixBitmap;
 import org.hercworks.core.data.file.dyn.DynamixBitmapArray;
@@ -32,12 +30,12 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		dba.setExt(FileType.DBA);
 		dba.setDir(FileType.DBA);
 		
-		dba.setImages(new LinkedHashSet<DynamixBitmap>());
-		
 		dba.setHeader(indexSegment(4));
 		dba.setFileSize(Bytes.from(indexSegmentLE(4)));
 		dba.setArrayRow(indexShortLE());
-		dba.setArrayCols(indexShortLE());
+		dba.setArrayCols(indexShortLE());	//TODO could this actually be an INT32 for total images?
+		
+		DynamixBitmap[] images = new DynamixBitmap[dba.getArrayRow()];
 		
 		int imageCount = 0;
 		
@@ -45,22 +43,19 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		
 		int actualBytes = bytes.length - index;
 		while(index < actualBytes) {
-			int fileLength = Bytes.from(bytes, index+4, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt();
+			skip(4);
 			
-			byte[] dbaItem = indexSegment(fileLength + 8);	//4 for header, 4 for total file len.
+			int fileLength = indexIntLE();	//slight read ahead to get file size first 
 			
+			index -= 8;	//transformer assumes a clean read from byte[0], so reset head read.
+			byte[] dbaItem = indexSegment(fileLength + 8);	//+8 for the 4 byte DBM header and INT32 file size.
 			
 			dynbitmapTransform.resetIndex();
 			DynamixBitmap dbm = (DynamixBitmap)dynbitmapTransform.bytesToObject(dbaItem);
 			
-			System.out.println("IMAGE:"+imageCount+"-------------");
-			System.out.println("");
-			System.out.println("Width:" + dbm.getCols());
-			System.out.println("Height:" + dbm.getRows());
-			System.out.println("imgByteLen:" + fileLength);
-			dbm.setFileName("_"+imageCount);
+			dbm.setFileName("_" + imageCount);
 			
-			dba.getImages().add(dbm);
+			images[imageCount] = dbm;
 			imageCount++;
 			
 			if(index+1 < actualBytes) {
@@ -70,6 +65,7 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 				}	
 			}
 		}
+		dba.setImages(images);
 		
 		return dba;
 	}
@@ -87,20 +83,19 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
 		
 		objectBytes.write(DynamixBitmapArray.header.array());
-		objectBytes.write(dba.getFileSize().array());
-		objectBytes.write(writeShort(dba.getArrayRow()));
-		objectBytes.write(writeShort(dba.getArrayCols()));
+		objectBytes.write(dba.getFileSize().reverse().array());
+		objectBytes.write(writeShortLE(dba.getArrayRow()));
+		objectBytes.write(writeShortLE(dba.getArrayCols()));
 		
-		DynamixBitmapTransformer dbmConvert = new DynamixBitmapTransformer();
 		for(DynamixBitmap dbm : dba.getImages()) {
 			
-			byte[] bytes = dbmConvert.objectToBytes(dbm);
-			objectBytes.write(bytes);
-			dbmConvert.resetIndex();
+			DynamixBitmapTransformer dbmConvert = new DynamixBitmapTransformer();
+			
+			objectBytes.write(dbmConvert.objectToBytes(dbm));
+			objectBytes.write(0x00);
+			objectBytes.flush();
 		}
-		
 		
 		return objectBytes.toByteArray();
 	}
-
 }

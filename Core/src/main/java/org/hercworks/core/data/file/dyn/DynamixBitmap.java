@@ -32,6 +32,9 @@ public class DynamixBitmap extends DataFile{
 	private short rows;
 	private short cols;
 	private short bitDepth;
+	private byte unkSpacer1;
+	private int imageDataLen;
+	private short unkSpacer2;
 	
 	private DynamixPalette palette;
 	
@@ -77,5 +80,29 @@ public class DynamixBitmap extends DataFile{
 
 	public void setPalette(DynamixPalette palette) {
 		this.palette = palette;
+	}
+
+	public byte getUnkSpacer1() {
+		return unkSpacer1;
+	}
+
+	public short getUnkSpacer2() {
+		return unkSpacer2;
+	}
+
+	public void setUnkSpacer1(byte unkSpacer1) {
+		this.unkSpacer1 = unkSpacer1;
+	}
+
+	public void setUnkSpacer2(short unkSpacer2) {
+		this.unkSpacer2 = unkSpacer2;
+	}
+
+	public int getImageDataLen() {
+		return imageDataLen;
+	}
+
+	public void setImageDataLen(int imageDataLen) {
+		this.imageDataLen = imageDataLen;
 	}
 }

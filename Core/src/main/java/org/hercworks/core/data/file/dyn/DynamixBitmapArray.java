@@ -1,9 +1,5 @@
 package org.hercworks.core.data.file.dyn;
 
-import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.hercworks.voln.DataFile;
 
 import at.favre.lib.bytes.Bytes;
@@ -16,23 +12,23 @@ import at.favre.lib.bytes.Bytes;
  */
 public class DynamixBitmapArray extends DataFile{
 	
-	public static Bytes header = Bytes.from("01002800", StandardCharsets.UTF_8);
-	
-	private LinkedHashSet<DynamixBitmap> images;
+	public static Bytes header = Bytes.from(0x01002800);
 	
 	private short arrayRow;
 	private short arrayCols;
-
+	
+	private DynamixBitmap[] images;
+	
 	private DynamixPalette palette;
 	
 	public DynamixBitmapArray() {}
 
 
-	public Set<DynamixBitmap> getImages() {
+	public DynamixBitmap[] getImages() {
 		return images;
 	}
 
-	public void setImages(LinkedHashSet<DynamixBitmap> images) {
+	public void setImages(DynamixBitmap[] images) {
 		this.images = images;
 	}
 

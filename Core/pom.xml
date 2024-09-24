@@ -2,16 +2,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-  <parent>
+  	<parent>
 		<groupId>org.hercworks</groupId>
 		<artifactId>herc-works</artifactId>
- 	<version>1.0.0</version>
+ 		<version>1.0.0</version>
 	</parent>
   <artifactId>Core</artifactId>
   <name>HercWorksCore</name>
   <description>Core api and data structures for interacting with ES2 assets.</description>
   <packaging>jar</packaging>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
   
   <dependencies>
     <dependency>

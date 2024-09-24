@@ -77,8 +77,6 @@ public class ArmHerc extends DataFile{
 	
 	private short totalWeapons;
 	
-	private short totalHardpoints;
-	
 	private Map<Short, UiHardpointGraphic[]> weaponHardpoints;
 	
 	public ArmHerc() {}
@@ -103,10 +101,6 @@ public class ArmHerc extends DataFile{
 		return totalWeapons;
 	}
 
-	public short getTotalHardpoints() {
-		return totalHardpoints;
-	}
-
 	public Map<Short, UiHardpointGraphic[]> getWeaponHardpoints() {
 		return weaponHardpoints;
 	}
@@ -123,9 +117,6 @@ public class ArmHerc extends DataFile{
 		this.totalWeapons = totalWeapons;
 	}
 
-	public void setTotalHardpoints(short totalHardpoints) {
-		this.totalHardpoints = totalHardpoints;
-	}
 	
 	public void setWeaponHardpoints(Map<Short, UiHardpointGraphic[]> weaponHardpoints) {
 		this.weaponHardpoints = weaponHardpoints;

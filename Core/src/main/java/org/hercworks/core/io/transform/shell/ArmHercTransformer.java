@@ -52,7 +52,7 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		
 		armData.setTotalWeapons(indexShortLE());
 		
-		System.out.println("total entries=" + armData.getTotalWeapons());
+		//System.out.println("total entries=" + armData.getTotalWeapons());
 		
 		//Begun Weapon-Id-Hardpoint map
 		Map<Short, UiHardpointGraphic[]> weaponHardpoints = new HashMap<Short, UiHardpointGraphic[]>();
@@ -65,7 +65,7 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 			UiHardpointGraphic[] graphics = new UiHardpointGraphic[pointTotal];
 			
 			for(int h=0; h < (int)pointTotal; h++) {
-				System.out.println("+---h=" + h);
+				//System.out.println("+---h=" + h);
 				UiHardpointGraphic hardpoint = new UiHardpointGraphic();
 				hardpoint.setId(indexShortLE());
 				hardpoint.setOriginX(indexIntLE());
@@ -93,16 +93,12 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
 		
 		objectBytes.write(writeShortLE(data.getTopImgArrId()));
-		objectBytes.write(uiImageToByte(data.getHercTopImg()));
+		uiImageToByte(data.getHercTopImg(), objectBytes);
 		
 		objectBytes.write(writeShortLE(data.getBottomImgArrId()));
-		objectBytes.write(uiImageToByte(data.getHercBotImg()));
+		uiImageToByte(data.getHercBotImg(), objectBytes);
 		
 		objectBytes.write(writeShortLE(data.getTotalWeapons()));
-		objectBytes.write((byte)0x00);
-		objectBytes.write((byte)0x00);
-		
-		objectBytes.write(writeShortLE(data.getTotalHardpoints()));
 		
 		//Begun Weapon-Id-Hardpoint map
 		for(short id : data.getWeaponHardpoints().keySet()) {
@@ -113,36 +109,30 @@ public class ArmHercTransformer extends ThreeSpaceByteTransformer{
 			
 			for(UiHardpointGraphic graphic : items) {
 				objectBytes.write(writeShortLE(graphic.getId()));
-				objectBytes.write(uiHardpointToBytes(graphic));
+				uiHardpointToBytes(graphic, objectBytes);
 			}
 		}
 		
 		return objectBytes.toByteArray();
 	}
 
-	private byte[] uiImageToByte(UiImageDBA img) throws IOException {
+	private void uiImageToByte(UiImageDBA img, ByteArrayOutputStream targ) throws IOException {
 		
-		ByteArrayOutputStream bass = new ByteArrayOutputStream();
-		bass.write(writeIntLE(img.getOriginX()));
-		bass.write(writeIntLE(img.getOriginY()));
-		bass.write(writeIntLE(img.getOriginX()));
-		bass.write(writeIntLE(img.getOriginY()));
-		bass.write(writeShortLE(img.getFrameId()));
-		bass.write(writeShortLE(img.getFlags().val()));
-		
-		return bass.toByteArray();
+		targ.write(writeIntLE(img.getOriginX()));
+		targ.write(writeIntLE(img.getOriginY()));
+		targ.write(writeIntLE(img.getOriginX()));
+		targ.write(writeIntLE(img.getOriginY()));
+		targ.write(writeShortLE(img.getFrameId()));
+		targ.write(writeShortLE(img.getFlags().val()));
 	}
 	
-	private byte[] uiHardpointToBytes(UiHardpointGraphic img) throws IOException {
+	private void uiHardpointToBytes(UiHardpointGraphic img, ByteArrayOutputStream targ) throws IOException {
 		
-		ByteArrayOutputStream bass = new ByteArrayOutputStream();
-		bass.write(writeIntLE(img.getOriginX()));
-		bass.write(writeIntLE(img.getOriginY()));
-		bass.write(writeIntLE(img.getOutlineX()));
-		bass.write(writeIntLE(img.getOutlineY()));
-		bass.write(writeShortLE(img.getFrameId()));
-		bass.write(writeShortLE(img.getFlags().val()));
-		
-		return bass.toByteArray();
+		targ.write(writeIntLE(img.getOriginX()));
+		targ.write(writeIntLE(img.getOriginY()));
+		targ.write(writeIntLE(img.getOutlineX()));
+		targ.write(writeIntLE(img.getOutlineY()));
+		targ.write(writeShortLE(img.getFrameId()));
+		targ.write(writeShortLE(img.getFlags().val()));
 	}
 }

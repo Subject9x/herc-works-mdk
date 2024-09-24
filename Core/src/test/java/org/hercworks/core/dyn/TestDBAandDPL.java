@@ -172,13 +172,12 @@ public class TestDBAandDPL {
 	@Test	
 	public void loadAndExportDBAtoDBM() {
 		
-		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\VOL\\DBG\\SHELL\\DBG_SHELL01\\DBA\\ICONS2.DBA";
+		String targUrl = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\SHELL0\\DBA\\OUT_BOD.DBA";
 		
 		DynamixBitmapArray loadedDBA = null;
 		try {
 			loadedDBA = DynFileReader.loadDBA(targUrl);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
@@ -239,7 +238,7 @@ public class TestDBAandDPL {
 		pview.setBackground(Color.black);
 		
 		
-		PaletteViewPanel canvas = new PaletteViewPanel(pview, loadedDBA.getImages().iterator().next()) ;
+		PaletteViewPanel canvas = new PaletteViewPanel(pview, loadedDBA.getImages()[0]) ;
 	    pview.add(canvas);
 	    
 	    

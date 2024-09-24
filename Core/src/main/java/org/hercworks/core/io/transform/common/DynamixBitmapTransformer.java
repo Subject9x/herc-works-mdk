@@ -37,14 +37,10 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		dbm.setRows(indexShortLE());
 		dbm.setCols(indexShortLE());
 		dbm.setBitDepth(indexShortLE());
-		
-		skip(1);
-		
-		int byteLen = indexIntLE();
-		
-		skip(2);
-		
-		dbm.setImageData(Bytes.from(indexSegment(byteLen-4)));
+		dbm.setUnkSpacer1(indexByte());
+		dbm.setImageDataLen(indexIntLE());
+		dbm.setUnkSpacer2(indexShortLE());
+		dbm.setImageData(Bytes.from(indexSegment(dbm.getImageDataLen())));
 		
 		return dbm;
 	}
@@ -62,18 +58,16 @@ public class DynamixBitmapTransformer extends ThreeSpaceByteTransformer{
 		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
 		
 		objectBytes.write(DynamixBitmap.header.array());
-		objectBytes.write(dbm.getFileSize().array());
+		
+		int size = dbm.getImageData().array().length + 13;
+		
+		objectBytes.write(writeIntLE(size));
 		objectBytes.write(writeShortLE(dbm.getRows()));
 		objectBytes.write(writeShortLE(dbm.getCols()));
 		objectBytes.write(writeShortLE(dbm.getBitDepth()));
-		
-		objectBytes.write((byte)0x00);
-		
-		objectBytes.write(writeIntLE(dbm.getImageData().array().length + 4));
-		
-		objectBytes.write((byte)0x00);
-		objectBytes.write((byte)0x00);
-		
+		objectBytes.write(dbm.getUnkSpacer1());
+		objectBytes.write(writeIntLE(dbm.getImageDataLen()));
+		objectBytes.write(writeShortLE(dbm.getUnkSpacer2()));
 		objectBytes.write(dbm.getImageData().array());
 		
 		return objectBytes.toByteArray();

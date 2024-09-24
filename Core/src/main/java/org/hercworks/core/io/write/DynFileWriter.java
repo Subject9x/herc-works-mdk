@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import org.hercworks.core.data.file.dyn.DynamixBitmap;
 import org.hercworks.core.data.file.dyn.DynamixPalette;
+import org.hercworks.core.io.transform.common.DynamixBitmapTransformer;
 
 public final class DynFileWriter {
 
@@ -85,7 +86,9 @@ public final class DynFileWriter {
 		File file = new File(filePath + dbm.getFileName() + ".DBM");
 		
 		try(FileOutputStream fozz = new FileOutputStream(file)){
-			fozz.write(dbm.getRawBytes());
+			DynamixBitmapTransformer transform = new DynamixBitmapTransformer();
+			
+			fozz.write(transform.objectToBytes(dbm));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());

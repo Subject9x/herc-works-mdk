@@ -95,7 +95,7 @@ public abstract class ThreeSpaceByteTransformer {
 	
 	public void skip(int skip) {
 		if(index + skip < bytes.length) {
-			index += skip;	
+			index = index + skip;	
 		}
 	}
 	
