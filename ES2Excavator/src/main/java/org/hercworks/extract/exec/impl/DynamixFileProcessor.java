@@ -286,11 +286,11 @@ public class DynamixFileProcessor extends FileProcessor{
 			int yOffset = 0;
 
 			for(int p=0; p < dpl.getColorCount(); p++) {
-				int color = dpl.colorAt(p).getColor().getRGB();
+				int color = dpl.colorAt(p).getJavaColor().getRGB();
 				
-				getLogger().consoleDebug("Color " + p + "=(" + dpl.colorAt(p).getColor().getRed() + ", "
-											+  dpl.colorAt(p).getColor().getGreen() + ", "
-											+  dpl.colorAt(p).getColor().getBlue() + ")");
+				getLogger().consoleDebug("Color " + p + "=(" + dpl.colorAt(p).getJavaColor().getRed() + ", "
+											+  dpl.colorAt(p).getJavaColor().getGreen() + ", "
+											+  dpl.colorAt(p).getJavaColor().getBlue() + ")");
 				
 				for(int r=yOffset; r < yOffset + pixel; r++) {
 					for(int c=xOffset; c < xOffset + pixel; c++) {

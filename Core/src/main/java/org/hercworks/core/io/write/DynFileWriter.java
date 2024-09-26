@@ -57,7 +57,7 @@ public final class DynFileWriter {
 				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
 				try {
-					rasterData[i] = palette.colorAt(idx).getColor().getRGB();// + palette.colorAt(idx).getColor().getTransparency();
+					rasterData[i] = palette.colorAt(idx).getJavaColor().getRGB();// + palette.colorAt(idx).getColor().getTransparency();
 //					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx);
 				}
 				catch(NullPointerException nope) {

@@ -125,7 +125,7 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		
 		ColorBytes rawColor = new ColorBytes(bytes);
 		
-		rawColor.setColor(new Color(ir, ig, ib, ia));
+		rawColor.setJavaColor(new Color(ir, ig, ib, ia));
 		
 		return rawColor;
 	}
@@ -141,11 +141,11 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		
 		byte[] data = new byte[4];
 		
-		data[0] = Bytes.from(color.getColor().getRed() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
+		data[0] = Bytes.from(color.getJavaColor().getRed() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
 		
-		data[1] = Bytes.from(color.getColor().getBlue() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
+		data[1] = Bytes.from(color.getJavaColor().getBlue() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
 		
-		data[2] = Bytes.from(color.getColor().getGreen() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
+		data[2] = Bytes.from(color.getJavaColor().getGreen() / scalar).byteOrder(ByteOrder.LITTLE_ENDIAN).toByte();
 		
 		if(color.getArray()[3] != 0) {
 			data[3] = (byte)0x01;

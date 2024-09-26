@@ -43,9 +43,9 @@ public class DynamixPalette extends DataFile {
 	public int[] toIntColorMap() {
 		
 		int[] cmap = new int[256];
-		int i = 255;
+		//int i = 255;
 		for(int shade : getColors().keySet()) {
-			cmap[shade] =  getColors().get(shade).getColor().getRGB();
+			cmap[shade] =  getColors().get(shade).getJavaColor().getRGB();
 //			i--;
 		}
 //		int grayIncr = 256/(256-i);

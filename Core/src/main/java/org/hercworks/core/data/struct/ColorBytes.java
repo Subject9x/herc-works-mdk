@@ -9,7 +9,7 @@ import at.favre.lib.bytes.Bytes;
  */
 public class ColorBytes {
 
-	private Color color;
+	private Color awtColor;
 	private byte[] array = new byte[4];
 
 	public ColorBytes(byte r, byte g, byte b, byte a) {
@@ -37,17 +37,17 @@ public class ColorBytes {
 		this.array[index] = b;
 	}
 
-	public Color getColor() {
-		return color;
+	public Color getJavaColor() {
+		return awtColor;
 	}
 
-	public void setColor(Color color) {
-		this.color = color;
+	public void setJavaColor(Color awtColor) {
+		this.awtColor = awtColor;
 	}
 	
 	
 	public int colorIntRGB() {
-		Color tone = getColor();
+		Color tone = getJavaColor();
 		
 		return (tone.getRed() << 16) | (tone.getGreen() << 8) | (tone.getBlue() << 0);
 	}
@@ -64,10 +64,10 @@ public class ColorBytes {
 	public String toString() {
 		
 		return "ColorBytes [hex=" + Bytes.from(getArray()).encodeHex() 
-									+ ", rgb=(" + getColor().getRed() 
-									+ ", " + getColor().getGreen()
-									+ ", " + getColor().getBlue() +")"
-									+ ", alpha=" + getColor().getAlpha()
+									+ ", rgb=(" + getJavaColor().getRed() 
+									+ ", " + getJavaColor().getGreen()
+									+ ", " + getJavaColor().getBlue() +")"
+									+ ", alpha=" + getJavaColor().getAlpha()
 									+ "]";
 	}
 }
