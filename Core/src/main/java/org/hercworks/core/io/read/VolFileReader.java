@@ -220,7 +220,7 @@ public final class VolFileReader {
 	}
 	
 	private static void sortHeaderFileListDirs(Voln vol) {
-		System.out.println("sorting file--------------------------------");
+		//System.out.println("sorting file--------------------------------");
 		for(VolEntry file : vol.getFilesSet()) {
 			vol.getFolders().get(file.getDirIdx()).getFiles().add(file);
 		}
