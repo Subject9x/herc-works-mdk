@@ -69,6 +69,15 @@ public enum HercLUT {
     	return null;
     }
     
+    public static HercLUT getByAbbrev(String abbrev) {
+    	for(HercLUT herc : HercLUT.values()) {
+    		if(abbrev.toLowerCase().equals(herc.getAbbrevDat().toLowerCase())) {
+    			return herc;
+    		}
+    	}
+    	return null;
+    }
+    
 	public String getName() {
 		return name;
 	}

@@ -19,7 +19,6 @@ public class HardpointOverlayTransformer extends ThreeSpaceByteTransformer {
 		setBytes(inputArray);
 		
 		HardpointOverlayConfig rprHercOverlay = new HardpointOverlayConfig();
-		rprHercOverlay.setFileName("RPR_HOTS");
 		rprHercOverlay.setExt(FileType.DAT);
 		rprHercOverlay.setDir(FileType.GAM);
 		rprHercOverlay.setRawBytes(inputArray);

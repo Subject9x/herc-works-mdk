@@ -4,13 +4,13 @@ import org.hercworks.voln.DataFile;
 
 /**
  * 	FILE
- * 		/GAM/THEATER.DAT
+ * 		/GAM/MAP_LOCS.DAT
  * 
  *		Usage completely unknown, changing values doesn't seem to affect any gameplay.
  *	
  */
-public class Theater extends DataFile {
+public class MapLOCS extends DataFile{
 
 	
-	
+	public MapLOCS() {}
 }
