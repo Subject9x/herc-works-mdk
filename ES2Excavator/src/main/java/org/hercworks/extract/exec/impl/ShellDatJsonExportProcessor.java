@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.ArmWeap;
+import org.hercworks.core.data.file.dat.shell.CareerMissions;
 import org.hercworks.core.data.file.dat.shell.HercInf;
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.InitHerc;
+import org.hercworks.core.data.file.dat.shell.HardpointOverlayConfig;
 import org.hercworks.core.data.file.dat.shell.RprHerc;
 import org.hercworks.core.data.file.dat.shell.TrainingHercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
@@ -15,9 +17,11 @@ import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.core.io.transform.common.PlayerSaveTransform;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.ArmWeapTransformer;
+import org.hercworks.core.io.transform.shell.CareerDataTransformer;
 import org.hercworks.core.io.transform.shell.HercInfoTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.InitHercTransformer;
+import org.hercworks.core.io.transform.shell.HardpointOverlayTransformer;
 import org.hercworks.core.io.transform.shell.RprHercTransform;
 import org.hercworks.core.io.transform.shell.TrainingHercsTransform;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
@@ -29,8 +33,10 @@ import org.hercworks.extract.util.ShellFileMatch;
 import org.hercworks.transfer.dto.file.TransferObject;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.ArmWeapDTO;
+import org.hercworks.transfer.dto.file.shell.CareerMissionsDTO;
 import org.hercworks.transfer.dto.file.shell.HercInfDTO;
 import org.hercworks.transfer.dto.file.shell.InitHercDTO;
+import org.hercworks.transfer.dto.file.shell.HardpointOverlayDTO;
 import org.hercworks.transfer.dto.file.shell.RepairHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
@@ -40,9 +46,11 @@ import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.transfer.svc.impl.PlayerSaveDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmWeapDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.CareerMissionsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.HercInfoDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.InitHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.RepairHercDTOServiceImpl;
+import org.hercworks.transfer.svc.impl.shell.HardpointOverlayDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.TrainingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
@@ -101,6 +109,9 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 					case ARM_WEAP:
 						exportJson(file.getName(), new ArmWeapTransformer(), ArmWeap.class, new ArmWeapDTOServiceImpl(), ArmWeapDTO.class);
 						break;
+					case HARDPOINT_OVERLAY:
+						exportJson(file.getName(), new HardpointOverlayTransformer(), HardpointOverlayConfig.class, new HardpointOverlayDTOServiceImpl(), HardpointOverlayDTO.class);
+						break;
 					case RPR_HERC:
 						exportJson(file.getName(), new RprHercTransform(), RprHerc.class, new RepairHercDTOServiceImpl(), RepairHercDTO.class);
 						break;
@@ -114,7 +125,7 @@ public class ShellDatJsonExportProcessor extends GenericJsonProcessor{
 						exportJson(file.getName(), new  HercInfoTransformer(), HercInf.class, new HercInfoDTOServiceImpl(), HercInfDTO.class);
 						break;
 					case CAREER:
-						
+						exportJson(file.getName(), new CareerDataTransformer(), CareerMissions.class, new CareerMissionsDTOServiceImpl(), CareerMissionsDTO.class);
 						break;
 					case TRAINING_HERCS:
 						exportJson(file.getName(), new TrainingHercsTransform(), TrainingHercs.class, new TrainingHercsDTOServiceImpl(), TrainingHercsDTO.class);

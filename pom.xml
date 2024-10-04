@@ -16,17 +16,17 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
   	  	<es2.vol.version>0.0.4</es2.vol.version>
-  	  	<es2.core.version>0.3.2</es2.core.version>
-  	  	<es2.transfr.version>0.3.1</es2.transfr.version>
-  	  	<es2.excavate.version>0.2.2</es2.excavate.version>
+  	  	<es2.core.version>0.3.4</es2.core.version>
+  	  	<es2.transfr.version>0.3.3</es2.transfr.version>
+  	  	<es2.excavate.version>0.2.4</es2.excavate.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>9</maven.compiler.release>
 	</properties>
 
 	<modules>
 		<module>ES2Vol</module>
-		<module>Core</module>
-		<module>TransferApi</module>
+		<module>ES2Core</module>
+		<module>ES2TransferApi</module>
 		<module>ES2Excavator</module>
 	</modules>
 

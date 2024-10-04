@@ -53,7 +53,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(this.unpackPath);
 				
 				//TODO : make configurable by user
-				String exportModDir = makeExportPath(targDirPath+"/MOD/" + ((DataFile)convert).getDir().val().toUpperCase() +"/");
+				String exportModDir = makeExportPath(targDirPath + File.separator + "MOD" + File.separator + ((DataFile)convert).getDir().val().toUpperCase() +File.separator);
 				
 				if(exportModDir != null) {
 					targDirPath = exportModDir;
@@ -72,7 +72,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			byte[] data = transformerClass.objectToBytes(convert);
 			
 			
-			String fullImportPath = targDirPath + "/" + cleanFileName + "." + ((DataFile)convert).getExt().val().toUpperCase();
+			String fullImportPath = targDirPath + File.separator + cleanFileName + "." + ((DataFile)convert).getExt().val().toUpperCase();
 			
 			File out = new File(fullImportPath);
 			
@@ -108,7 +108,7 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 				targDirPath = makeExportPath(getAppPath() + fileNoExt(file));
 			}
 			else {
-				targDirPath = makeExportPath(this.unpackPath + "/" + ((DataFile)exportDat).getDir().name() + "/");
+				targDirPath = makeExportPath(this.unpackPath + File.separator + ((DataFile)exportDat).getDir().name() + File.separator);
 			}
 			
 			if(targDirPath == null) {
@@ -127,7 +127,11 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			
 			dto = dtoClass.cast(dto);
 			
-			String fullExportPath = targDirPath + "/" + ((DataFile)exportDat).getFileName() + "." + ((DataFile)exportDat).getExt().name() + ".json";
+			((TransferObject)dto).setFileName(((DataFile)exportDat).getFileName());
+			((TransferObject)dto).setDir(((DataFile)exportDat).getDir().val());
+			((TransferObject)dto).setFileExt(((DataFile)exportDat).getExt().val());
+			
+			String fullExportPath = targDirPath + File.separator + ((DataFile)exportDat).getFileName()  + ".json";
 			
 			File json = new File(fullExportPath);
 			json.setWritable(true);
@@ -144,3 +148,4 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 	}
 	
 }
+

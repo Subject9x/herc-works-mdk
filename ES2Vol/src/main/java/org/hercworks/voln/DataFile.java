@@ -38,7 +38,10 @@ public abstract class DataFile {
 	}
 	
 	public String originNameNoExt() {
-		return getFileName().substring(0, getFileName().lastIndexOf("."));
+		if(getFileName().lastIndexOf('.') != -1) {
+			return getFileName().substring(0, getFileName().lastIndexOf("."));
+		}
+		return getFileName();
 	}
 	
 	public String getFileName() {

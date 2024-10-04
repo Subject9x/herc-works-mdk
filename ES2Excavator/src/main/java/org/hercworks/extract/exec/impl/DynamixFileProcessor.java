@@ -57,6 +57,9 @@ public class DynamixFileProcessor extends FileProcessor{
 			if(file.getType().equals(FileType.VOL)) {
 				unpackVolFile(file.getName());
 			}
+			else if(file.getType().equals(FileType.DBM)) {
+				exportDBM(file.getName());
+			}
 			else if(file.getType().equals(FileType.DBA)
 					|| file.getType().val().contains("db")
 					|| file.getType().val().contains("hb")) {
@@ -64,9 +67,6 @@ public class DynamixFileProcessor extends FileProcessor{
 			}
 			else if(file.getType().equals(FileType.DPL)) {
 				exportDPL(file.getName());
-			}
-			else if(file.getType().equals(FileType.DBM)) {
-				exportDBM(file.getName());
 			}
 		}
 	}

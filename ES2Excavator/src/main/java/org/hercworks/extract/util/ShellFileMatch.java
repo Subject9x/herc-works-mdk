@@ -18,7 +18,8 @@ public enum ShellFileMatch {
 	HERC_INF("HERC_INF"),
 	CAREER("CAREER"),
 	TRAINING_HERCS("TRN_HERC"),
-	SAVE_FILE("GAME_");
+	SAVE_FILE("GAME_"),
+	HARDPOINT_OVERLAY("_HOTS");
 	
 	private String namePattern;
 	private static final Map<String,ShellFileMatch> ENUM_MAP;
