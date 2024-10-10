@@ -31,7 +31,8 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 		
 		setBytes(inputArray);
 		
-		data.setInternalsTotal(indexShortLE());
+		InternalsHealth[] internals = new InternalsHealth[indexShortLE()];
+		data.setInternalsTotal((short)internals.length);
 		
 		data.setInternals(new InternalsHealth[data.getInternalsTotal()]);
 		for(int i = 0; i < data.getInternalsTotal(); i++) {
@@ -44,9 +45,11 @@ public class HercDamageFileTransformer extends ThreeSpaceByteTransformer{
 				if(val != 0) {
 					system.setName(HercInternals.getById((short)i));	
 				}
-				data.getInternals()[i] = system;
+				
+				internals[i] = system;
 			}
 		}
+		data.setInternals(internals);
 		
 		for(int i=0; i< 22 - data.getInternals().length; i++) {
 			skip(2);
