@@ -6,10 +6,10 @@ import java.util.Map;
 
 public enum MissionSector {
 	RAZR("RAZR", (short)5),
-	ALPHA("ALPHA", (short)0),
-	DELTA("DELTA", (short)1),
-	OMICR("OMICRON", (short)2),
-	BRAVO("BRAVO", (short)3),
+	ALPH("ALPHA", (short)0),
+	DELT("DELTA", (short)1),
+	OMIC("OMICRON", (short)2),
+	BRAV("BRAVO", (short)3),
 	LUNA("LUNA", (short)4);
 	
 	private String val;

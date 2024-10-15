@@ -147,7 +147,10 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 	@Override
 	public DataFile fromDTO(TransferObject source) {
 		HercSimDatDTO dto = (HercSimDatDTO)source;
+		
 		HercSimDat dat = new HercSimDat();
+		
+		dat.setFileName(dto.getFileName());
 		dat.setExt(FileType.DAT);
 		dat.setDir(FileType.DAT);
 		

@@ -60,8 +60,9 @@ public class WeaponsDatShellDTOServiceImpl implements GeneralDTOService {
 	public DataFile fromDTO(TransferObject source) {
 		
 		WeaponsDatDTO srcDto = (WeaponsDatDTO)source;
-		
 		WeaponsDat data = new WeaponsDat(srcDto.getTotal());
+		
+		data.setFileName(srcDto.getFileName());
 		data.setExt(FileType.DAT);
 		data.setDir(FileType.GAM);
 		

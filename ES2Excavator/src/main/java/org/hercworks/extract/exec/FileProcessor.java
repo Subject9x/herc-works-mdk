@@ -56,7 +56,6 @@ public abstract class FileProcessor extends LoggingUtil{
 		filesToProcess = new ArrayList<FileItem>();
 	}
 	
-	
 
 	protected String getRootDir() {
 		String decodedPath = null;
@@ -135,7 +134,4 @@ public abstract class FileProcessor extends LoggingUtil{
 	public boolean hasFiles() {
 		return !filesToProcess.isEmpty();
 	}
-	
-	
-	
 }

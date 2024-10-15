@@ -104,6 +104,7 @@ public class PaperDollDTOServiceImpl implements GeneralDTOService{
 	
 		PaperDollDTO dto = (PaperDollDTO)source;
 		PaperDollGraphic pdg = new PaperDollGraphic();
+		pdg.setFileName(dto.getFileName());
 		pdg.setExt(FileType.PDG);
 		pdg.setDir(FileType.PDG);
 		

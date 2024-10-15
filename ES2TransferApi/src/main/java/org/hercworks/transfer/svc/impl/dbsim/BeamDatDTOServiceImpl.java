@@ -37,6 +37,8 @@ public class BeamDatDTOServiceImpl implements GeneralDTOService {
 		BeamDatDTO dto = (BeamDatDTO)source;
 		
 		BeamData data = new BeamData((short)dto.getBeams().length);
+		
+		data.setFileName(dto.getFileName());
 		data.setExt(FileType.DAT);
 		data.setDir(FileType.DAT);
 		

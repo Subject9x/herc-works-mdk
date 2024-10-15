@@ -57,6 +57,8 @@ public class ArmWeapDTOServiceImpl implements GeneralDTOService{
 		ArmWeapDTO srcData = (ArmWeapDTO)source;
 		
 		ArmWeap armWeap = new ArmWeap(srcData.getTotalWeapons());
+		
+		armWeap.setFileName(srcData.getFileName());
 		armWeap.setExt(FileType.DAT);
 		armWeap.setDir(FileType.GAM);
 		

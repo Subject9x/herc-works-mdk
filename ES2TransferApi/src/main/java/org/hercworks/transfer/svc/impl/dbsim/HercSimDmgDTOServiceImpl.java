@@ -53,6 +53,8 @@ public class HercSimDmgDTOServiceImpl  implements GeneralDTOService{
 
 		HercDmgDTO dto = (HercDmgDTO)source;
 		HercSimDamage data = new HercSimDamage();
+		
+		data.setFileName(dto.getFileName());
 		data.setExt(FileType.DMG);
 		data.setDir(FileType.DMG);
 		

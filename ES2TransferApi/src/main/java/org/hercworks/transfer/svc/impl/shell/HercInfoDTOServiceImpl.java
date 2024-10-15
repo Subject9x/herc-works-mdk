@@ -43,6 +43,8 @@ public class HercInfoDTOServiceImpl implements GeneralDTOService{
 		HercInfDTO srcData = (HercInfDTO)source;
 		
 		HercInf hercInf = new HercInf(srcData.getTotalHercs());
+		
+		hercInf.setFileName(srcData.getFileName());
 		hercInf.setExt(FileType.DAT);
 		hercInf.setDir(FileType.GAM);
 		

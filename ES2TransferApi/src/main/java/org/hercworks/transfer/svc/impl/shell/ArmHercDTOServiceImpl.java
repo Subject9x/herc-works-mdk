@@ -74,6 +74,8 @@ public class ArmHercDTOServiceImpl implements GeneralDTOService{
 		ArmHercDTO srcData = (ArmHercDTO)source;
 		
 		ArmHerc armData = new ArmHerc();
+		
+		armData.setFileName(srcData.getFileName());
 		armData.setExt(FileType.DAT);
 		armData.setDir(FileType.GAM);
 		

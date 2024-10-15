@@ -43,11 +43,14 @@ public class FlightModelDTOServiceImpl implements GeneralDTOService {
 	@Override
 	public DataFile fromDTO(TransferObject source) {
 		
+		FlightModelDTO dto = (FlightModelDTO)source;
+		
 		FlightModel fm = new FlightModel();
+		
+		fm.setFileName(dto.getFileName());
 		fm.setExt(FileType.FM);
 		fm.setDir(FileType.FM);
 		
-		FlightModelDTO dto = (FlightModelDTO)source;
 		
 		fm.setPitchRate(dto.getPitchRate());
 		fm.setRollRate(dto.getRollRate());

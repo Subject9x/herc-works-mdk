@@ -128,8 +128,6 @@ public abstract class GenericJsonProcessor extends FileProcessor{
 			dto = dtoClass.cast(dto);
 			
 			((TransferObject)dto).setFileName(((DataFile)exportDat).getFileName());
-			((TransferObject)dto).setDir(((DataFile)exportDat).getDir().val());
-			((TransferObject)dto).setFileExt(((DataFile)exportDat).getExt().val());
 			
 			String fullExportPath = targDirPath + File.separator + ((DataFile)exportDat).getFileName()  + ".json";
 			

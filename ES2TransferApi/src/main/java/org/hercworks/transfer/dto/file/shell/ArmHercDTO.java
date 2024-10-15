@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 /***
  * Wraps {@linkplain ArmHerc} SHELL0/GAM/
  */
-@JsonRootName("Arm_Herc_dat")
+@JsonRootName("ArmHerc")
 public class ArmHercDTO extends TransferObject  {
 
 	@JsonProperty(value = "img_bay_top_frame", index = 1)

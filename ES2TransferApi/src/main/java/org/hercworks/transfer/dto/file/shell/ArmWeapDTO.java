@@ -6,19 +6,19 @@ import org.hercworks.transfer.dto.struct.shell.ArmWeapIconDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("")
+@JsonRootName("ArmWeap")
 public class ArmWeapDTO extends TransferObject  {
 
-	@JsonProperty(value="total active items", index = 1)
+	@JsonProperty(value="total_weapons", index = 1)
 	private short totalWeapons;
 	
-	@JsonProperty(index = 2)
+	@JsonProperty(value="weapon_icons", index = 2)
 	private ArmWeapIconDTO[] icons;
 	
-	@JsonProperty(value="unknown second total list", index = 3)
+	@JsonProperty(value="unknown_list", index = 3)
 	private short secondList;
 	
-	@JsonProperty(index = 4)
+	@JsonProperty(value="unknown_second_list", index = 4)
 	private ArmWeapIconDTO[] secondary;
 	
 	public ArmWeapDTO() {}

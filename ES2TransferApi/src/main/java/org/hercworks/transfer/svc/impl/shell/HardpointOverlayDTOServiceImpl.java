@@ -10,6 +10,7 @@ import org.hercworks.transfer.dto.struct.shell.HardpointOverlayDTOHerc;
 import org.hercworks.transfer.dto.struct.shell.HardpointOverlayDTOSegment;
 import org.hercworks.transfer.svc.GeneralDTOService;
 import org.hercworks.voln.DataFile;
+import org.hercworks.voln.FileType;
 
 public class HardpointOverlayDTOServiceImpl implements GeneralDTOService {
 	
@@ -18,11 +19,6 @@ public class HardpointOverlayDTOServiceImpl implements GeneralDTOService {
 		
 		HardpointOverlayDTO dto = new HardpointOverlayDTO();
 		HardpointOverlayConfig hercOverlay = (HardpointOverlayConfig)source;
-		
-		
-		dto.setFileName(source.originNameNoExt());
-		dto.setFileExt(source.getExt().val());
-		dto.setDir(source.getDir().val());
 		
 		HardpointOverlayDTOHerc[] entries = new HardpointOverlayDTOHerc[hercOverlay.getEntries().length];
 		
@@ -66,6 +62,10 @@ public class HardpointOverlayDTOServiceImpl implements GeneralDTOService {
 		
 		HardpointOverlayDTO dto = (HardpointOverlayDTO)source;
 		HardpointOverlayConfig repairHercOverlay = new HardpointOverlayConfig();
+		
+		repairHercOverlay.setFileName(dto.getFileName());
+		repairHercOverlay.setDir(FileType.GAM);
+		repairHercOverlay.setExt(FileType.DAT);
 		
 		HardpointOverlayConfig.Herc[] entries = new HardpointOverlayConfig.Herc[dto.getEntries().length];
 		

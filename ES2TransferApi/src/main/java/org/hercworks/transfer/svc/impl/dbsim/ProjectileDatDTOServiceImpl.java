@@ -62,6 +62,7 @@ public class ProjectileDatDTOServiceImpl implements GeneralDTOService {
 		
 		ProjectileDataDTO src = (ProjectileDataDTO)source;
 		ProjectileData data = new ProjectileData();
+		data.setFileName(src.getFileName());
 		data.setExt(FileType.DAT);
 		data.setDir(FileType.DAT);
 		

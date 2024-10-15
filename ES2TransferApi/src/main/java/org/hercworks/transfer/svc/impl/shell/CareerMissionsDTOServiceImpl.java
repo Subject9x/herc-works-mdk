@@ -18,10 +18,10 @@ public class CareerMissionsDTOServiceImpl implements GeneralDTOService {
 		CareerMissions data = (CareerMissions)source;
 		CareerMissionsDTO dto = new CareerMissionsDTO();
 		
-		LinkedHashMap<String, int[]> sectors = new LinkedHashMap<String, int[]>();
+		LinkedHashMap<MissionSector, int[]> sectors = new LinkedHashMap<MissionSector, int[]>();
 		
 		for(MissionSector m : data.getSectors().keySet()) {
-			sectors.put(m.val(), data.getSectors().get(m));
+			sectors.put(m, data.getSectors().get(m));
 		}
 		dto.setSectors(sectors);
 		
@@ -33,15 +33,16 @@ public class CareerMissionsDTOServiceImpl implements GeneralDTOService {
 		
 		CareerMissionsDTO dto = (CareerMissionsDTO)source;
 		CareerMissions data = new CareerMissions();
+		
 		data.setFileName(dto.getFileName());
-		data.setExt(FileType.typeFromVal(dto.getFileExt()));
-		data.setDir(FileType.typeFromVal(dto.getDir()));
+		data.setExt(FileType.DAT);
+		data.setDir(FileType.GAM);
 		
 		LinkedHashMap<MissionSector, int[]> sectors = new LinkedHashMap<MissionSector, int[]>();
 		
-		for(String s : dto.getSectors().keySet()) {
+		for(MissionSector m : dto.getSectors().keySet()) {
 			
-			sectors.put(MissionSector.valueOf(s), dto.getSectors().get(s));
+			sectors.put(m, dto.getSectors().get(m));
 		}
 		
 		data.setSectors(sectors);

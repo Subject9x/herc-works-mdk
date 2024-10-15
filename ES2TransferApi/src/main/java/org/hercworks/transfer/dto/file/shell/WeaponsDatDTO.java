@@ -14,10 +14,10 @@ public class WeaponsDatDTO extends TransferObject {
 	@JsonProperty(value = "total", index = 1)
 	private short total;
 	
-	@JsonProperty(value = "", index = 2)
+	@JsonProperty(value = "weaponData", index = 2)
 	private WeaponsDatDTOItem[] weapons;
 	
-	@JsonProperty(value = "", index = 4)
+	@JsonProperty(value = "startingList", index = 4)
 	private List<String[]> startingList;
 	
 	public WeaponsDatDTO() {}

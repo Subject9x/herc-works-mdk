@@ -39,7 +39,8 @@ public class WeapnPDGDTOServiceImpl implements GeneralDTOService {
 		
 		WpnPDGDTO dto =(WpnPDGDTO)source;
 		WeaponPaperDiagram data = new WeaponPaperDiagram();
-		data.setFileName("WEAPONS");
+		
+		data.setFileName(dto.getFileName());
 		data.setDir(FileType.PDG);
 		data.setExt(FileType.PDG);
 		

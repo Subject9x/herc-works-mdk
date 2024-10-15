@@ -53,7 +53,6 @@ public class TrainingHercsDTOServiceImpl implements GeneralDTOService{
 			
 			dto.getData()[i] = dtoHerc;
 		}
-		
 		return dto;
 	}
 
@@ -63,8 +62,11 @@ public class TrainingHercsDTOServiceImpl implements GeneralDTOService{
 		TrainingHercsDTO srcData = (TrainingHercsDTO)source;
 		
 		TrainingHercs trainHercs = new TrainingHercs();
+		
+		trainHercs.setFileName(srcData.getFileName());
 		trainHercs.setExt(FileType.DAT);
 		trainHercs.setDir(FileType.GAM);
+		
 		List<ShellHercData> data = new ArrayList<ShellHercData>();
 
 		for(ShellHercDTO dtoHerc : srcData.getData()) {

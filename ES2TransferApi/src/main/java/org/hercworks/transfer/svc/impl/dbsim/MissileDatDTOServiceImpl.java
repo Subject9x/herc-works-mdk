@@ -42,6 +42,7 @@ public class MissileDatDTOServiceImpl implements GeneralDTOService {
 				
 		MissileDatDTO dto = (MissileDatDTO)source;
 		MissileDatFile data = new MissileDatFile((short)dto.getMissiles().length);
+		data.setFileName(dto.getFileName());
 		data.setExt(FileType.DAT);
 		data.setDir(FileType.DAT);
 		
