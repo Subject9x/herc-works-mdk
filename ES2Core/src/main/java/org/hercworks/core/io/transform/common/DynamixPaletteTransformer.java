@@ -97,31 +97,39 @@ public class DynamixPaletteTransformer extends ThreeSpaceByteTransformer {
 		byte[] bytes = new byte[4];
 		
 		int ir, ig, ib, ia;
-		if(idx == 0) {
-			//FIXME: uh, Alpha Transparent color index appears to be index 0?
-			ir = Byte.toUnsignedInt(dynamixColor[0]);
-			ig = Byte.toUnsignedInt(dynamixColor[1]);
-			ib = Byte.toUnsignedInt(dynamixColor[2]);
+//		if(idx == 0) {
+//			//FIXME: uh, Alpha Transparent color index appears to be index 0?
+//			ir = Byte.toUnsignedInt(dynamixColor[0]);
+//			ig = Byte.toUnsignedInt(dynamixColor[1]);
+//			ib = Byte.toUnsignedInt(dynamixColor[2]);
+//			ia = 0;
+//			
+//		}
+//		else {
+		ir = Byte.toUnsignedInt(dynamixColor[0]);
+		ig = Byte.toUnsignedInt(dynamixColor[1]);
+		ib =  Byte.toUnsignedInt(dynamixColor[2]);
+		ia = dynamixColor[3];
+		
+		//detect "transparency" palette color
+		if(ir == 0 && ig == 0 && ib == 0) {
+			ir = 218;
+			ig = 164;
+			ib = 164;
 			ia = 0;
-			
 		}
-		else {
-			ir = Byte.toUnsignedInt(dynamixColor[0]);
+		else{
 			ir = (ir * scalar) > 255 ? 255 : ir * scalar;
-			bytes[0] = (byte) ir;
-			
-			ig = Byte.toUnsignedInt(dynamixColor[1]);
 			ig = (ig * scalar) > 255 ? 255 : ig * scalar;
-			bytes[1] = (byte) ig;
-			
-			ib =  Byte.toUnsignedInt(dynamixColor[2]);
 			ib = (ib * scalar) > 255 ? 255 : ib * scalar;
-			bytes[2] = (byte) ib;
-			
-			ia = dynamixColor[3];
 			ia = ia == 1 ? 255 : 0;
-			bytes[3] = (byte) ia;
 		}
+		bytes[0] = (byte) ir;
+		bytes[1] = (byte) ig;
+		bytes[2] = (byte) ib;
+		bytes[3] = (byte) ia;
+			
+		//}
 		
 		ColorBytes rawColor = new ColorBytes(bytes);
 		

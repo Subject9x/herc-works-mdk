@@ -16,7 +16,7 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
   	  	<es2.vol.version>0.0.4</es2.vol.version>
-  	  	<es2.core.version>0.3.4</es2.core.version>
+  	  	<es2.core.version>0.3.5</es2.core.version>
   	  	<es2.transfr.version>0.4.3</es2.transfr.version>
   	  	<es2.excavate.version>0.2.4</es2.excavate.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

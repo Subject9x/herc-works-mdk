@@ -37,7 +37,7 @@ public final class DynFileWriter {
 		//XXX: TYPE_INT_ARGB - DOES NOT WORK WITH IMAGEIO on .BMP!
 		
 		try {
-			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_ARGB);
+			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_INT_RGB);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -57,8 +57,7 @@ public final class DynFileWriter {
 				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
 				try {
-					rasterData[i] = palette.colorAt(idx).getJavaColor().getRGB();// + palette.colorAt(idx).getColor().getTransparency();
-//					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx);
+					rasterData[i] = palette.colorAt(idx).getJavaColor().getRGB();
 				}
 				catch(NullPointerException nope) {
 					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 

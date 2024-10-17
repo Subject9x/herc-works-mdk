@@ -60,6 +60,8 @@ public class CareerDataTransformer extends ThreeSpaceByteTransformer {
 			
 			int[] missions = data.getSectors().get(sector);
 			
+			out.write(writeShortLE((short)missions.length));
+			
 			for(int i=0; i < missions.length; i++) {
 				out.write(writeShortLE((short)missions[i]));
 			}
