@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.dat.sim;
 
+import org.hercworks.core.data.struct.ProjectileType;
 import org.hercworks.voln.DataFile;
 
 /**
@@ -62,7 +63,7 @@ public class ProjectileData extends DataFile {
 	
 	public class Projectile {
 		
-		private short unk1_val;
+		private ProjectileType type;	//TODO: possible projectile type bitflag, 0x04 == beams, 0x02 == bullets?
 		private short missileId;
 		private short damageShield;
 		private short damageArmor;
@@ -74,8 +75,8 @@ public class ProjectileData extends DataFile {
 		
 		public Projectile() {}
 
-		public short getUnk1_val() {
-			return unk1_val;
+		public ProjectileType getType() {
+			return type;
 		}
 
 		public short getMissileId() {
@@ -110,8 +111,8 @@ public class ProjectileData extends DataFile {
 			return impactFXGround;
 		}
 
-		public void setUnk1_val(short unk1_val) {
-			this.unk1_val = unk1_val;
+		public void setType(ProjectileType type) {
+			this.type = type;
 		}
 
 		public void setMissileId(short missileId) {

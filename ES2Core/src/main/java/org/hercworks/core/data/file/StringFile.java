@@ -1,4 +1,4 @@
-package org.hercworks.core.data.file.str;
+package org.hercworks.core.data.file;
 
 import org.hercworks.voln.DataFile;
 

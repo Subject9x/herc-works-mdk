@@ -24,6 +24,7 @@ public class BeamDatDTOServiceImpl implements GeneralDTOService {
 			beam.setId(b);
 			beam.setWidth(entry.getWidth());
 			beam.setColorId(entry.getColorId());
+			beam.setDbaFrameNum(entry.getDBAFrameNum());
 			
 			dto.getBeams()[b] = beam;
 		}
@@ -44,7 +45,7 @@ public class BeamDatDTOServiceImpl implements GeneralDTOService {
 		
 		for(int b=0; b < data.getData().length; b++) {
 			BeamDatEntryDTO beam = dto.getBeams()[b];
-			Entry entry = data.newEntry((short)beam.getWidth(), (short)beam.getColorId());
+			Entry entry = data.newEntry((short)beam.getWidth(), (short)beam.getColorId(), (short)beam.getDbaFrameNum());
 			
 			data.getData()[b] = entry;
 		}

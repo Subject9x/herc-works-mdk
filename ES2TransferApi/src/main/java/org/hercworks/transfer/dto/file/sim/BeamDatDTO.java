@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("")
 public class BeamDatDTO extends TransferObject {
 
-	@JsonProperty("beams")
+	@JsonProperty(value = "beams", required = true)
 	private BeamDatEntryDTO[] beams;
 	
 	public BeamDatDTO() {}

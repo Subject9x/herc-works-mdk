@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.hercworks.core.data.file.dat.sim.ProjectileData;
 import org.hercworks.core.data.file.dat.sim.ProjectileData.Projectile;
+import org.hercworks.core.data.struct.ProjectileType;
 import org.hercworks.core.io.transform.ThreeSpaceByteTransformer;
 import org.hercworks.voln.DataFile;
 import org.hercworks.voln.FileType;
@@ -29,7 +30,7 @@ public class ProjectileDataTransformer extends ThreeSpaceByteTransformer {
 		for(int p=0; p < data.getTotal(); p++) {
 			Projectile proj = data.newProjectile();
 			
-			proj.setUnk1_val(indexShortLE());
+			proj.setType(ProjectileType.forId(indexShortLE()));
 			proj.setMissileId(indexShortLE());
 			proj.setDamageShield(indexShortLE());
 			proj.setDamageArmor(indexShortLE());
@@ -69,7 +70,7 @@ public class ProjectileDataTransformer extends ThreeSpaceByteTransformer {
 		for(int p=0; p < data.getData().length; p++) {
 			Projectile proj = data.getData()[p];
 			
-			out.write(writeShortLE(proj.getUnk1_val()));
+			out.write(writeShortLE(proj.getType().val()));
 			out.write(writeShortLE(proj.getMissileId()));
 			out.write(writeShortLE(proj.getDamageShield()));
 			out.write(writeShortLE(proj.getDamageArmor()));

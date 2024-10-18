@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("")
 public class BeamDatEntryDTO {
 
-	@JsonProperty(value = "id", index = 0)
+	@JsonProperty(value = "id", index = 0, required = true)
 	private int id;
 	
-	@JsonProperty(value = "width", index = 1)
+	@JsonProperty(value = "width", index = 1, required = true)
 	private int width;
 
-	@JsonProperty(value = "color_id", index = 2)
+	@JsonProperty(value = "color_id", index = 2, required = true)
 	private int colorId;
+	
+	@JsonProperty(value = "dbaFrameNum", index = 3, defaultValue = "0", required = true)
+	private int dbaFrameNum;
 	
 	public BeamDatEntryDTO() {}
 
@@ -39,5 +42,13 @@ public class BeamDatEntryDTO {
 
 	public void setColorId(int colorId) {
 		this.colorId = colorId;
+	}
+
+	public int getDbaFrameNum() {
+		return dbaFrameNum;
+	}
+
+	public void setDbaFrameNum(int dbaFrameNum) {
+		this.dbaFrameNum = dbaFrameNum;
 	}
 }

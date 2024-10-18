@@ -23,8 +23,8 @@ public class ProjectileDatDTOServiceImpl implements GeneralDTOService {
 			Projectile proj = src.getData()[p];
 			ProjectileEntryDTO entry = new ProjectileEntryDTO();
 			
-			entry.setProjId(p);
-			entry.setUnk1_val(proj.getUnk1_val());
+			entry.setId(p);
+			entry.setType(proj.getType());
 			entry.setMissileId(proj.getMissileId());
 			entry.setDamageShield(proj.getDamageShield());
 			entry.setDamageArmor(proj.getDamageArmor());
@@ -73,7 +73,7 @@ public class ProjectileDatDTOServiceImpl implements GeneralDTOService {
 			ProjectileEntryDTO proj =src.getProjectiles()[p];
 			Projectile entry = data.newProjectile();
 			
-			entry.setUnk1_val((short)proj.getUnk1_val());
+			entry.setType(proj.getType());
 			entry.setMissileId((short)proj.getMissileId());
 			entry.setDamageShield((short)proj.getDamageShield());
 			entry.setDamageArmor((short)proj.getDamageArmor());

@@ -9,7 +9,7 @@
   <name>Data Transfer API</name>
   <description>wrapper library for core that exports/imports data to other modern formats.</description>
   <packaging>jar</packaging>
-  <version>0.4.3</version>
+  <version>0.4.5</version>
   
 	<dependencies>
 	    <dependency>

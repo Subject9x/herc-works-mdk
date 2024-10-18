@@ -33,7 +33,7 @@ public final class VolFileWriter {
 			}
 		}
 		
-		File volOutput = new File(destPath + "\\" + vol.getFileName());
+		File volOutput = new File(String.join(File.pathSeparator, destPath, vol.getFileName()));
 		
 		try (ByteArrayOutputStream bass = new ByteArrayOutputStream(vol.getRawBytes().length);  FileOutputStream fout = new FileOutputStream(volOutput)){
 					
@@ -164,9 +164,9 @@ public final class VolFileWriter {
 		}
 		
 		String volDirRoot = vol.getFileName().substring(0, vol.getFileName().lastIndexOf('.'));
-		
-		volDir = new File(destPath + "\\" + volDirRoot);
-		volDirRoot = destPath + "\\" + volDirRoot;
+
+		volDirRoot = String.join(File.pathSeparator, destPath, volDirRoot);
+		volDir = new File(volDirRoot);
 		
 		if(!volDir.exists()) {
 			volDir.mkdir();
@@ -174,7 +174,7 @@ public final class VolFileWriter {
 		
 		for(Byte idx : vol.getFolders().keySet()) {
 			VolDir folder = vol.getFolders().get(idx);
-			String dirPath = volDirRoot + "\\" + folder.getLabel();
+			String dirPath = String.join(File.pathSeparator, volDirRoot, folder.getLabel());
 			File dirPathAct = new File(dirPath);
 			if(!dirPathAct.exists()) {
 				dirPathAct.mkdir();	
@@ -193,14 +193,10 @@ public final class VolFileWriter {
 	}
 	
 	private static void writeVolAssetFile(String dirPath, VolEntry entry){
-//		File file = new File(dirPath + "\\" + entry.getFileName().strip());	//Java 11
-		File file = new File(dirPath + "\\" + entry.getFileName().trim());	//Java 9 compatibility
-		
+		File file = new File(String.join(File.pathSeparator, dirPath, entry.getFileName().trim()));	//Java 9 compatibility
+	
 		try(FileOutputStream fizz = new FileOutputStream(file);){
-			fizz.write(entry.getRawBytes());
-			
-//			System.out.println("Wrote ["+file.getPath()+"]");
-			
+			fizz.write(entry.getRawBytes());	
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage() + "\n file=" + entry.getFilePath() +"\\"+entry.getFileName());

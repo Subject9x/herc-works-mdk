@@ -25,7 +25,7 @@ public class BeamDatFileTransformer extends ThreeSpaceByteTransformer {
 		data.setRawBytes(inputArray);
 		
 		for(int b=0; b < data.getData().length; b++) {
-			Entry beam = data.newEntry(indexShortLE(), indexShortLE());
+			Entry beam = data.newEntry(indexShortLE(), indexShortLE(), indexShortLE());
 			
 			data.getData()[b] = beam;
 		}
@@ -51,6 +51,7 @@ public class BeamDatFileTransformer extends ThreeSpaceByteTransformer {
 			
 			out.write(writeShortLE(beam.getWidth()));
 			out.write(writeShortLE(beam.getColorId()));
+			out.write(writeShortLE(beam.getDBAFrameNum()));
 		}
 		
 		return out.toByteArray();

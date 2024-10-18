@@ -8,8 +8,9 @@ import org.hercworks.voln.DataFile;
  * 	0- UINT16 - Total Beam count
  * 
  * 	SEQ0 - Beam struct
- * 		SEQ0_0 - Beam Width
- * 		SEQ0_1 - unknown?
+ * 		SEQ0_0 - UINT16 - Beam Width
+ * 		SEQ0_2 - UINT16 - possible color id
+ * 		SEQ0_4 - UINT16 - possible Render Flags, but all are 0, and should be kept 0
  * 
  * BEAM ORDER
  * 	PBW-I
@@ -75,18 +76,20 @@ public class BeamData extends DataFile {
 		this.data = new Entry[total];
 	}
 	
-	public Entry newEntry(short width, short colorId) {
-		return new Entry(width, colorId);
+	public Entry newEntry(short width, short colorId, short dbaFrameNum) {
+		return new Entry(width, colorId, dbaFrameNum);
 	}
 	
 	public class Entry{
 		
 		private short width;
 		private short colorId;
+		private short dbaFrameNum;
 		
-		public Entry(short width, short colorId) {
+		public Entry(short width, short colorId, short dbaFrameNum) {
 			this.width = width;
 			this.colorId = colorId;
+			this.dbaFrameNum = dbaFrameNum;
 		}
 
 		public short getWidth() {
@@ -103,6 +106,14 @@ public class BeamData extends DataFile {
 
 		public void setColorId(short colorId) {
 			this.colorId = colorId;
+		}
+
+		public short getDBAFrameNum() {
+			return dbaFrameNum;
+		}
+
+		public void setDBAFrameNum(short dbaFrameNum) {
+			this.dbaFrameNum = dbaFrameNum;
 		}
 	}
 

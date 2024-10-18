@@ -1,16 +1,18 @@
 package org.hercworks.transfer.dto.struct.dbsim;
 
+import org.hercworks.core.data.struct.ProjectileType;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("proj")
 public class ProjectileEntryDTO {
 
-	@JsonProperty(value = "proj_id", index = 0)
-	private int projId;
+	@JsonProperty(value = "id", index = 0)
+	private int id;
 	
-	@JsonProperty(value = "unk1_val", index = 1)
-	private int unk1_val;
+	@JsonProperty(value = "type", index = 1)
+	private ProjectileType type;
 	
 	@JsonProperty(value = "missile_id", index = 2)
 	private int missileId;
@@ -75,12 +77,12 @@ public class ProjectileEntryDTO {
 		}
 	}
 
-	public int getProjId() {
-		return projId;
+	public int getId() {
+		return id;
 	}
 
-	public int getUnk1_val() {
-		return unk1_val;
+	public ProjectileType getType() {
+		return type;
 	}
 
 	public int getMissileId() {
@@ -107,12 +109,12 @@ public class ProjectileEntryDTO {
 		return impactEffects;
 	}
 	
-	public void setProjId(int projId) {
-		this.projId = projId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public void setUnk1_val(int unk1_val) {
-		this.unk1_val = unk1_val;
+	public void setType(ProjectileType type) {
+		this.type = type;
 	}
 
 	public void setMissileId(int missileId) {
