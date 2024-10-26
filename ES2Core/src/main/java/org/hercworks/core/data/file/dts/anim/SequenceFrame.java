@@ -1,12 +1,12 @@
-package org.hercworks.core.data.file.dts;
+package org.hercworks.core.data.file.dts.anim;
 
-public class ANSequenceFrame {
+public class SequenceFrame {
 
 	private short tic = 0;
 	private short numTransitions = 0;
 	private short firstTransition = 0;
 	
-	public ANSequenceFrame() {}
+	public SequenceFrame() {}
 
 	public short getTic() {
 		return tic;

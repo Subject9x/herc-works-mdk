@@ -1,15 +1,13 @@
 package org.hercworks.core.data.file.dts;
 
-import at.favre.lib.bytes.Bytes;
-
-public class TSPoly implements DTSSegment{
+public class Poly extends DTSObject implements DTSSegment{
 
 	private short normal = 0;
 	private short center = 0;
 	private short vertexCount = 0;
 	private short vertexList = 0;
 	
-	public TSPoly() {}
+	public Poly() {}
 	
 	public short getNormal() {
 		return normal;
@@ -44,7 +42,7 @@ public class TSPoly implements DTSSegment{
 	}
 
 	@Override
-	public Bytes getSegmentType() {
-		return Bytes.from("0x140001".toCharArray());
+	public DTSChunkTypes getSegType() {
+		return DTSChunkTypes.POLY;
 	}
 }

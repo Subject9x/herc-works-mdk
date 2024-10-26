@@ -14,13 +14,18 @@ public class TestDTS {
 	public void testDTSModel() {
 		
 		try {
-			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\ACHILLES.DTS";
+//			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\ACHILLES.DTS";
 		
+			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\TOMA_DEB.DTS";
+			
 			DTSModelTransformer transform = new DTSModelTransformer();
 			
 			FileInputStream fizz = new FileInputStream(new File(targURL));
 			
-			transform.bytesToObject(fizz.readAllBytes());
+			byte[] fileData = fizz.readAllBytes();
+			fizz.close();
+			transform.bytesToObject(fileData);
+			
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

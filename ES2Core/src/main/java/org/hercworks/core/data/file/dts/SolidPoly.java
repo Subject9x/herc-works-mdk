@@ -1,12 +1,10 @@
 package org.hercworks.core.data.file.dts;
 
-import at.favre.lib.bytes.Bytes;
-
-public class TSSolidPoly implements DTSSegment{
+public class SolidPoly extends Poly implements DTSSegment{
 
 	private short color = 0;
 	
-	public TSSolidPoly() {}
+	public SolidPoly() {}
 	
 	public short getColor() {
 		return color;
@@ -17,7 +15,7 @@ public class TSSolidPoly implements DTSSegment{
 	}
 
 	@Override
-	public Bytes getSegmentType() {
-		return Bytes.from("0x140002".toCharArray());
+	public DTSChunkTypes getSegType() {
+		return DTSChunkTypes.SOLID_POLY;
 	}
 }

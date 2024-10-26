@@ -1,17 +1,17 @@
 package org.hercworks.core.data.file.dts;
 
-import java.util.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-public class TSBSPPartNode {
+public class BSPPartNode {
 
-	private Vector<Short> normal = new Vector<Short>(3);
+	private Vector3D normal = new Vector3D(0,0,0);
 	private int coeff = 0;
 	private short front = 0;
 	private short back = 0;
 	
-	public TSBSPPartNode() {}
+	public BSPPartNode() {}
 
-	public Vector<Short> getNormal() {
+	public Vector3D getNormal() {
 		return normal;
 	}
 
@@ -27,7 +27,7 @@ public class TSBSPPartNode {
 		return back;
 	}
 
-	public void setNormal(Vector<Short> normal) {
+	public void setNormal(Vector3D normal) {
 		this.normal = normal;
 	}
 

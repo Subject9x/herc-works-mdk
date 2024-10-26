@@ -1,22 +1,17 @@
 package org.hercworks.core.data.file.dts;
 
-import java.util.Vector;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-import at.favre.lib.bytes.Bytes;
+public class BasePart extends DTSObject implements DTSSegment{
 
-public class TSBasePart implements DTSSegment{
-
-	private short transform;
+	private short transform = 0;
+	private short IDNumber = 0;
+	private short radius = 0;
+	private Vector3D origin = new Vector3D(0,0,0);
 	
-	private short IDNumber;
+	public BasePart() {}
 	
-	private short radius;
-	
-	private Vector<Short> origin = new Vector<Short>(3);
-	
-	public TSBasePart() {}
-	
-	public TSBasePart(short transform, short id, short radius, Vector<Short> origin) {
+	public BasePart(short transform, short id, short radius, Vector3D origin) {
 		this.transform = transform;
 		this.IDNumber = id;
 		this.radius = radius;
@@ -35,7 +30,7 @@ public class TSBasePart implements DTSSegment{
 		return radius;
 	}
 
-	public Vector<Short> getOrigin() {
+	public Vector3D getOrigin() {
 		return origin;
 	}
 
@@ -51,12 +46,13 @@ public class TSBasePart implements DTSSegment{
 		this.radius = radius;
 	}
 
-	public void setOrigin(Vector<Short> origin) {
+	public void setOrigin(Vector3D origin) {
 		this.origin = origin;
 	}
 
 	@Override
-	public Bytes getSegmentType() {
-		return Bytes.from("0x140005".toCharArray());
+	public DTSChunkTypes getSegType() {
+		return DTSChunkTypes.BASE_PART;
+	
 	}
 }

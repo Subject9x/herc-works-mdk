@@ -1,13 +1,13 @@
-package org.hercworks.core.data.file.dts;
+package org.hercworks.core.data.file.dts.anim;
 
-public class ANAnimListTransition {
+public class Transition{
 
 	private short tic = 0;
 	private short destSequence = 0;
 	private short destFrame = 0;
 	private short groundMovement = 0;
 	
-	public ANAnimListTransition() {}
+	public Transition() {}
 
 	public short getTic() {
 		return tic;
