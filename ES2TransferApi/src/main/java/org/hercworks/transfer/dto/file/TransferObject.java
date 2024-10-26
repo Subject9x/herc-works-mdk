@@ -11,6 +11,7 @@ import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.TrainingHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
 import org.hercworks.transfer.dto.file.sim.BeamDatDTO;
+import org.hercworks.transfer.dto.file.sim.DebrisHercDTO;
 import org.hercworks.transfer.dto.file.sim.FlightModelDTO;
 import org.hercworks.transfer.dto.file.sim.GunLayoutDTO;
 import org.hercworks.transfer.dto.file.sim.HercDmgDTO;
@@ -41,6 +42,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @Type(value = TrainingHercsDTO.class, name = "TrainingHercs"),
   @Type(value = WeaponsDatDTO.class, name = "WeaponsDat"),
   
+  @Type(value = DebrisHercDTO.class, name = "DebrisHerc"),
   @Type(value = BeamDatDTO.class, name = "BeamData"),
   @Type(value = FlightModelDTO.class, name = "FlightModel"),
   @Type(value = GunLayoutDTO.class, name = "GunLayout"),

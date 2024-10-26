@@ -9,59 +9,20 @@ import org.hercworks.voln.DataFile;
  * 
  * 	SEQ0 - Beam struct
  * 		SEQ0_0 - UINT16 - Beam Width
- * 		SEQ0_2 - UINT16 - possible color id
- * 		SEQ0_4 - UINT16 - possible Render Flags, but all are 0, and should be kept 0
+ * 		SEQ0_2 - UINT16 - color index id, but only active on ELF weapons for some reason.
+ * 		SEQ0_4 - UINT16 - BEAMTEX.DBA frame number!
  * 
- * BEAM ORDER
- * 	PBW-I
- *  ELF-I
- *  ?
- *  LASER
- *  ?
- *  ?
- *  PBW-II
- *  ELF-II
- * 
- * 
- * 	2- UINT16 - PBW I - beam width
- * 	4- UINT16 - ?
- *  
- *  6-7 spacer
- * 	
- *  8- UINT16 - ELF I - beam width
- * 	10- UINT16 - ELF I - beam color
- *  
- *  12-13  spacer
- * 	
- *  14- UINT16 - ?
- * 	16- UINT16 - ?
- *  
- *  18-19  spacer
- * 	
- *  20- UINT16 - LASER - beam width
- *  22- UINT16 - ?
- *  
- *  24-25  spacer
- *  
- *  26- UINT16 - ?
- *  28- UINT16 - ?
- *  
- *  30-31  spacer
- *  
- *  32- UINT16 - ?
- *  34- UINT16 - ?
- *  
- *  36-37  spacer
- *  
- *  38- UINT16 - PBW II - beam width
- *  40- UINT16 - ?
- *  
- *  42-43  spacer 
- *  
- *  44- UINT16 - ELF II - beam width
- *  46- UINT16 - ELF II - beam color
- *  
- *  48-49  spacer
+ * STOCK BEAM ORDER - this maps to {@linkplain ProjectileData} "missile_id" when "type" == "BEAM"
+ * 0 PBW I
+ * 1 ELF I
+ * 2 ?
+ * 3 LAS100
+ * 4 LAS200, LAS400
+ * 5 LAS300, LAS500
+ * 6 PBW II
+ * 7 ELF II
+ * 8 ???
+ * 9 ???
  */
 public class BeamData extends DataFile {
 
