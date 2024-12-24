@@ -112,13 +112,13 @@ public final class DynFileWriter {
 		
 		///-------------------------
 		
-		File file = new File(filePath + dbm.getFileName().substring(0, dbm.getFileName().lastIndexOf('.')) + "_RAW.bmp");
+		File file = new File(filePath + dbm.getFileName() + "_RAW.bmp");
 		BufferedImage imageOut = null;
 		//TYPE_USHORT_555_RGB almost has it
 		//XXX: TYPE_INT_ARGB - DOES NOT WORK WITH IMAGEIO on .BMP!
 		
 		try {
-			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_3BYTE_BGR);
+			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_BYTE_GRAY);
 		}
 		catch(Exception e) {
 			// TODO Auto-generated catch block
@@ -127,6 +127,7 @@ public final class DynFileWriter {
 		}
 		
 		byte[] data = ((DataBufferByte)imageOut.getRaster().getDataBuffer()).getData();
+		//int[] data = ((DataBufferInt)imageOut.getRaster().getDataBuffer()).getData();
 		
 		for(int i=0; i < dbm.getImageData().array().length; i++) {
 			data[i] = dbm.getImageData().array()[i];
@@ -136,7 +137,6 @@ public final class DynFileWriter {
 		try {
 			ImageIO.write(imageOut, "bmp", file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}

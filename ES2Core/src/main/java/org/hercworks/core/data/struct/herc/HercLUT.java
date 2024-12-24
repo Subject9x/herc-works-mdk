@@ -19,21 +19,19 @@ public enum HercLUT {
 	OGRE((short)6, "Ogre",  (short)10, "OGRE"),
 	MAVERICK((short)7, "Maverick", (short)4, "MAVERICK"),
 	RAZOR((short)8, "Razor", (short)7, "RAZOR"),
-	//WARN - I don't know if Cybrid hercs are on the same num-id sequence as player hercs, so the following is not accurate.
-	//I have cybrids here for convenience.
-	ACHILLES((short)9, "ACHILLES", (short)6, "ACHILLES"),
-	CERBERUS((short)10, "CERBERUS", (short)9, "CERBERUS"),
-	DIABLO((short)11, "DIABLO", (short)8, "DIABLO"),
-	HEADHUNTER((short)12, "HEADHUNTER", (short)9, "HEADHUNT"),
-	HYPERION((short)13, "HYPERION", (short)9, "HYPERION"),
-	MIRIMAC((short)14, "MIRIMAC", (short)5, "MIRIMAC"),
-	MONGOOSE((short)15, "MONGOOSE", (short)3, "MONGOOSE"),
-	PITBULL((short)16, "PITBULL", (short)1, "PITBULL"),
-	RAMSES((short)17, "RAMSES", (short)4, "RAMSES"),
-	SCARAB((short)18, "SCARAB", (short)4, "SCARAB"),
-	STINGRAY((short)19, "STINGRAY", (short)3, "STINGRAY"),
-	SKIMMER((short)20, "SKIMMER", (short)3, "SKIMMER"),
-	SPIDER((short)21, "SPIDER", (short)1, "SPIDER");
+	MONGOOSE((short)9, "MONGOOSE", (short)3, "MONGOOSE"),
+	STINGRAY((short)10, "STINGRAY", (short)3, "STINGRAY"),
+	MIRIMAC((short)11, "MIRIMAC", (short)5, "MIRIMAC"),
+	RAMSES((short)12, "RAMSES", (short)4, "RAMSES"),
+	ACHILLES((short)13, "ACHILLES", (short)6, "ACHILLES"),
+	HYPERION((short)14, "HYPERION", (short)9, "HYPERION"),
+	PITBULL((short)15, "PITBULL", (short)1, "PITBULL"),
+	SPIDER((short)16, "SPIDER", (short)1, "SPIDER"),
+	DIABLO((short)17, "DIABLO", (short)8, "DIABLO"),
+	HEADHUNTER((short)18, "HEADHUNTER", (short)9, "HEADHUNT"),
+	SCARAB((short)19, "SCARAB", (short)4, "SCARAB"),
+	CERBERUS((short)20, "CERBERUS", (short)9, "CERBERUS"),
+	SKIMMER((short)20, "SKIMMER", (short)3, "SKIMMER");
 
 	private static final Map<Short,HercLUT> ENUM_MAP;
 	private String name;
