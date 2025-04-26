@@ -86,14 +86,17 @@ public class DynamixBitmapArrayTransformer extends ThreeSpaceByteTransformer{
 		objectBytes.write(dba.getFileSize().reverse().array());
 		objectBytes.write(writeShortLE(dba.getArrayRow()));
 		objectBytes.write(writeShortLE(dba.getArrayCols()));
-		
+
+		DynamixBitmapTransformer dbmConvert = new DynamixBitmapTransformer();
 		for(DynamixBitmap dbm : dba.getImages()) {
 			
-			DynamixBitmapTransformer dbmConvert = new DynamixBitmapTransformer();
-			
-			objectBytes.write(dbmConvert.objectToBytes(dbm));
-			objectBytes.write(0x00);
-			objectBytes.flush();
+			dbmConvert.resetIndex();
+			byte[] data = dbmConvert.objectToBytes(dbm);
+			if(data != null) {
+				objectBytes.write(data);
+				objectBytes.write(0x00);
+				objectBytes.flush();
+			}
 		}
 		
 		return objectBytes.toByteArray();

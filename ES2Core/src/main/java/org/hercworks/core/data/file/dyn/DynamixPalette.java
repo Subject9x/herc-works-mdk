@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.dyn;
 
+import java.awt.Color;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 
@@ -26,10 +27,15 @@ public class DynamixPalette extends DataFile {
 	private Bytes rawIndexBytes;
 	private LinkedHashMap<Integer, ColorBytes> colors;
 	
+	private ColorBytes index0AlphaKey;
+	
 	public DynamixPalette() {
 		super();
 		scalar = 1;
 		colors = new LinkedHashMap<Integer, ColorBytes>();
+		
+		index0AlphaKey = new ColorBytes((byte)218, (byte)164, (byte)164, (byte)255);
+		index0AlphaKey.setJavaColor(new Color(218, 164, 164, 255));
 	}
 
 	public ColorBytes colorAt(int idx) {
@@ -106,5 +112,13 @@ public class DynamixPalette extends DataFile {
 
 	public void setScalar(int scalar) {
 		this.scalar = scalar;
+	}
+
+	public ColorBytes getIndex0AlphaKey() {
+		return index0AlphaKey;
+	}
+
+	public void setIndex0AlphaKey(ColorBytes index0AlphaKey) {
+		this.index0AlphaKey = index0AlphaKey;
 	}
 }

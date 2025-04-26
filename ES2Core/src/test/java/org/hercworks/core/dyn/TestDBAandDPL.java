@@ -70,7 +70,7 @@ public class TestDBAandDPL {
 		for(DynamixPalette pal : dplList) {
 			if(pals.iterator().hasNext()) {
 				loadedDBM.setFileName(fileName+"_"+pal.originNameNoExt());
-				DynFileWriter.writeDBMToFile(loadedDBM, pal, volDir+"DBM\\exp\\");
+				DynFileWriter.writeDBMToFile(loadedDBM, true, pal, volDir+"DBM\\exp\\");
 			}
 			
 		}
@@ -161,7 +161,7 @@ public class TestDBAandDPL {
 			for(DynamixPalette pal : dplList) {
 					DynFileReader.matchUniqueColorToPalette(DynFileReader.getDBMUniqueColors(dbm), pal);
 					dbm.setFileName(name+pal.originNameNoExt());
-					DynFileWriter.writeDBMToFile(dbm, pal, dbm.getFilePath());
+					DynFileWriter.writeDBMToFile(dbm, true, pal, dbm.getFilePath());
 			}
 //			DynFileWriter.writeDBMToFile(dbm, mainDPL, dbaDir);
 		}

@@ -1,7 +1,7 @@
 package org.hercworks.core.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,27 +15,74 @@ public final class PaletteBinding {
 
 	private static PaletteBinding INSTANCE;
 	
-	private HashMap<String, List<String>> bindings = new HashMap<String, List<String>>();
+	private List<PaletteBindingEntry> bindings = new ArrayList<PaletteBindingEntry>();
+	
+	private boolean indexAlpha = true;
+	private boolean noAlphaPixel = false;
 	
 	private PaletteBinding() {
-		bindings.put("ARMING.DPL", Arrays.asList("ARM_", "ARMING", "_WEP", "_BOD", "ARMING"));
+		//VSHELL
+		bindings.add(new PaletteBindingEntry("ALPH.DPL", Arrays.asList("ALPH2."), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("ALPHA.DPL", Arrays.asList("ALPHA."), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("ARMING.DPL", Arrays.asList("MT_3QTR", "_BOD.", "_INT.", "_OUT.", "_WEP.","ARM_WEAP.", "ARM_HERC.", "ARM_WPNS.", "RPR_"), indexAlpha));
+		
+		bindings.add(new PaletteBindingEntry("BAY.DPL", Arrays.asList("BAY2A_80", "BAY2A_81", "BAY2A_82", "BAY2A_83", "BAY2A_84"), noAlphaPixel));
+
+		bindings.add(new PaletteBindingEntry("BR_ER.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_MN.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_W1.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_W2.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_W3.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_W4.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BR_W5.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("BRAV.DPL", Arrays.asList("BRAV1."), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("BRAVO.DPL", Arrays.asList("BRAVO."), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("CAM_ER.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("CAM_MOON.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("DB_ER.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_MOON.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_W1.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_W2.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_W3.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_W4.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DB_W5.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("DELT.DPL", Arrays.asList("DELT1."), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("DELTA.DPL", Arrays.asList("DELTA."), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("ESII.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("INTR_PT1.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("LUNA.DPL", Arrays.asList("LUNA", "LUNA1"), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("MAP.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("MAP_PAL1.DPL", Arrays.asList(""), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("MAP_PAL2.DPL", Arrays.asList(""), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("OMIC.DPL", Arrays.asList("OMIC."), noAlphaPixel));
+		bindings.add(new PaletteBindingEntry("OMICRON.DPL", Arrays.asList("OMICRON."), noAlphaPixel));
+		
+		bindings.add(new PaletteBindingEntry("PALETTE.DPL", Arrays.asList("MAINPIC1"), indexAlpha));
+		
+		
+		//SIMVOL
+		
 	}
 	
-	public String getPalette(String fileName) {
-		String found = null;
+	public PaletteBindingEntry getPalette(String fileName) {
+		PaletteBindingEntry found = null;
 		
-		for(String dpl : bindings.keySet()) {
-			//maybe file straight matches palette
-			if(dpl.toLowerCase().equals(fileName.toLowerCase())) {
-				found = dpl;
-				break;
-			}
-			//ok it doesn't, lets get fuzzy.
-			List<String> fragments = bindings.get(dpl);
+		for(PaletteBindingEntry binding : bindings) {
+			List<String> fragments = binding.getFiles();
 			if(fragments != null && !fragments.isEmpty()) {
 				for(String stub : fragments) {
 					if(fileName.toLowerCase().contains(stub.toLowerCase())) {
-						found = dpl;
+						found = binding;
 						break;
 					}
 				}

@@ -19,10 +19,13 @@ import org.hercworks.core.io.transform.common.DynamixBitmapArrayTransformer;
 import org.hercworks.core.io.transform.common.DynamixBitmapTransformer;
 import org.hercworks.core.io.transform.common.DynamixPaletteTransformer;
 import org.hercworks.core.io.write.DynFileWriter;
+import org.hercworks.core.util.PaletteBinding;
+import org.hercworks.core.util.PaletteBindingEntry;
 import org.hercworks.extract.cmd.ExcavatorCmdLine;
 import org.hercworks.extract.cmd.ExcavatorCmdLine.OptionArgs;
 import org.hercworks.extract.exec.FileProcessor;
 import org.hercworks.extract.util.FileItem;
+import org.hercworks.extract.util.FileItemDBM;
 import org.hercworks.extract.util.FileMatcher;
 import org.hercworks.extract.util.impl.DynFileMatcher;
 import org.hercworks.voln.FileType;
@@ -44,7 +47,11 @@ public class DynamixFileProcessor extends FileProcessor{
 			return false;
 		}
 		if(fileMatch.matchFile(file.getName())) {
-			filesToProcess.add(file);
+			FileItemDBM itemDBM = new FileItemDBM();
+			itemDBM.setName(file.getName());
+			itemDBM.setType(file.getType());
+			
+			filesToProcess.add(itemDBM);
 			return true;
 		}
 		
@@ -171,7 +178,8 @@ public class DynamixFileProcessor extends FileProcessor{
 						for(DynamixBitmap dbm : dba.getImages()) {
 							
 							dbm.setFileName(dbm.getFileName() + "_" + dpl.getFileName());
-							DynFileWriter.writeDBMToFile(dbm, dpl, targDirPath +"/");
+							PaletteBindingEntry dplBind = PaletteBinding.instance().getPalette(dbaName);
+							DynFileWriter.writeDBMToFile(dbm, dplBind.isIndex0Alpha(), dpl, targDirPath +"/");
 						}
 					}
 				}
@@ -230,8 +238,13 @@ public class DynamixFileProcessor extends FileProcessor{
 				return;
 			}
 			for(DynamixPalette dpl : palettes) {
+				PaletteBindingEntry dplBind = PaletteBinding.instance().getPalette(dbm.getFileName());
+				boolean indexAlph = false;
+				if(dplBind != null) {
+					indexAlph = dplBind.isIndex0Alpha();
+				}
 				dbm.setFileName(dbm.getFileName() + "_" + dpl.getFileName());
-				DynFileWriter.writeDBMToFile(dbm, dpl, targDirPath +"/");
+				DynFileWriter.writeDBMToFile(dbm, indexAlph, dpl, targDirPath +"/");
 			}
 			
 		} catch(Exception e) {

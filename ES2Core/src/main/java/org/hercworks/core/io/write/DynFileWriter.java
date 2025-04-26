@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import org.hercworks.core.data.file.dyn.DynamixBitmap;
 import org.hercworks.core.data.file.dyn.DynamixPalette;
+import org.hercworks.core.data.struct.ColorBytes;
 import org.hercworks.core.io.transform.common.DynamixBitmapTransformer;
 
 public final class DynFileWriter {
@@ -19,7 +20,7 @@ public final class DynFileWriter {
 	public DynFileWriter() {}
 	
 	
-	public static void writeDBMToFile(DynamixBitmap dbm, DynamixPalette palette, String filePath) {
+	public static void writeDBMToFile(DynamixBitmap dbm, boolean index0Alpha, DynamixPalette palette, String filePath) {
 		
 //		IndexColorModel colorIndex = new IndexColorModel(8,
 //															256,
@@ -45,7 +46,7 @@ public final class DynFileWriter {
 		}
 		
 		WritableRaster rast = (WritableRaster)imageOut.getRaster();
-		int[] rasterData = new int[dbm.getCols()*dbm.getRows()*4];
+		int[] rasterData = new int[dbm.getCols() * dbm.getRows() * 4];
 		
 		int i = 0;
 		for(int r=0; r < dbm.getRows(); r++) {
@@ -57,7 +58,12 @@ public final class DynFileWriter {
 				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
 				
 				try {
-					rasterData[i] = palette.colorAt(idx).getJavaColor().getRGB();
+					if(index0Alpha && idx == 0) {
+						rasterData[i] = palette.getIndex0AlphaKey().getJavaColor().getRGB();
+					}
+					else{
+						rasterData[i] = palette.colorAt(idx).getJavaColor().getRGB();
+					}
 				}
 				catch(NullPointerException nope) {
 					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 
@@ -68,7 +74,6 @@ public final class DynFileWriter {
 				i++;
 			}
 		}
-		
 		rast.setDataElements(0, 0, dbm.getCols(), dbm.getRows(), rasterData);
 		
 		boolean wrote = false;
