@@ -1,8 +1,5 @@
 package org.hercworks.core.data.file.dyn;
 
-import java.util.LinkedList;
-
-import org.hercworks.core.data.file.dts.DTSObject;
 import org.hercworks.voln.DataFile;
 
 /**
@@ -12,19 +9,19 @@ import org.hercworks.voln.DataFile;
  */
 public class DynamixThreeSpaceModel extends DataFile {
 	
-	private LinkedList<DTSObject> parts;
-	
-	public DynamixThreeSpaceModel() {}
-	
-	public DynamixThreeSpaceModel(String fileName, String dirPath) {
-		super(fileName, dirPath);
-	}
-
-	public LinkedList<DTSObject> getDTSParts() {
-		return parts;
-	}
-
-	public void setDTSParts(LinkedList<DTSObject> parts) {
-		this.parts = parts;
-	}
+//	private LinkedList<DTSObject> parts;
+//	
+//	public DynamixThreeSpaceModel() {}
+//	
+//	public DynamixThreeSpaceModel(String fileName, String dirPath) {
+//		super(fileName, dirPath);
+//	}
+//
+//	public LinkedList<DTSObject> getDTSParts() {
+//		return parts;
+//	}
+//
+//	public void setDTSParts(LinkedList<DTSObject> parts) {
+//		this.parts = parts;
+//	}
 }

@@ -16,7 +16,7 @@ public class TestDTS {
 		try {
 //			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\ACHILLES.DTS";
 		
-			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\TOMA_DEB.DTS";
+			String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\simvol0\\dts\\ROCKETS.DTS";
 			
 			DTSModelTransformer transform = new DTSModelTransformer();
 			
