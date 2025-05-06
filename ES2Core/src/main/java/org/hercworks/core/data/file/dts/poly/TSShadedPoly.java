@@ -1,14 +1,14 @@
 package org.hercworks.core.data.file.dts.poly;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class TSShadedPoly extends TSSolidPoly {
 	
 	public TSShadedPoly() {
-		super(TSChunkHeader.TS_SHADED_POLY);
+		super(TSObjectHeader.TS_SHADED_POLY);
 	}
 	
-	public TSShadedPoly(TSChunkHeader hdr) {
+	public TSShadedPoly(TSObjectHeader hdr) {
 		super(hdr);
 	}
 	

@@ -1,13 +1,15 @@
 package org.hercworks.core.io.transform.dbsim;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hercworks.core.data.file.dts.TSBasePart;
-import org.hercworks.core.data.file.dts.TSChunk;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
 import org.hercworks.core.data.file.dts.TSGroup;
+import org.hercworks.core.data.file.dts.TSObject;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSPoly;
 import org.hercworks.core.data.file.dts.TSShape;
 import org.hercworks.core.data.file.dts.TSShapeColor;
@@ -41,7 +43,9 @@ import at.favre.lib.bytes.Bytes;
 
 public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 
-	
+	private String dbgSpace = "";
+	private String treeSpace = "	";
+	private TSObject dbgParent = null;
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
@@ -57,33 +61,149 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		dts.setExt(FileType.DTS);
 		dts.setDir(FileType.DTS);
 		
-		ArrayList<TSChunk> chunks = new ArrayList<TSChunk>();
-		
 		System.out.println("[\n");
 		
+		Set<TSObject> meshes = new HashSet<TSObject>();
+		
 		while(index < inputArray.length) {
-			chunks.add(loadChunkByType(null));
+			meshes.add(loadChunkByType(null));
 		}
-		for(int s=0; s < chunks.size(); s++) {
-			System.out.println(chunks.get(s).toString());
-			if(s < chunks.size()-1) {
-				System.out.println(",\n");
-			}
-		}
-		
-		
+//		for(int s=0; s < chunks.size(); s++) {
+//			System.out.println(meshes.get(s).toString());
+//			if(s < chunks.size() - 1) {
+//				System.out.println(",\n");
+//			}
+//		}
+		dts.setMeshes(meshes);
 		System.out.println("]");
+		
+		return dts;
+	}
+	
+	/**
+	 * hacked together analogue for the ChunkTypes[] object in the ol' python script.
+	 * DTS do seem to be nested objects and object lists, so a tree loading approach is
+	 * necessary.
+	 * @param marker
+	 * @return
+	 */
+	private TSObject loadChunkByType(TSObject parent) {
+		
+		int markerIndex = index;
+		
+		byte[] marker = Bytes.from(indexSegment(4)).array();
+		
+		if(parent == null) {
+			System.out.println("\n");
+			dbgSpace = "";
+		}
+		else {
+			dbgSpace = "";
+			TSObject p = parent;
+			do {
+				dbgSpace += treeSpace;
+				p = p.getParent();
+			}
+			while(p != null);
+		}
+		
+		System.out.println(dbgSpace + TSObjectHeader.findVal(marker) + " @ " + (markerIndex) + " | "
+									+ Bytes.from((markerIndex)).encodeHex() + " |"
+									+ " len " + Bytes.from(bytes, index, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+		
+		
+		if(Arrays.equals(TSObjectHeader.TS_BASE_PART.val(), marker)) {
+			return readTSBasePart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_PART_LIST.val(), marker)) {
+			return readTSPartList(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SHAPE.val(), marker)) {
+			return readTSShape(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_SHAPE.val(), marker)) {
+			return readANShape(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.BSP_PART.val(), marker)) {
+			return readTSBSPPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_GROUP.val(), marker)) {
+			return readTSGroup(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_POLY.val(), marker)) {
+			return readTSPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
+			return readTSShadedPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
+			return readTSSolidPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_TEXTURE4_POLY.val(), marker)) {
+			return readTSTexture4Poly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SHADED_POLY.val(), marker)) {
+			return readTSShadedPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_GOURAUD_POLY.val(), marker)) {
+			return readTSGouraudPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_CELL_ANIM_PART.val(), marker)) {
+			return readTSCellAnimPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_ANIM_LIST.val(), marker)) {
+			return readANAnimList(parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_CYCLIC_SEQUENCE.val(), marker)) {
+			return readANCyclicSequence(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_SEQUENCE.val(), marker)) {
+			return readANSequence(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_BITMAP_PART.val(), marker)) {
+			return readTSBitmapPart(null, parent); 
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_DETAIL_PART.val(), marker)) {
+			return readTSDetailPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_BSP_GROUP.val(), marker)) {
+			return readTSBSPGroup(null, parent);
+		}
+		
+		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
+		int len = indexIntLE();
+		System.out.println("--->len = " + len);
+		skip(len);
 		
 		return null;
 	}
 	
-	private TSBasePart readTSBasePart(TSBasePart link, TSChunk parent) {
+	
+	private TSBasePart readTSBasePart(TSBasePart link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSBasePart();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link.setTransform(indexShortLE());
@@ -94,13 +214,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSBitmapPart readTSBitmapPart(TSBitmapPart link, TSChunk parent) {
+	private TSBitmapPart readTSBitmapPart(TSBitmapPart link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSBitmapPart();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSBitmapPart) readTSBasePart(link, parent);
@@ -112,20 +232,22 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSDetailPart readTSDetailPart(TSDetailPart link, TSChunk parent) {
+	private TSDetailPart readTSDetailPart(TSDetailPart link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSDetailPart();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 
 		link = (TSDetailPart) readTSPartList(link, parent);
-		
-		short[] details = new short[indexShortLE()];
-		
+
+		//FIXME - so far these just seem to trail at the end for any remaining bytes of the TSObject's byte-len.
+		//	pretty weird.
+		int detailCount =  (link.getDataIndex() + link.getByteLen()) - index;
+		short[] details = new short[detailCount / 2];
 		for(int d=0; d < details.length; d++) {
 			details[d] = indexShortLE();
 		}
@@ -135,22 +257,21 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSPartList readTSPartList(TSPartList link, TSChunk parent) {
+	private TSPartList readTSPartList(TSPartList link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSPartList();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSPartList) readTSBasePart(link, parent);
 		
-		short totalParts = indexShortLE();
-		TSChunk[] parts = new TSChunk[totalParts];
+		TSObject[] parts = new TSObject[indexShortLE()];
 		
 		for(int i = 0; i < parts.length; i++) {
-			TSChunk part = loadChunkByType(link);
+			TSObject part = loadChunkByType(link);
 			if(part != null) {
 				parts[i] = part;	
 			}
@@ -159,31 +280,30 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSCellAnimPart readTSCellAnimPart(TSCellAnimPart link, TSChunk parent) {
+	private TSCellAnimPart readTSCellAnimPart(TSCellAnimPart link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSCellAnimPart();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSCellAnimPart) readTSPartList(link, parent);
 		
 		link.setAnimSequence(indexShortLE());
-
 		
 		return link;
 	}
 	
 
-	private TSGroup readTSGroup(TSGroup link, TSChunk parent) {
+	private TSGroup readTSGroup(TSGroup link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSGroup();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSGroup) readTSBasePart(link, parent);
@@ -191,7 +311,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		short[] indexes = new short[indexShortLE()];
 		Vec3Short[] points = new Vec3Short[indexShortLE()];
 		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
-		TSChunk[] items = new TSChunk[indexShortLE()];
+		TSObject[] items = new TSObject[indexShortLE()];
 		
 		
 		for(int i=0; i < indexes.length; i++) {
@@ -217,13 +337,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSBSPGroup readTSBSPGroup(TSBSPGroup link, TSChunk parent) {
+	private TSBSPGroup readTSBSPGroup(TSBSPGroup link, TSObject parent) {
 
 		if(link == null) {
 			link = new TSBSPGroup();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSBSPGroup) readTSGroup(link, parent);
@@ -241,14 +361,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSPoly readTSPoly(TSPoly link, TSChunk parent) {
+	private TSPoly readTSPoly(TSPoly link, TSObject parent) {
 
-		
 		if(link == null) {
 			link = new TSPoly();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		
@@ -261,29 +380,29 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSSolidPoly readTSSolidPoly(TSSolidPoly link, TSChunk parent) {
+	private TSSolidPoly readTSSolidPoly(TSSolidPoly link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSSolidPoly();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
+		
 		link = (TSSolidPoly) readTSPoly(link, parent);
 		link.setColor(indexShortLE());
-
 		
 		return link;
 	}
 	
-	private TSShadedPoly readTSShadedPoly(TSShadedPoly link, TSChunk parent) {
+	private TSShadedPoly readTSShadedPoly(TSShadedPoly link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSShadedPoly();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSShadedPoly) readTSSolidPoly(link, parent);
@@ -291,13 +410,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSTexture4Poly readTSTexture4Poly(TSTexture4Poly link, TSChunk parent) {
+	private TSTexture4Poly readTSTexture4Poly(TSTexture4Poly link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSTexture4Poly();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSTexture4Poly) readTSSolidPoly(link, parent);
@@ -305,13 +424,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-	private TSGouraudPoly readTSGouraudPoly(TSGouraudPoly link, TSChunk parent) {
+	private TSGouraudPoly readTSGouraudPoly(TSGouraudPoly link, TSObject parent) {
 
 		if(link == null) {
 			link = new TSGouraudPoly();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSGouraudPoly) readTSSolidPoly(link, parent);
@@ -326,20 +445,25 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		node.setIndex(index);
 		
 		node.setNormal(new Vec3Short(indexShortLE(),indexShortLE(),indexShortLE()));
-		node.setCoeff(indexByte());
-		node.setFront(indexByte());
-		node.setBack(indexByte());
+		node.setCoeff(indexIntLE());
+		node.setFront(indexShortLE());
+		node.setBack(indexShortLE());
+		
+		node.setByteLen(index - node.getIndex());
+		node.setData(Bytes.from(bytes, node.getIndex(), node.getByteLen()).array());
+		
+		System.out.println(dbgSpace + treeSpace + " BSPPartNode @ " + node.getIndex() + " | " + Bytes.from(node.getIndex()).encodeHex() + " | len" + node.getByteLen());
 		
 		return node;
 	}
 	
-	private TSBSPPart readTSBSPPart(TSBSPPart link, TSChunk parent) {
+	private TSBSPPart readTSBSPPart(TSBSPPart link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSBSPPart();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSBSPPart) readTSPartList(link, parent);
@@ -350,40 +474,81 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		link.setNodes(nodes);
 		
-		short[] transforms = new short[nodes.length];
-		for(int t=0; t < transforms.length; t++) {
-			transforms[t] = indexShortLE();
+		
+		short bspTransformId = indexShortLE();
+		System.out.println("TSBSPPart - end bytes = " + bspTransformId + " @ " + Bytes.from(index - 2).encodeHex());
+		
+		if(bspTransformId > 0 && index < link.getIndex() + link.getByteLen()) {
+			System.out.println("trail bytes!?");
 		}
-		link.setTransforms(transforms);
-
+		//FIXME - like TSDetailPart, in ROCKETS.DTS 
+		//	@00000980 - TSBSPPart's last byte is a signed short and less than byte len
+//		short[] transforms = new short[bspTransformId];
+//		for(int t=0; t < transforms.length; t++) {
+//			transforms[t] = indexShortLE();
+//		}
+//		link.setTransforms(transforms);
+//	
 		
 		return link;
 	}
 	
-	private TSShape readTSShape(TSShape link, TSChunk parent) {
+	private TSShape readTSShape(TSShape link, TSObject parent) {
 		
 		if(link == null) {
 			link = new TSShape();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (TSShape) readTSPartList(link, parent);
-
-		short[] transformList = new short[indexShortLE()];
 		
-		//XXX - OpenSiege source
-		short[] seq = new short[indexShortLE()];
-		for(int s=0; s < seq.length; s++) {
-			seq[s] = indexShortLE();
+		int len = 0;
+		for(TSObject c : link.getParts()) {
+			len += c.getByteLen();
 		}
-		link.setSequenceList(seq);
 		
-		for(int t=0; t < transformList.length; t++) {
-			transformList[t] = indexShortLE();
+		System.out.println("inital byte len= " + link.getByteLen());
+		System.out.println("branch byte len= " + len);
+		System.out.println("remaining byte len=" + (link.getByteLen() - len));
+		
+		//66 remaining bytes in ACHILLES.DTS before adding the AnimationSequnce object, and maybe a counter for num of seq.
+		// @ 32A0
+		
+		//14 remaining bytes in ROCKET_SPLIT_1 before the next TS SHAPE (in split 2.dts)
+		// @ 982
+		short transformTotal = indexShortLE();
+		System.out.println("TSSHAPE - transfrm ? " + transformTotal + " @" + Bytes.from(index - 2).encodeHex());	
+		
+		short sequenceTotal = indexShortLE();
+		System.out.println("TSSHAPE - seqeuence ? "+ sequenceTotal + " @" + Bytes.from(index - 2).encodeHex());
+		
+		short[] sequences = new short[sequenceTotal];
+		System.out.println("		value = " + sequences.length);
+		for(int s=0; s < sequences.length; s++) {
+			sequences[s] = indexShortLE();
 		}
-		link.setTransformList(transformList);
+		link.setSequenceList(sequences);
+		
+		short[] transforms = new short[transformTotal];		
+		System.out.println("		value = " + transforms.length);
+		for(int t=0; t < transforms.length; t++) {
+			transforms[t] = indexShortLE();
+		}
+		link.setTransformList(transforms);
+		
+//		//XXX - OpenSiege source
+//		short[] seq = new short[indexShortLE()];
+//		for(int s=0; s < seq.length; s++) {
+//			seq[s] = indexShortLE();
+//		}
+//		link.setSequenceList(seq);
+//		
+//		for(int t=0; t < transformList.length; t++) {
+//			transformList[t] = indexShortLE();
+//		}
+//		link.setTransformList(transformList);
 		
 //		int remainSize = index - ((link.getIndex() + 8) + link.getByteLen());
 //		int limit = index + remainSize;
@@ -398,8 +563,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 //		
 		
 		//XXX - based on older python code
-//		short[] transformList = new short[indexByte()];
-//		short[] sequenceList = new short[indexByte()];
+//		short[] transformList = new short[indexShortLE()];
+//		short[] sequenceList = new short[indexShortLE()];
 //
 //		for(int s=0; s < sequenceList.length; s++ ) {
 //			sequenceList[s] = indexShortLE();
@@ -408,7 +573,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 //		for(int t=0; t < transformList.length; t++ ) {
 //			transformList[t] = indexShortLE();
 //		}
-		
+//		
 //		int total = s + (t*16);
 //		short[] sequence1 = new short[total];
 //		for(int seq=0; seq < total; seq++) {
@@ -434,16 +599,19 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		frame.setNumTransitions(indexShortLE());
 		frame.setFirstTransition(indexShortLE());
 		
+		frame.setByteLen(index - frame.getIndex());
+		frame.setData(Bytes.from(bytes, frame.getIndex(), frame.getByteLen()).array());
+		
 		return frame;
 	}
 	
-	private ANSequence readANSequence(ANSequence seq, TSChunk parent) {
+	private ANSequence readANSequence(ANSequence seq, TSObject parent) {
 		
 		if(seq == null) {
 			seq = new ANSequence();
 			seq.setByteLen(indexIntLE());
 			seq.setIndex(index - 8);
-			seq.setData(Bytes.from(bytes, seq.getIndex(), seq.getByteLen()+8).array());
+			seq.setData(Bytes.from(bytes, seq.getIndex() + 8, seq.getByteLen()).array());
 			seq.setParent(parent);
 		}
 		
@@ -474,13 +642,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 	}
 	
 	
-	private ANCyclicSequence readANCyclicSequence(ANCyclicSequence link, TSChunk parent) {
+	private ANCyclicSequence readANCyclicSequence(ANCyclicSequence link, TSObject parent) {
 		
 		if(link == null) {
 			link = new ANCyclicSequence();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (ANCyclicSequence) readANSequence(link, parent);
@@ -511,11 +679,12 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return transform;
 	}
 	
-	private ANAnimList readANAnimList(TSChunk parent) {
+	private ANAnimList readANAnimList(TSObject parent) {
 		ANAnimList anim = new ANAnimList();
 		
 		anim.setByteLen(indexIntLE());
 		anim.setIndex(index - 8);
+		anim.setData(Bytes.from(bytes, anim.getIndex() + 8, anim.getByteLen()).array());
 		anim.setParent(parent);
 		
 		TSPartList[] sequences = new TSPartList[indexShortLE()];
@@ -550,116 +719,22 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return anim;
 	}
 	
-	private ANShape readANShape(ANShape link, TSChunk parent) {
+	private ANShape readANShape(ANShape link, TSObject parent) {
 		
 		if(link == null) {
 			link = new ANShape();
 			link.setByteLen(indexIntLE());
 			link.setIndex(index - 8);
-			link.setData(Bytes.from(bytes, link.getIndex(), link.getByteLen()+8).array());
+			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
 		}
 		link = (ANShape) readTSShape(link, parent);
 		
-		link.setPart(readTSPartList(null,link));
+		link.setAnimations(readANAnimList(link));
 		
 		return link;
 	}
 	
-	/**
-	 * hacked together analogue for the ChunkTypes[] object in the ol' python script.
-	 * DTS do seem to be nested objects and object lists, so a tree loading approach is
-	 * necessary.
-	 * @param marker
-	 * @return
-	 */
-	private TSChunk loadChunkByType(TSChunk parent) {
-		
-		byte[] marker = Bytes.from(indexSegment(4)).array();
-		
-		if(Arrays.equals(TSChunkHeader.TS_BASE_PART.val(), marker)) {
-			return readTSBasePart(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_PART_LIST.val(), marker)) {
-			return readTSPartList(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_SHAPE.val(), marker)) {
-			return readTSShape(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.AN_SHAPE.val(), marker)) {
-			return readANShape(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.BSP_PART.val(), marker)) {
-			return readTSBSPPart(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_GROUP.val(), marker)) {
-			return readTSGroup(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_POLY.val(), marker)) {
-			return readTSPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_SOLID_POLY.val(), marker)) {
-			return readTSShadedPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_SOLID_POLY.val(), marker)) {
-			return readTSSolidPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_TEXTURE4_POLY.val(), marker)) {
-			return readTSTexture4Poly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_SHADED_POLY.val(), marker)) {
-			return readTSShadedPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_GOURAUD_POLY.val(), marker)) {
-			return readTSGouraudPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_CELL_ANIM_PART.val(), marker)) {
-			return readTSCellAnimPart(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.AN_ANIM_LIST.val(), marker)) {
-			return readANAnimList(parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.AN_CYCLIC_SEQUENCE.val(), marker)) {
-			return readANCyclicSequence(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.AN_SEQUENCE.val(), marker)) {
-			return readANSequence(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_BITMAP_PART.val(), marker)) {
-			return readTSBitmapPart(null, parent); 
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_DETAIL_PART.val(), marker)) {
-			return readTSDetailPart(null, parent);
-		}
-		
-		if(Arrays.equals(TSChunkHeader.TS_BSP_GROUP.val(), marker)) {
-			return readTSBSPGroup(null, parent);
-		}
-		
-		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
-		int len = indexIntLE();
-		System.out.println("--->len = " + len);
-		skip(len);
-		
-		return null;
-	}
 	
 	
 	@Override
@@ -667,5 +742,28 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	private int calcChildBytesLen(TSObject tso, int len) {
+		
+		if(tso instanceof TSShape) {
+			TSShape s = (TSShape)tso;
+			
+			for(TSObject c : s.getParts()) {
+				len += calcChildBytesLen(c, len);
+			}
+			return len;
+		}
+		else {
+			return tso.getByteLen() + len;
+		}
+	}
 
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		
+		b.append("index @ " + Bytes.from(index).encodeHex());
+		
+		return b.toString();
+	}
 }

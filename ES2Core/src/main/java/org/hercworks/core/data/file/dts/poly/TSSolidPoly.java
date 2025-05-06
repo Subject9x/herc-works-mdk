@@ -1,6 +1,6 @@
 package org.hercworks.core.data.file.dts.poly;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSPoly;
 
 public class TSSolidPoly extends TSPoly {
@@ -9,10 +9,10 @@ public class TSSolidPoly extends TSPoly {
 	private short color;
 	
 	public TSSolidPoly() {
-		super(TSChunkHeader.TS_SOLID_POLY);
+		super(TSObjectHeader.TS_SOLID_POLY);
 	}
 	
-	public TSSolidPoly(TSChunkHeader hdr) {
+	public TSSolidPoly(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

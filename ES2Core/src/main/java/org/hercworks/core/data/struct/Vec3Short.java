@@ -56,6 +56,16 @@ public class Vec3Short {
 		this.z = z;
 	}
 	
+	public double[] toDouble() {
+		double[] val = new double[3];
+	
+		val[0] = getX() / 10;
+		val[1] = getY() / 10;
+		val[2] = getZ() / 10;
+		
+		return val;
+	}
+	
 	private String formatfixedPoint(short p) {
 		
 		double d = (double)p;

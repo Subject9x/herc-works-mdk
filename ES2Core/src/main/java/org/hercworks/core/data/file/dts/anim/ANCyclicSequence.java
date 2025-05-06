@@ -2,16 +2,16 @@ package org.hercworks.core.data.file.dts.anim;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class ANCyclicSequence extends ANSequence {
 
 	
 	public ANCyclicSequence() {
-		super(TSChunkHeader.AN_CYCLIC_SEQUENCE);
+		super(TSObjectHeader.AN_CYCLIC_SEQUENCE);
 	}
 	
-	public ANCyclicSequence(TSChunkHeader hdr) {
+	public ANCyclicSequence(TSObjectHeader hdr) {
 		super(hdr);
 	}
 	

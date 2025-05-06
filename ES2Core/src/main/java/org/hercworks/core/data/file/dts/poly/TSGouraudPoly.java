@@ -1,16 +1,16 @@
 package org.hercworks.core.data.file.dts.poly;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class TSGouraudPoly extends TSSolidPoly {
 
 	private short normalList;
 	
 	public TSGouraudPoly() {
-		super(TSChunkHeader.TS_GOURAUD_POLY);
+		super(TSObjectHeader.TS_GOURAUD_POLY);
 	}
 	
-	public TSGouraudPoly(TSChunkHeader hdr) {
+	public TSGouraudPoly(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

@@ -2,10 +2,10 @@ package org.hercworks.core.data.file.dts.anim;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunk;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObject;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
-public class ANSequence extends TSChunk {
+public class ANSequence extends TSObject {
 
 	//unsigned
 	private short tick;
@@ -24,10 +24,10 @@ public class ANSequence extends TSChunk {
 	
 	
 	public ANSequence() {
-		super(TSChunkHeader.AN_SEQUENCE);
+		super(TSObjectHeader.AN_SEQUENCE);
 	}
 	
-	public ANSequence(TSChunkHeader hdr) {
+	public ANSequence(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

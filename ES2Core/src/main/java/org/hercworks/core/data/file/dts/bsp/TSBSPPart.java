@@ -1,6 +1,6 @@
 package org.hercworks.core.data.file.dts.bsp;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.part.TSPartList;
 
 public class TSBSPPart extends TSPartList {
@@ -11,10 +11,10 @@ public class TSBSPPart extends TSPartList {
 	private short[] transforms;
 	
 	public TSBSPPart() {
-		super(TSChunkHeader.BSP_PART);
+		super(TSObjectHeader.BSP_PART);
 	}
 	
-	public TSBSPPart(TSChunkHeader hdr) {
+	public TSBSPPart(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -33,6 +33,7 @@ public class TSBSPPart extends TSPartList {
 	public void setTransforms(short[] transforms) {
 		this.transforms = transforms;
 	}
+	
 	
 	@Override
 	public String toString() {

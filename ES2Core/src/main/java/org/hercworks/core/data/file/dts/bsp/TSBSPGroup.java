@@ -2,7 +2,7 @@ package org.hercworks.core.data.file.dts.bsp;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSGroup;
 
 public class TSBSPGroup extends TSGroup {
@@ -10,10 +10,10 @@ public class TSBSPGroup extends TSGroup {
 	private TSBSPGroupNode[] groupNodes;
 	
 	public TSBSPGroup() {
-		super(TSChunkHeader.TS_BSP_GROUP);
+		super(TSObjectHeader.TS_BSP_GROUP);
 	}
 	
-	public TSBSPGroup(TSChunkHeader hdr) {
+	public TSBSPGroup(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

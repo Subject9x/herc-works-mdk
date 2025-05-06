@@ -1,9 +1,12 @@
 package org.hercworks.core.data.file.dts.anim;
 
+import java.util.Arrays;
+
 public class ANSequenceFrame {
 
 	private int index;
 	private byte[] data;
+	private int byteLen;
 	
 	//unsigned
 	private short tick;
@@ -53,7 +56,17 @@ public class ANSequenceFrame {
 	}
 
 	public void setData(byte[] data) {
-		this.data = data;
+		this.data= data;
+	}
+
+	
+	
+	public int getByteLen() {
+		return byteLen;
+	}
+
+	public void setByteLen(int byteLen) {
+		this.byteLen = byteLen;
 	}
 
 	@Override
@@ -62,6 +75,8 @@ public class ANSequenceFrame {
 		
 		str.append("{ \"class\" : \"").append(getClass().getSimpleName()).append("\",\n");
 		str.append("\"index\" : ").append(getIndex()).append(",\n");
+		str.append("\"len\" : ").append(getByteLen()).append(",\n");
+		str.append("\"data\" : ").append(Arrays.toString(getData())).append(",\n");
 		str.append("\"tick\" :").append(getTick()).append(",\n");
 		str.append("\"numTransitions\" :").append(getNumTransitions()).append(",\n");
 		str.append("\"firstTransition\" :").append(getFirstTransition()).append("\n");

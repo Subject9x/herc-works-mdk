@@ -1,21 +1,25 @@
 package org.hercworks.core.data.file.dts.bsp;
 
+import java.util.Arrays;
+
 import org.hercworks.core.data.struct.Vec3Short;
 
 public class TSBSPPartNode {
 	
 	private int index;
+	private int byteLen;
+	private byte[] data ;
 	
 	private Vec3Short normal;
 	
 	//signed long
-	private byte coeff;
+	private int coeff;
 	
 	//signed
-	private byte front;
+	private short front;
 	
 	//signed
-	private byte back;
+	private short back;
 	
 	public TSBSPPartNode() {}
 
@@ -27,27 +31,27 @@ public class TSBSPPartNode {
 		this.normal = normal;
 	}
 
-	public long getCoeff() {
+	public int getCoeff() {
 		return coeff;
 	}
 
-	public void setCoeff(byte coeff) {
+	public void setCoeff(int coeff) {
 		this.coeff = coeff;
 	}
 
-	public byte getFront() {
+	public short getFront() {
 		return front;
 	}
 
-	public void setFront(byte front) {
+	public void setFront(short front) {
 		this.front = front;
 	}
 
-	public byte getBack() {
+	public short getBack() {
 		return back;
 	}
 
-	public void setBack(byte back) {
+	public void setBack(short back) {
 		this.back = back;
 	}	
 	
@@ -58,6 +62,22 @@ public class TSBSPPartNode {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+	
+	public int getByteLen() {
+		return byteLen;
+	}
+
+	public void setByteLen(int byteLen) {
+		this.byteLen = byteLen;
+	}
+
+	public byte[] getData() {
+		return data;
+	}
+
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 
 	@Override
 	public String toString() {
@@ -65,6 +85,8 @@ public class TSBSPPartNode {
 		
 		str.append("{ \n\"class\" : \"TSBSPPartNode\",\n");
 		str.append("\"index\" : ").append(getIndex()).append(",\n");
+		str.append("\"byteLen\" : ").append(getByteLen()).append(",\n");
+		str.append("\"data\" : ").append(Arrays.toString(getData())).append(",\n");
 		str.append("\"normal\" : ").append(getNormal().toString()).append(",\n");
 		str.append("\"coeff\" : ").append(getCoeff()).append(",\n");
 		str.append("\"front\" : ").append(getFront()).append(",\n");

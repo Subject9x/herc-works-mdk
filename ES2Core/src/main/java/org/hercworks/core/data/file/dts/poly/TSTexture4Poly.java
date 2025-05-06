@@ -1,15 +1,15 @@
 package org.hercworks.core.data.file.dts.poly;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class TSTexture4Poly extends TSSolidPoly {
 
 	
 	public TSTexture4Poly() {
-		super(TSChunkHeader.TS_TEXTURE4_POLY);
+		super(TSObjectHeader.TS_TEXTURE4_POLY);
 	}
 	
-	public TSTexture4Poly(TSChunkHeader hdr) {
+	public TSTexture4Poly(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -23,7 +23,7 @@ public class TSTexture4Poly extends TSSolidPoly {
 		str.append("\"center\" : ").append(getCenter()).append(",\n");
 		str.append("\"vertexCount\" : ").append(getVertexCount()).append(",\n");
 		str.append("\"vertexList\" : ").append(getVertexList()).append(",\n");
-		str.append("\"color\" : ").append(getColor()).append("\n");
+		str.append("\"dba_frameId\" : ").append(getColor()).append("\n");
 		str.append("}");
 		
 		return str.toString();

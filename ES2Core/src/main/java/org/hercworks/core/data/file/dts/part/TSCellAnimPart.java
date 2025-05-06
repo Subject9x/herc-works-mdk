@@ -1,21 +1,23 @@
 package org.hercworks.core.data.file.dts.part;
 
-import java.util.Arrays;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
-
+/**
+ * FIXME - testing in /BULLETS.DTS, the tail bytes look very much like a TSShape segment as the direct inherit vs a TSPartList,
+ *	TSShape inherits directly from TSPartList, so other sources aren't too far off.
+ *
+ *	will test other files.
+ */
 public class TSCellAnimPart extends TSPartList {
 
 	//unsigned
 	private short animSequence;
 	
-	private short[] cells;
-	
 	public TSCellAnimPart() {
-		super(TSChunkHeader.TS_CELL_ANIM_PART);
+		super(TSObjectHeader.TS_CELL_ANIM_PART);
 	}
 	
-	public TSCellAnimPart(TSChunkHeader hdr) {
+	public TSCellAnimPart(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -25,14 +27,6 @@ public class TSCellAnimPart extends TSPartList {
 
 	public void setAnimSequence(short animSequence) {
 		this.animSequence = animSequence;
-	}
-	
-	public short[] getCells() {
-		return cells;
-	}
-
-	public void setCells(short[] cells) {
-		this.cells = cells;
 	}
 
 	@Override
@@ -55,8 +49,6 @@ public class TSCellAnimPart extends TSPartList {
 		str.append("],\n");
 		
 		str.append("\"animSequence\" : ").append(getAnimSequence()).append("\n");
-		
-//		str.append("\"cells\" : ").append(Arrays.toString(getCells())).append("\n");
 		
 		str.append("}\n");
 		

@@ -2,7 +2,7 @@ package org.hercworks.core.data.file.dts;
 
 import org.hercworks.core.data.struct.Vec3Short;
 
-public class TSBasePart extends TSChunk {
+public class TSBasePart extends TSObject {
 
 	//unsigned
 	private short transform;
@@ -16,10 +16,10 @@ public class TSBasePart extends TSChunk {
 	private Vec3Short center;
 	
 	public TSBasePart() {
-		super(TSChunkHeader.TS_BASE_PART);
+		super(TSObjectHeader.TS_BASE_PART);
 	}
 	
-	public TSBasePart(TSChunkHeader hdr) {
+	public TSBasePart(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

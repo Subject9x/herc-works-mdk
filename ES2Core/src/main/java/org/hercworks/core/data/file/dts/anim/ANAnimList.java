@@ -2,12 +2,12 @@ package org.hercworks.core.data.file.dts.anim;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunk;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObject;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.part.TSPartList;
 import org.hercworks.core.data.struct.Vec2Short;
 
-public class ANAnimList extends TSChunk {
+public class ANAnimList extends TSObject {
 	
 	private TSPartList[] sequences;
 	
@@ -21,10 +21,10 @@ public class ANAnimList extends TSChunk {
 	private Vec2Short[] relations;
 	
 	public ANAnimList() {
-		super(TSChunkHeader.AN_ANIM_LIST);
+		super(TSObjectHeader.AN_ANIM_LIST);
 	}
 	
-	public ANAnimList(TSChunkHeader hdr) {
+	public ANAnimList(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

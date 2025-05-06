@@ -1,7 +1,7 @@
 package org.hercworks.core.data.file.dts.part;
 
 import org.hercworks.core.data.file.dts.TSBasePart;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 /**
  * NOTES:
@@ -19,10 +19,10 @@ public class TSBitmapPart extends TSBasePart {
 	
 	
 	public TSBitmapPart() {
-		super(TSChunkHeader.TS_BITMAP_PART);
+		super(TSObjectHeader.TS_BITMAP_PART);
 	}
 	
-	public TSBitmapPart(TSChunkHeader hdr) {
+	public TSBitmapPart(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

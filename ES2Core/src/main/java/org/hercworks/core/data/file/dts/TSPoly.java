@@ -1,6 +1,6 @@
 package org.hercworks.core.data.file.dts;
 
-public class TSPoly extends TSChunk {
+public class TSPoly extends TSObject {
 
 	//unsigned
 	private short normal;
@@ -15,10 +15,10 @@ public class TSPoly extends TSChunk {
 	private short vertexList;
 	
 	public TSPoly() {
-		super(TSChunkHeader.TS_POLY);
+		super(TSObjectHeader.TS_POLY);
 	}
 	
-	public TSPoly(TSChunkHeader hdr) {
+	public TSPoly(TSObjectHeader hdr) {
 		super(hdr);
 	}
 

@@ -1,6 +1,8 @@
 package org.hercworks.core.data.file.dts;
 
-public enum TSChunkHeader {
+import java.util.Arrays;
+
+public enum TSObjectHeader {
 
 	TS_POLY(new byte[]{0x01,0x00,0x14,0x00}),
 	
@@ -47,7 +49,7 @@ public enum TSChunkHeader {
 	
 	private final byte[] val;
 	
-	private TSChunkHeader(byte[] val) {
+	private TSObjectHeader(byte[] val) {
 		this.val = val;
 		
 	}
@@ -56,4 +58,12 @@ public enum TSChunkHeader {
 		return this.val;
 	}
 	
+	public static TSObjectHeader findVal(byte[] marker) {
+		for(TSObjectHeader hdr : TSObjectHeader.values()) {
+			if(Arrays.equals(hdr.val(), marker)) {
+				return hdr;
+			}
+		}
+		return null;
+	}
 }

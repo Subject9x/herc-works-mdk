@@ -1,26 +1,26 @@
 package org.hercworks.core.data.file.dts.part;
 
 import org.hercworks.core.data.file.dts.TSBasePart;
-import org.hercworks.core.data.file.dts.TSChunk;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObject;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class TSPartList extends TSBasePart {
 
-	private TSChunk[] parts;
+	private TSObject[] parts;
 	
 	public TSPartList() {
-		super(TSChunkHeader.TS_PART_LIST);
+		super(TSObjectHeader.TS_PART_LIST);
 	}
 	
-	public TSPartList(TSChunkHeader hdr) {
+	public TSPartList(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
-	public TSChunk[] getParts() {
+	public TSObject[] getParts() {
 		return parts;
 	}
 
-	public void setParts(TSChunk[] parts) {
+	public void setParts(TSObject[] parts) {
 		this.parts = parts;
 	}
 	

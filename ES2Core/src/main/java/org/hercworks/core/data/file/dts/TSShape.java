@@ -5,19 +5,23 @@ import java.util.Arrays;
 import org.hercworks.core.data.file.dts.part.TSPartList;
 
 public class TSShape extends TSPartList {
-
-	//FIXME - transformLIst !?
+	
+	
+	private short transformTotal;
+	private short sequenceTotal;
+	
+	//FIXME - transformLIst !?	
 	private short[] transformList;
 	
 	private short[] sequenceList;
 
-	private TSChunk[] extraParts;
+	private TSObject[] extraParts;
 	
 	public TSShape() {
-		super(TSChunkHeader.TS_SHAPE);
+		super(TSObjectHeader.TS_SHAPE);
 	}
 	
-	public TSShape(TSChunkHeader hdr) {
+	public TSShape(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -37,12 +41,31 @@ public class TSShape extends TSPartList {
 		this.transformList = transformList;
 	}
 	
-	public TSChunk[] getExtraParts() {
+	public TSObject[] getExtraParts() {
 		return extraParts;
 	}
 
-	public void setExtraParts(TSChunk[] extraParts) {
+	public void setExtraParts(TSObject[] extraParts) {
 		this.extraParts = extraParts;
+	}
+
+	
+	
+	
+	public short getTransformTotal() {
+		return transformTotal;
+	}
+
+	public void setTransformTotal(short transformTotal) {
+		this.transformTotal = transformTotal;
+	}
+
+	public short getSequenceTotal() {
+		return sequenceTotal;
+	}
+
+	public void setSequenceTotal(short sequenceTotal) {
+		this.sequenceTotal = sequenceTotal;
 	}
 
 	@Override
@@ -64,7 +87,11 @@ public class TSShape extends TSPartList {
 		}
 		str.append("],\n");
 		
-		str.append("\"sequenceList\" : ").append(Arrays.toString(getSequenceList())).append("\n");
+
+		str.append("\"seq_list\" : ").append(Arrays.toString(getSequenceList())).append(",\n");
+		str.append("\"trns_list\" : ").append(Arrays.toString(getTransformList())).append("\n");
+		
+//		str.append("\"sequenceList\" : ").append(Arrays.toString(getSequenceList())).append("\n");
 		
 //		str.append("\"extra_parts\" : [");
 //		for(int s=0; s < getExtraParts().length; s++) {

@@ -3,22 +3,22 @@ package org.hercworks.core.data.file.dts;
 /**
  * 
  */
-public abstract class TSChunk {
+public abstract class TSObject {
 
-	private TSChunkHeader header = null;
+	private TSObjectHeader header = null;
 	private int byteLen;
 	private int index = 0;
-	private TSChunk parent = null;
+	private TSObject parent = null;
 	private byte[] data;
 	
-	public TSChunk() {
+	public TSObject() {
 	}
 	
-	public TSChunk(TSChunkHeader hdr) {
+	public TSObject(TSObjectHeader hdr) {
 		this.header = hdr;
 	}
 		
-	public TSChunkHeader getHeader() {
+	public TSObjectHeader getHeader() {
 		return this.header;
 	}
 
@@ -38,11 +38,11 @@ public abstract class TSChunk {
 		this.index = index;
 	}
 
-	public TSChunk getParent() {
+	public TSObject getParent() {
 		return parent;
 	}
 
-	public void setParent(TSChunk parent) {
+	public void setParent(TSObject parent) {
 		this.parent = parent;
 	}
 	
@@ -52,6 +52,10 @@ public abstract class TSChunk {
 
 	public void setData(byte[] data) {
 		this.data = data;
+	}
+	
+	public int getDataIndex() {
+		return this.index + 8;
 	}
 
 	public String metaInfoString(String chunkName) {

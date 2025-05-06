@@ -2,8 +2,7 @@ package org.hercworks.core.data.file.dts.anim;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunk;
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSShape;
 import org.hercworks.core.data.file.dts.part.TSPartList;
 
@@ -11,11 +10,14 @@ public class ANShape extends TSShape {
 
 	private TSPartList part;
 	
+	private ANAnimList animations;
+	
+	
 	public ANShape() {
-		super(TSChunkHeader.AN_SHAPE);
+		super(TSObjectHeader.AN_SHAPE);
 	}
 	
-	public ANShape(TSChunkHeader hdr) {
+	public ANShape(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -27,6 +29,14 @@ public class ANShape extends TSShape {
 		this.part = part;
 	}
 	
+	public ANAnimList getAnimations() {
+		return animations;
+	}
+
+	public void setAnimations(ANAnimList animations) {
+		this.animations = animations;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();

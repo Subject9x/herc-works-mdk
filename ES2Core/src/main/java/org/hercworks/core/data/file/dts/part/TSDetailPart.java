@@ -2,7 +2,7 @@ package org.hercworks.core.data.file.dts.part;
 
 import java.util.Arrays;
 
-import org.hercworks.core.data.file.dts.TSChunkHeader;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 
 public class TSDetailPart extends TSPartList {
 
@@ -10,11 +10,11 @@ public class TSDetailPart extends TSPartList {
 	
 	
 	public TSDetailPart() {
-		super(TSChunkHeader.TS_DETAIL_PART);
+		super(TSObjectHeader.TS_DETAIL_PART);
 	}
 	
 	
-	public TSDetailPart(TSChunkHeader hdr) {
+	public TSDetailPart(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -36,7 +36,7 @@ public class TSDetailPart extends TSPartList {
 		str.append("\"transform\" : ").append(getTransform()).append(",\n");
 		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
 		str.append("\"radius\" : ").append(getRadius()).append(",\n");
-		str.append("\"center\" : ").append(getCenter().toString()).append("\n");
+		str.append("\"center\" : ").append(getCenter().toString()).append(",\n");
 		
 		str.append("\"parts\" : [\n");
 		for(int s=0; s < getParts().length; s++) {

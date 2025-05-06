@@ -12,13 +12,13 @@ public class TSGroup extends TSBasePart {
 	
 	private TSShapeColor[] colors;
 	
-	private TSChunk[] items;
+	private TSObject[] items;
 	
 	public TSGroup() {
-		super(TSChunkHeader.TS_GROUP);
+		super(TSObjectHeader.TS_GROUP);
 	}
 	
-	public TSGroup(TSChunkHeader hdr) {
+	public TSGroup(TSObjectHeader hdr) {
 		super(hdr);
 	}
 
@@ -46,11 +46,11 @@ public class TSGroup extends TSBasePart {
 		this.colors = colors;
 	}
 
-	public TSChunk[] getItems() {
+	public TSObject[] getItems() {
 		return items;
 	}
 
-	public void setItems(TSChunk[] items) {
+	public void setItems(TSObject[] items) {
 		this.items = items;
 	}
 	
