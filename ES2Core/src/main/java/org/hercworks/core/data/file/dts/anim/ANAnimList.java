@@ -4,12 +4,11 @@ import java.util.Arrays;
 
 import org.hercworks.core.data.file.dts.TSObject;
 import org.hercworks.core.data.file.dts.TSObjectHeader;
-import org.hercworks.core.data.file.dts.part.TSPartList;
 import org.hercworks.core.data.struct.Vec2Short;
 
 public class ANAnimList extends TSObject {
 	
-	private TSPartList[] sequences;
+	private TSObject[] sequences;
 	
 	private ANAnimListTransition[] transitions;
 	
@@ -28,11 +27,11 @@ public class ANAnimList extends TSObject {
 		super(hdr);
 	}
 
-	public TSPartList[] getSequences() {
+	public TSObject[] getSequences() {
 		return sequences;
 	}
 
-	public void setSequences(TSPartList[] sequences) {
+	public void setSequences(TSObject[] sequences) {
 		this.sequences = sequences;
 	}
 
@@ -74,6 +73,17 @@ public class ANAnimList extends TSObject {
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
 
+		str = jsonString(str);
+
+		str.append("\n");
+		str.append("}\n");
+		
+		return str.toString();
+	}
+	
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+		
 		str.append("\"sequences\" : [\n");
 		for(int s=0; s < getSequences().length; s++) {
 			str.append(getSequences()[s].toString());
@@ -85,9 +95,9 @@ public class ANAnimList extends TSObject {
 		str.append("],\n");
 		
 		str.append("\"transitions\" : [\n");
-		for(int s=0; s < getTransitions().length; s++) {
-			str.append(getTransitions()[s].toString());
-			if(s < getSequences().length - 1) {
+		for(int t=0; t < getTransitions().length; t++) {
+			str.append(getTransitions()[t].toString());
+			if(t < getTransitions().length - 1) {
 				str.append(",");
 			}
 			str.append("\n");
@@ -95,9 +105,9 @@ public class ANAnimList extends TSObject {
 		str.append("],\n");
 		
 		str.append("\"transforms\" : [\n");
-		for(int s=0; s < getTransforms().length; s++) {
-			str.append(getTransforms()[s].toString());
-			if(s < getSequences().length - 1) {
+		for(int trs=0; trs < getTransforms().length; trs++) {
+			str.append(getTransforms()[trs].toString());
+			if(trs < getTransforms().length - 1) {
 				str.append(",");
 			}
 			str.append("\n");
@@ -108,17 +118,15 @@ public class ANAnimList extends TSObject {
 		
 		str.append("\"relations\" : [\n");
 
-		for(int s=0; s < getRelations().length; s++) {
-			str.append(getRelations()[s].toString());
-			if(s < getRelations().length - 1) {
+		for(int r=0; r < getRelations().length; r++) {
+			str.append(getRelations()[r].toString());
+			if(r < getRelations().length - 1) {
 				str.append(",");
 			}
 			str.append("\n");
 		}
-		str.append("]\n");
+		str.append("]");
 		
-		str.append("}\n");
-		
-		return str.toString();
+		return str;
 	}
 }

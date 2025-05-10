@@ -60,12 +60,23 @@ public class TSBasePart extends TSObject {
 		StringBuilder str = new StringBuilder();
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
-		str.append("\"transform\" : ").append(getTransform()).append(",\n");
-		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
-		str.append("\"radius\" : ").append(getRadius()).append(",\n");
-		str.append("\"center\" : ").append(getCenter().toString()).append("\n");
+		
+		str = jsonString(str);
+		
+		str.append("\n");
 		str.append("}\n");
 		
 		return str.toString();
+	}
+
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+
+		str.append("\"transform\" : ").append(getTransform()).append(",\n");
+		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
+		str.append("\"radius\" : ").append(getRadius()).append(",\n");
+		str.append("\"center\" : ").append(getCenter().toString());
+		
+		return str;
 	}
 }

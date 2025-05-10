@@ -2,6 +2,7 @@ package org.hercworks.core.data.file.dyn;
 
 import java.util.Set;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hercworks.core.data.file.dts.TSObject;
 import org.hercworks.voln.DataFile;
 
@@ -15,6 +16,8 @@ import org.hercworks.voln.DataFile;
 public class DynamixThreeSpaceModel extends DataFile {
 	
 	private Set<TSObject> meshes;
+	
+	private Vector3D center;
 	
 	//XXX - these are set by game engine code, and thus must be set by any code that would like to link 
 	// a texture to the DTS model
@@ -46,4 +49,14 @@ public class DynamixThreeSpaceModel extends DataFile {
 	public void setTextureName(String textureName) {
 		this.textureName = textureName;
 	}
+//	
+//	public Vector3D pointOffset(TSObject object, Vector3D origin) {
+//		
+//		TSObject parent = object.getParent();
+//		while(parent != null) {
+//			
+//			parent = parent.getParent();
+//		}
+//		
+//	}
 }

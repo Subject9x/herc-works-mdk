@@ -18,13 +18,20 @@ public class TSShadedPoly extends TSSolidPoly {
 		StringBuilder str = new StringBuilder();
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
-		str.append("\"normal\" : ").append(getNormal()).append(",\n");
-		str.append("\"center\" : ").append(getCenter()).append(",\n");
-		str.append("\"vertexCount\" : ").append(getVertexCount()).append(",\n");
-		str.append("\"vertexList\" : ").append(getVertexList()).append(",\n");
-		str.append("\"color\" : ").append(getColor()).append("\n");
-		str.append("}");
+		
+		str = jsonString(str);
+		str.append("\n");
+		
+		str.append("}\n");
 		
 		return str.toString();
+	}	
+	
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+		
+		str = super.jsonString(str);
+		
+		return str;
 	}
 }

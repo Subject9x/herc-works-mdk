@@ -59,10 +59,20 @@ public class TSGroup extends TSBasePart {
 		StringBuilder str = new StringBuilder();
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
-		str.append("\"transform\" : ").append(getTransform()).append(",\n");
-		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
-		str.append("\"radius\" : ").append(getRadius()).append(",\n");
-		str.append("\"center\" : ").append(getCenter().toString()).append(",\n");
+		
+		str = jsonString(str);
+		str.append("\n");
+		str.append("}\n");
+		
+		return str.toString();
+	}
+	
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+
+		str = super.jsonString(str);
+		
+		str.append(",\n");
 		str.append("\"indexes\" : ").append(Arrays.toString(getIndexes())).append(",\n");
 		str.append("\"points\" : [\n");
 		for(int s=0; s < getPoints().length; s++) {
@@ -93,10 +103,8 @@ public class TSGroup extends TSBasePart {
 			}
 			str.append("\n");
 		}
-		str.append("]\n");
+		str.append("]");
 		
-		str.append("}\n");
-		
-		return str.toString();
+		return str;
 	}
 }

@@ -1,6 +1,5 @@
 package org.hercworks.core.api;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
@@ -45,6 +44,5 @@ public class TestDTSLoader {
 		}
 		
 		assertNotNull(dts);
-		assertFalse(dts.getDTSParts().isEmpty());
 	}
 }

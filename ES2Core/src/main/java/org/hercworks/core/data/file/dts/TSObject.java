@@ -1,7 +1,9 @@
 package org.hercworks.core.data.file.dts;
 
 /**
+ * Root ThreeSpace2 3D object, most of the DTS segments inherit from a base type.
  * 
+ * DTS files are a tree data structure.
  */
 public abstract class TSObject {
 
@@ -68,4 +70,6 @@ public abstract class TSObject {
 		
 		return str.toString();
 	}
+	
+	public abstract StringBuilder jsonString(StringBuilder str);
 }

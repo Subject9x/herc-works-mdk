@@ -33,26 +33,23 @@ public class TSDetailPart extends TSPartList {
 		StringBuilder str = new StringBuilder();
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
-		str.append("\"transform\" : ").append(getTransform()).append(",\n");
-		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
-		str.append("\"radius\" : ").append(getRadius()).append(",\n");
-		str.append("\"center\" : ").append(getCenter().toString()).append(",\n");
 		
-		str.append("\"parts\" : [\n");
-		for(int s=0; s < getParts().length; s++) {
-			str.append(getParts()[s].toString());
-			if(s < getParts().length - 1) {
-				str.append(",");
-			}
-			str.append("\n");
-		}
-		str.append("],\n");
-
-		str.append("\"details\" : ").append(Arrays.toString(getDetails())).append("\n");
+		str = jsonString(str);
 		
+		str.append("\n");
 		str.append("}\n");
 		
 		return str.toString();
 	}
-	
+
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+		
+		str = super.jsonString(str);
+		
+		str.append(",\n");
+		str.append("\"details\" : ").append(Arrays.toString(getDetails()));
+		
+		return str;
+	}
 }

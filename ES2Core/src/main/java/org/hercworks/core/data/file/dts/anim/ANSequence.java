@@ -86,6 +86,17 @@ public class ANSequence extends TSObject {
 		
 		str.append(metaInfoString(getClass().getSimpleName()));
 		
+		str = jsonString(str);
+		
+		str.append("\n");
+		str.append("}\n");
+		
+		return str.toString();
+	}	
+	
+	@Override
+	public StringBuilder jsonString(StringBuilder str) {
+		
 		str.append("\"tick\" : ").append(getTick()).append(",\n");
 		str.append("\"priority\" : ").append(getPriority()).append(",\n");
 		str.append("\"groundMove\" : ").append(getGroundMovement()).append(",\n");
@@ -101,9 +112,8 @@ public class ANSequence extends TSObject {
 		str.append("],\n");
 		
 		str.append("\"partIds\" : ").append(Arrays.toString(getPartIds())).append(",\n");
-		str.append("\"transformIndices\" : ").append(Arrays.toString(getTransformIndices())).append("\n");
-		str.append("}\n");
+		str.append("\"transformIndices\" : ").append(Arrays.toString(getTransformIndices()));
 		
-		return str.toString();
+		return str;
 	}
 }

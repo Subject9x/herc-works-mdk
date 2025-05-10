@@ -45,7 +45,6 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 
 	private String dbgSpace = "";
 	private String treeSpace = "	";
-	private TSObject dbgParent = null;
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
@@ -68,15 +67,16 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		while(index < inputArray.length) {
 			meshes.add(loadChunkByType(null));
 		}
-//		for(int s=0; s < chunks.size(); s++) {
-//			System.out.println(meshes.get(s).toString());
-//			if(s < chunks.size() - 1) {
-//				System.out.println(",\n");
-//			}
-//		}
+		System.out.println("{ \"meshes\" : [\n");
+		for(int s=0; s < meshes.size(); s++) {
+			System.out.println(meshes.iterator().next().toString());
+			if(s < meshes.size() - 1) {
+				System.out.println(",\n");
+			}
+		}
+		System.out.println("]}");
+
 		dts.setMeshes(meshes);
-		System.out.println("]");
-		
 		return dts;
 	}
 	
@@ -452,7 +452,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		node.setByteLen(index - node.getIndex());
 		node.setData(Bytes.from(bytes, node.getIndex(), node.getByteLen()).array());
 		
-		System.out.println(dbgSpace + treeSpace + " BSPPartNode @ " + node.getIndex() + " | " + Bytes.from(node.getIndex()).encodeHex() + " | len" + node.getByteLen());
+		System.out.println("	BSPPartNode @ " + node.getIndex() + " | " + Bytes.from(node.getIndex()).encodeHex() + " | len" + node.getByteLen());
 		
 		return node;
 	}
@@ -475,20 +475,12 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		link.setNodes(nodes);
 		
 		
-		short bspTransformId = indexShortLE();
-		System.out.println("TSBSPPart - end bytes = " + bspTransformId + " @ " + Bytes.from(index - 2).encodeHex());
-		
-		if(bspTransformId > 0 && index < link.getIndex() + link.getByteLen()) {
-			System.out.println("trail bytes!?");
+		//AHA! I think this count is matched to # of BSPPartNodes in the list!
+		short[] transforms = new short[nodes.length];
+		for(int p=0; p < nodes.length; p++) {
+			transforms[p] = indexShortLE();
 		}
-		//FIXME - like TSDetailPart, in ROCKETS.DTS 
-		//	@00000980 - TSBSPPart's last byte is a signed short and less than byte len
-//		short[] transforms = new short[bspTransformId];
-//		for(int t=0; t < transforms.length; t++) {
-//			transforms[t] = indexShortLE();
-//		}
-//		link.setTransforms(transforms);
-//	
+		link.setTransforms(transforms);
 		
 		return link;
 	}
@@ -595,9 +587,10 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		ANSequenceFrame frame = new ANSequenceFrame();
 		frame.setIndex(index);
+		
 		frame.setTick(indexShortLE());
-		frame.setNumTransitions(indexShortLE());
 		frame.setFirstTransition(indexShortLE());
+		frame.setNumTransitions(indexShortLE());
 		
 		frame.setByteLen(index - frame.getIndex());
 		frame.setData(Bytes.from(bytes, frame.getIndex(), frame.getByteLen()).array());
@@ -631,7 +624,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		seq.setPartIds(partIds);
 		
-		int len = (partIds.length - 1) * (frames.length - 1);
+		int len = (partIds.length) * (frames.length);
 		short[] transfrmIndex = new short[len];
 		for(int t=0; t < transfrmIndex.length; t++) {
 			transfrmIndex[t] = indexShortLE();
@@ -687,9 +680,9 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		anim.setData(Bytes.from(bytes, anim.getIndex() + 8, anim.getByteLen()).array());
 		anim.setParent(parent);
 		
-		TSPartList[] sequences = new TSPartList[indexShortLE()];
+		TSObject[] sequences = new TSObject[indexShortLE()];
 		for(int s=0; s < sequences.length; s++) {
-			sequences[s] = readTSPartList(null, anim);
+			sequences[s] = loadChunkByType(anim);
 		}
 		anim.setSequences(sequences);
 		
@@ -697,6 +690,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		for(int t=0; t < transitions.length; t++) {
 			transitions[t] = readANAnimListTransition();
 		}
+		anim.setTransitions(transitions);
 		
 		ANAnimListTransform[] transforms = new ANAnimListTransform[indexShortLE()];
 		for(int v=0; v < transforms.length; v++) {
@@ -730,7 +724,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		link = (ANShape) readTSShape(link, parent);
 		
-		link.setAnimations(readANAnimList(link));
+		ANAnimList animationList = (ANAnimList)loadChunkByType(link);
+		link.setAnimationList(animationList);
 		
 		return link;
 	}
