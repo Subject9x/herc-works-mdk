@@ -6,7 +6,7 @@ import org.hercworks.core.data.file.dts.TSPoly;
 public class TSSolidPoly extends TSPoly {
 
 	//unsigned
-	private short color;
+	private short colorIndexId;
 	
 	public TSSolidPoly() {
 		super(TSObjectHeader.TS_SOLID_POLY);
@@ -16,12 +16,12 @@ public class TSSolidPoly extends TSPoly {
 		super(hdr);
 	}
 
-	public short getColor() {
-		return color;
+	public short getColorIndexId() {
+		return colorIndexId;
 	}
 
-	public void setColor(short color) {
-		this.color = color;
+	public void setColorIndexId(short colorIndexId) {
+		this.colorIndexId = colorIndexId;
 	}
 	
 	@Override
@@ -45,7 +45,7 @@ public class TSSolidPoly extends TSPoly {
 		str = super.jsonString(str);
 		
 		str.append(",\n");
-		str.append("\"color\" : ").append(getColor());
+		str.append("\"colorIndexId\" : ").append(getColorIndexId());
 		
 		return str;
 	}

@@ -10,7 +10,8 @@ public class TSGroup extends TSBasePart {
 	
 	private Vec3Short[] points;
 	
-	private TSShapeColor[] colors;
+//	private TSShapeColor[] colors;
+	private int[] colors;
 	
 	private TSObject[] items;
 	
@@ -38,11 +39,11 @@ public class TSGroup extends TSBasePart {
 		this.points = points;
 	}
 
-	public TSShapeColor[] getColors() {
+	public int[] getColors() {
 		return colors;
 	}
 
-	public void setColors(TSShapeColor[] colors) {
+	public void setColors(int[] colors) {
 		this.colors = colors;
 	}
 
@@ -86,7 +87,7 @@ public class TSGroup extends TSBasePart {
 		
 		str.append("\"colors\" : [\n");		
 		for(int c=0; c < getColors().length; c++) {
-			str.append(Arrays.toString(getColors()[c].getRgba()));
+			str.append(Arrays.toString(getColors()));
 			if(c < getColors().length - 1) {
 				str.append(",");
 			}

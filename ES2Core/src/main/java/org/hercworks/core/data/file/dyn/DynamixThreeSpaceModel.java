@@ -1,6 +1,6 @@
 package org.hercworks.core.data.file.dyn;
 
-import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hercworks.core.data.file.dts.TSObject;
@@ -15,7 +15,7 @@ import org.hercworks.voln.DataFile;
  */
 public class DynamixThreeSpaceModel extends DataFile {
 	
-	private Set<TSObject> meshes;
+	private List<TSObject> meshes;
 	
 	private Vector3D center;
 	
@@ -26,11 +26,11 @@ public class DynamixThreeSpaceModel extends DataFile {
 	
 	public DynamixThreeSpaceModel() {}
 
-	public Set<TSObject> getMeshes() {
+	public List<TSObject> getMeshes() {
 		return meshes;
 	}
 
-	public void setMeshes(Set<TSObject> meshes) {
+	public void setMeshes(List<TSObject> meshes) {
 		this.meshes = meshes;
 	}
 

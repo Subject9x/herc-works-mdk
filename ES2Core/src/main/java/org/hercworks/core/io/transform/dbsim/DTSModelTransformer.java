@@ -2,9 +2,9 @@ package org.hercworks.core.io.transform.dbsim;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.hercworks.core.data.file.dts.TSBasePart;
 import org.hercworks.core.data.file.dts.TSGroup;
@@ -62,7 +62,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		System.out.println("[\n");
 		
-		Set<TSObject> meshes = new HashSet<TSObject>();
+		List<TSObject> meshes = new ArrayList<TSObject>();
 		
 		while(index < inputArray.length) {
 			meshes.add(loadChunkByType(null));
@@ -310,7 +310,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		short[] indexes = new short[indexShortLE()];
 		Vec3Short[] points = new Vec3Short[indexShortLE()];
-		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
+//		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
+		int[] colors = new int[indexShortLE()];
 		TSObject[] items = new TSObject[indexShortLE()];
 		
 		
@@ -325,7 +326,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		link.setPoints(points);
 		
 		for(int c=0; c < colors.length; c++) {
-			colors[c] = new TSShapeColor(indexSegment(4));
+//			colors[c] = new TSShapeColor(indexSegment(4));
+			colors[c] = indexIntLE();
 		}
 		link.setColors(colors);
 		
@@ -391,7 +393,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		
 		link = (TSSolidPoly) readTSPoly(link, parent);
-		link.setColor(indexShortLE());
+		link.setColorIndexId(indexShortLE());
 		
 		return link;
 	}

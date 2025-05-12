@@ -42,7 +42,7 @@ public class TSGouraudPoly extends TSSolidPoly {
 		str = super.jsonString(str);
 		
 		str.append(",\n");
-		str.append("\"color\" : ").append(getColor()).append(",\n");
+		str.append("\"color\" : ").append(getColorIndexId()).append(",\n");
 		str.append("\"normalList\" : ").append(getNormalList());
 		
 		return str;

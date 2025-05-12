@@ -30,11 +30,7 @@ public class TSTexture4Poly extends TSSolidPoly {
 	@Override
 	public StringBuilder jsonString(StringBuilder str) {
 		
-		str = super.jsonString(str);
-		
-		str.append(",\n");
-		str.append("\"dba_frameId\" : ").append(getColor());
-		
+		str = super.jsonString(str);		
 		return str;
 	}
 }
