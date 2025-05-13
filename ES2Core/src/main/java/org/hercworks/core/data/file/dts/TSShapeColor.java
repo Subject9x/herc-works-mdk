@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.dts;
 
+import java.util.Arrays;
 
 /**
  * UTILITY
@@ -24,5 +25,18 @@ public class TSShapeColor {
 
 	public void setRgba(byte[] rgba) {
 		this.rgba = rgba;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		
+//		str.append("{ TSShapeColor=[\n");
+		
+		str.append("").append(Arrays.toString(getRgba())).append("\n");
+		
+//		str.append("]");
+		
+		return str.toString();
 	}
 }

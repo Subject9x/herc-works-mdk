@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.hercworks.core.data.file.dts.part.TSPartList;
 
-public class TSShape extends TSPartList {
+public class TSShape extends TSPartList implements TSRootObject{
 	
 	private short[] sequenceList;
 

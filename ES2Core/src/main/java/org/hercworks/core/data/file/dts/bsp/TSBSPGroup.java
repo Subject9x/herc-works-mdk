@@ -2,8 +2,9 @@ package org.hercworks.core.data.file.dts.bsp;
 
 import org.hercworks.core.data.file.dts.TSGroup;
 import org.hercworks.core.data.file.dts.TSObjectHeader;
+import org.hercworks.core.data.file.dts.TSRootObject;
 
-public class TSBSPGroup extends TSGroup {
+public class TSBSPGroup extends TSGroup implements TSRootObject{
 
 	private TSBSPGroupNode[] groupNodes;
 	

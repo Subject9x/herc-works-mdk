@@ -2,6 +2,7 @@ package org.hercworks.core.data.file.dts.part;
 
 import org.hercworks.core.data.file.dts.TSBasePart;
 import org.hercworks.core.data.file.dts.TSObjectHeader;
+import org.hercworks.core.data.file.dts.TSRootObject;
 
 /**
  * NOTES:
@@ -9,7 +10,7 @@ import org.hercworks.core.data.file.dts.TSObjectHeader;
  *  + ThreeSpace2 engine knows to generate a basic textured quad which is the destination.
  *  + TODO - make sure this is exported to a basic quad but not sure how to find matching material.
  */
-public class TSBitmapPart extends TSBasePart {
+public class TSBitmapPart extends TSBasePart implements TSRootObject{
 	
 	private short bmpTag;
 	

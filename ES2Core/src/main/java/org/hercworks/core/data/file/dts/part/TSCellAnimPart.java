@@ -1,6 +1,7 @@
 package org.hercworks.core.data.file.dts.part;
 
 import org.hercworks.core.data.file.dts.TSObjectHeader;
+import org.hercworks.core.data.file.dts.TSRootObject;
 
 /**
  * FIXME - testing in /BULLETS.DTS, the tail bytes look very much like a TSShape segment as the direct inherit vs a TSPartList,
@@ -8,7 +9,7 @@ import org.hercworks.core.data.file.dts.TSObjectHeader;
  *
  *	will test other files.
  */
-public class TSCellAnimPart extends TSPartList {
+public class TSCellAnimPart extends TSPartList implements TSRootObject{
 
 	//unsigned
 	private short animSequence;

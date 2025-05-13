@@ -3,8 +3,9 @@ package org.hercworks.core.data.file.dts.part;
 import org.hercworks.core.data.file.dts.TSBasePart;
 import org.hercworks.core.data.file.dts.TSObject;
 import org.hercworks.core.data.file.dts.TSObjectHeader;
+import org.hercworks.core.data.file.dts.TSRootObject;
 
-public class TSPartList extends TSBasePart {
+public class TSPartList extends TSBasePart implements TSRootObject{
 
 	private TSObject[] parts;
 	

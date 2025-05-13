@@ -2,7 +2,7 @@ package org.hercworks.core.data.file.dts;
 
 import org.hercworks.core.data.struct.Vec3Short;
 
-public class TSBasePart extends TSObject {
+public class TSBasePart extends TSObject implements TSRootObject{
 
 	//unsigned
 	private short transform;
@@ -78,5 +78,10 @@ public class TSBasePart extends TSObject {
 		str.append("\"center\" : ").append(getCenter().toString());
 		
 		return str;
+	}
+
+	@Override
+	public Vec3Short getRootCenter() {
+		return getCenter();
 	}
 }

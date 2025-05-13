@@ -67,14 +67,14 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		while(index < inputArray.length) {
 			meshes.add(loadChunkByType(null));
 		}
-		System.out.println("{ \"meshes\" : [\n");
-		for(int s=0; s < meshes.size(); s++) {
-			System.out.println(meshes.iterator().next().toString());
-			if(s < meshes.size() - 1) {
-				System.out.println(",\n");
-			}
-		}
-		System.out.println("]}");
+//		System.out.println("{ \"meshes\" : [\n");
+//		for(int s=0; s < meshes.size(); s++) {
+//			System.out.println(meshes.iterator().next().toString());
+//			if(s < meshes.size() - 1) {
+//				System.out.println(",\n");
+//			}
+//		}
+//		System.out.println("]}");
 
 		dts.setMeshes(meshes);
 		return dts;
@@ -310,8 +310,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		short[] indexes = new short[indexShortLE()];
 		Vec3Short[] points = new Vec3Short[indexShortLE()];
-//		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
-		int[] colors = new int[indexShortLE()];
+		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
+//		int[] colors = new int[indexShortLE()];
 		TSObject[] items = new TSObject[indexShortLE()];
 		
 		
@@ -326,8 +326,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		link.setPoints(points);
 		
 		for(int c=0; c < colors.length; c++) {
-//			colors[c] = new TSShapeColor(indexSegment(4));
-			colors[c] = indexIntLE();
+			colors[c] = new TSShapeColor(indexSegment(4));
+//			colors[c] = indexIntLE();
 		}
 		link.setColors(colors);
 		

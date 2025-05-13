@@ -4,14 +4,14 @@ import java.util.Arrays;
 
 import org.hercworks.core.data.struct.Vec3Short;
 
-public class TSGroup extends TSBasePart {
+public class TSGroup extends TSBasePart implements TSRootObject{
 
 	private short[] indexes;
 	
 	private Vec3Short[] points;
 	
-//	private TSShapeColor[] colors;
-	private int[] colors;
+	private TSShapeColor[] colors;
+//	private int[] colors;
 	
 	private TSObject[] items;
 	
@@ -39,11 +39,11 @@ public class TSGroup extends TSBasePart {
 		this.points = points;
 	}
 
-	public int[] getColors() {
+	public TSShapeColor[] getColors() {
 		return colors;
 	}
 
-	public void setColors(int[] colors) {
+	public void setColors(TSShapeColor[] colors) {
 		this.colors = colors;
 	}
 
@@ -94,6 +94,7 @@ public class TSGroup extends TSBasePart {
 			str.append("\n");
 		}
 		str.append("],\n");
+//		str.append("\"colors\" : ").append(Arrays.toString(getColors())).append(",\n");
 		
 		
 		str.append("\"parts\" : [\n");
