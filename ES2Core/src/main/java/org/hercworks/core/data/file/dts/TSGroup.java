@@ -10,8 +10,7 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 	
 	private Vec3Short[] points;
 	
-	private TSShapeColor[] colors;
-//	private int[] colors;
+	private TSSurfaceEntry[] surfaces;
 	
 	private TSObject[] items;
 	
@@ -39,12 +38,12 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 		this.points = points;
 	}
 
-	public TSShapeColor[] getColors() {
-		return colors;
+	public TSSurfaceEntry[] getSurfaces() {
+		return surfaces;
 	}
 
-	public void setColors(TSShapeColor[] colors) {
-		this.colors = colors;
+	public void setSurfaces(TSSurfaceEntry[] colors) {
+		this.surfaces = colors;
 	}
 
 	public TSObject[] getItems() {
@@ -59,7 +58,7 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		
-		str.append(metaInfoString(getClass().getSimpleName()));
+		str.append(metaInfoString(getClass().getSimpleName() + "_" + getListIndex()));
 		
 		str = jsonString(str);
 		str.append("\n");
@@ -85,10 +84,12 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 		}
 		str.append("],\n");
 		
-		str.append("\"colors\" : [\n");		
-		for(int c=0; c < getColors().length; c++) {
-			str.append(Arrays.toString(getColors()));
-			if(c < getColors().length - 1) {
+		str.append("\"surfaces\" : [\n");		
+		for(int c=0; c < getSurfaces().length; c++) {
+			
+			str.append(getSurfaces()[c].toString());
+			
+			if(c < getSurfaces().length - 1) {
 				str.append(",");
 			}
 			str.append("\n");

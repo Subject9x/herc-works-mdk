@@ -12,6 +12,7 @@ public abstract class TSObject {
 	private int index = 0;
 	private TSObject parent = null;
 	private byte[] data;
+	private int listIndex;
 	
 	public TSObject() {
 	}
@@ -58,6 +59,14 @@ public abstract class TSObject {
 	
 	public int getDataIndex() {
 		return this.index + 8;
+	}
+	
+	public int getListIndex() {
+		return listIndex;
+	}
+
+	public void setListIndex(int listIndex) {
+		this.listIndex = listIndex;
 	}
 
 	public String metaInfoString(String chunkName) {

@@ -12,7 +12,7 @@ import org.hercworks.core.data.file.dts.TSObject;
 import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSPoly;
 import org.hercworks.core.data.file.dts.TSShape;
-import org.hercworks.core.data.file.dts.TSShapeColor;
+import org.hercworks.core.data.file.dts.TSSurfaceEntry;
 import org.hercworks.core.data.file.dts.anim.ANAnimList;
 import org.hercworks.core.data.file.dts.anim.ANAnimListTransform;
 import org.hercworks.core.data.file.dts.anim.ANAnimListTransition;
@@ -45,6 +45,9 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 
 	private String dbgSpace = "";
 	private String treeSpace = "	";
+	
+	private int indexTSGroup = 0;
+	
 	
 	@Override
 	public DataFile bytesToObject(byte[] inputArray) throws ClassCastException {
@@ -305,13 +308,14 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			link.setIndex(index - 8);
 			link.setData(Bytes.from(bytes, link.getIndex() + 8, link.getByteLen()).array());
 			link.setParent(parent);
+			link.setListIndex(indexTSGroup);
+			indexTSGroup += 1;
 		}
 		link = (TSGroup) readTSBasePart(link, parent);
 		
 		short[] indexes = new short[indexShortLE()];
 		Vec3Short[] points = new Vec3Short[indexShortLE()];
-		TSShapeColor[] colors = new TSShapeColor[indexShortLE()];
-//		int[] colors = new int[indexShortLE()];
+		int colorCount = indexShortLE() / 4;
 		TSObject[] items = new TSObject[indexShortLE()];
 		
 		
@@ -325,11 +329,23 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		link.setPoints(points);
 		
-		for(int c=0; c < colors.length; c++) {
-			colors[c] = new TSShapeColor(indexSegment(4));
-//			colors[c] = indexIntLE();
+
+		TSSurfaceEntry[] surfaces = new TSSurfaceEntry[colorCount];
+		for(int c=0; c < surfaces.length; c++) {
+			
+			TSSurfaceEntry sclr = new TSSurfaceEntry();
+			sclr.setFrontColor(indexShortLE());
+			sclr.setFrontFlag(indexShortLE());
+			sclr.setFrontLineColor(indexShortLE());
+			sclr.setFrontLineFlag(indexShortLE());
+			sclr.setBackColor(indexShortLE());
+			sclr.setBackColorFlag(indexShortLE());
+			sclr.setBackLineColor(indexShortLE());
+			sclr.setBackLineFlag(indexShortLE());
+			
+			surfaces[c] = sclr;
 		}
-		link.setColors(colors);
+		link.setSurfaces(surfaces);
 		
 		for(int s=0; s < items.length; s++) {
 			items[s] = loadChunkByType(link);

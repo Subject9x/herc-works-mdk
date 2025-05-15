@@ -2,6 +2,10 @@ package org.hercworks.core.data.file.dts.poly;
 
 import org.hercworks.core.data.file.dts.TSObjectHeader;
 
+/**
+ * An untextured poly, assigned an indexed palette color based on in-game light calculations.
+ * 
+ */
 public class TSShadedPoly extends TSSolidPoly {
 	
 	public TSShadedPoly() {
