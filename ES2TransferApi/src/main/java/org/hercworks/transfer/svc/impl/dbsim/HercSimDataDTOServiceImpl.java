@@ -30,11 +30,11 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dto.setCameraBoneId(src.getCameraBoneId());
 		
-		dto.setInputThrottleHercFlag(src.getInputThrottleHercFlag());
+		dto.setInputThrottleHercFlag(src.getAnimId_Walk());
 		
-		dto.setUnk14_ValAnim1(src.getUnk14_ValAnim1());
-		dto.setUnk16_ValAnim2(src.getUnk16_ValAnim2());
-		dto.setUnk18_ValAnim3(src.getUnk18_ValAnim3());
+		dto.setUnk14_ValAnim1(src.getAnimId_Run());
+		dto.setUnk16_ValAnim2(src.animId_StopMove());
+		dto.setUnk18_ValAnim3(src.getAnimId_TorsoPitch());
 		dto.setUnitOffsetYAdjust(src.getUnitOffsetYAdjust());
 		dto.setUnk22_Val750Razor0(src.getUnk22_Val750Razor0());
 		
@@ -164,11 +164,11 @@ public class HercSimDataDTOServiceImpl implements GeneralDTOService {
 		
 		dat.setCameraBoneId((short)dto.getCameraBoneId());
 		
-		dat.setInputThrottleHercFlag((short)dto.getInputThrottleHercFlag());
+		dat.setAnimId_Walk((short)dto.getInputThrottleHercFlag());
 		
-		dat.setUnk14_ValAnim1((short)dto.getUnk14_ValAnim1());
-		dat.setUnk16_ValAnim2((short)dto.getUnk16_ValAnim2());
-		dat.setUnk18_ValAnim3((short)dto.getUnk18_ValAnim3());
+		dat.setAnimId_Run((short)dto.getUnk14_ValAnim1());
+		dat.setAnimId_StopMove((short)dto.getUnk16_ValAnim2());
+		dat.setAnimId_TorsoPitch((short)dto.getUnk18_ValAnim3());
 		dat.setUnitOffsetYAdjust((short)dto.getUnitOffsetYAdjust());
 		dat.setUnk22_Val750Razor0((short)dto.getUnk22_Val750Razor0());
 		

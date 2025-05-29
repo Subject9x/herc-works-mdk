@@ -36,11 +36,11 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 
 		data.setCameraBoneId(indexShortLE());
 		
-		data.setInputThrottleHercFlag(indexShortLE());
+		data.setAnimId_Walk(indexShortLE());
 		
-		data.setUnk14_ValAnim1(indexShortLE());
-		data.setUnk16_ValAnim2(indexShortLE());
-		data.setUnk18_ValAnim3(indexShortLE());
+		data.setAnimId_Run(indexShortLE());
+		data.setAnimId_StopMove(indexShortLE());
+		data.setAnimId_TorsoPitch(indexShortLE());
 		data.setUnitOffsetYAdjust(indexShortLE());
 		data.setUnk22_Val750Razor0(indexShortLE());
 		
@@ -151,11 +151,11 @@ public class HercSimDataTransformer extends ThreeSpaceByteTransformer{
 		
 		out.write(writeShortLE(data.getCameraBoneId()));
 		
-		out.write(writeShortLE(data.getInputThrottleHercFlag()));
+		out.write(writeShortLE(data.getAnimId_Walk()));
 		
-		out.write(writeShortLE(data.getUnk14_ValAnim1()));
-		out.write(writeShortLE(data.getUnk16_ValAnim2()));
-		out.write(writeShortLE(data.getUnk18_ValAnim3()));
+		out.write(writeShortLE(data.getAnimId_Run()));
+		out.write(writeShortLE(data.animId_StopMove()));
+		out.write(writeShortLE(data.getAnimId_TorsoPitch()));
 		out.write(writeShortLE(data.getUnitOffsetYAdjust()));
 		
 		out.write(writeShortLE(data.getUnk22_Val750Razor0()));

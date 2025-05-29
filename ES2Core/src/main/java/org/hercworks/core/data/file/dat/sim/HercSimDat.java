@@ -11,10 +11,10 @@ import org.hercworks.voln.DataFile;
  *  6 - UINT16 - SPEED\ACCEL_DECEL - both values
  *  8-	UINT16 - SPEED\TURNING\DECELERATION
  *  10-	UINT16 - CAMERA\BONE_ID
- *  12- UINT16 - INPUT\FLAG\TURN\RAZR_OR_HERC
- *  14- UINT16 - ? - animation related maybe : Hercs 2, Razor -2
- *  16- UINT16 - ? - animation related maybe : Hercs 3, Razor -3
- *  18- UINT16 - ? - animation related maybe : Hercs 4, Razor -4
+ *  12- UINT16 - MODEL\ANIM\ID\WALK
+ *  14- UINT16 - MODEL\ANIM\ID\RUN
+ *  16- UINT16 - MODEL\ANIM\ID\STOP
+ *  18- UINT16 - MODEL\ANIM\ID\TORSOPITCH
  *  20- UINT16 - MODEL\OFS\ADJ_ORIGIN_Y up/down adjust units
  *  22- UINT16 - ? - 750 or 1000, razor has 0x0000
  *  24- UINT16 - AI\AIM\TARG_OFS - this affects AI accuracy, high numbers make AI auto-miss. 
@@ -113,11 +113,10 @@ public class HercSimDat extends DataFile {
 	
 	private short cameraBoneId;
 	
-	private short inputThrottleHercFlag;
-	
-	private short unk14_ValAnim1 = 2;
-	private short unk16_ValAnim2 = 3;
-	private short unk18_ValAnim3 = 4;
+	private short animId_walk;
+	private short animId_run = 2;
+	private short animId_stopMove = 3;
+	private short animTorsoPitchId = 4;
 	private short unitOffsetYAdjust;
 	
 	private short unk22_Val750Razor0;
@@ -233,20 +232,20 @@ public class HercSimDat extends DataFile {
 		return cameraBoneId;
 	}
 
-	public short getInputThrottleHercFlag() {
-		return inputThrottleHercFlag;
+	public short getAnimId_Walk() {
+		return animId_walk;
 	}
 
-	public short getUnk14_ValAnim1() {
-		return unk14_ValAnim1;
+	public short getAnimId_Run() {
+		return animId_run;
 	}
 
-	public short getUnk16_ValAnim2() {
-		return unk16_ValAnim2;
+	public short animId_StopMove() {
+		return animId_stopMove;
 	}
 
-	public short getUnk18_ValAnim3() {
-		return unk18_ValAnim3;
+	public short getAnimId_TorsoPitch() {
+		return animTorsoPitchId;
 	}
 
 	public short getUnitOffsetYAdjust() {
@@ -481,20 +480,20 @@ public class HercSimDat extends DataFile {
 		this.cameraBoneId = cameraBoneId;
 	}
 
-	public void setInputThrottleHercFlag(short inputThrottleHercFlag) {
-		this.inputThrottleHercFlag = inputThrottleHercFlag;
+	public void setAnimId_Walk(short animId_walk) {
+		this.animId_walk = animId_walk;
 	}
 
-	public void setUnk14_ValAnim1(short unk14_ValAnim1) {
-		this.unk14_ValAnim1 = unk14_ValAnim1;
+	public void setAnimId_Run(short animId_run) {
+		this.animId_run = animId_run;
 	}
 
-	public void setUnk16_ValAnim2(short unk16_ValAnim2) {
-		this.unk16_ValAnim2 = unk16_ValAnim2;
+	public void setAnimId_StopMove(short animId_stopMove) {
+		this.animId_stopMove = animId_stopMove;
 	}
 
-	public void setUnk18_ValAnim3(short unk18_ValAnim3) {
-		this.unk18_ValAnim3 = unk18_ValAnim3;
+	public void setAnimId_TorsoPitch(short animTorsoPitchId) {
+		this.animTorsoPitchId = animTorsoPitchId;
 	}
 
 	public void setUnitOffsetYAdjust(short unitOffsetYAdjust) {
