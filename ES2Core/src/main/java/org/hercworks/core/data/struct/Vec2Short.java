@@ -37,6 +37,15 @@ public class Vec2Short {
 		this.y = y;
 	}
 	
+	public double[] toDouble() {
+		double[] dbl = new double[2];
+		
+		dbl[0] = (double)getX();
+		dbl[1] = (double)getY();
+		
+		return dbl;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();

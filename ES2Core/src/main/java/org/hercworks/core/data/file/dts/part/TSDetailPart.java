@@ -3,9 +3,8 @@ package org.hercworks.core.data.file.dts.part;
 import java.util.Arrays;
 
 import org.hercworks.core.data.file.dts.TSObjectHeader;
-import org.hercworks.core.data.file.dts.TSRootObject;
 
-public class TSDetailPart extends TSPartList implements TSRootObject{
+public class TSDetailPart extends TSPartList {
 
 	private short[] details;
 	

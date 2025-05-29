@@ -49,14 +49,22 @@ public class DynamixThreeSpaceModel extends DataFile {
 	public void setTextureName(String textureName) {
 		this.textureName = textureName;
 	}
-//	
-//	public Vector3D pointOffset(TSObject object, Vector3D origin) {
-//		
-//		TSObject parent = object.getParent();
-//		while(parent != null) {
-//			
-//			parent = parent.getParent();
-//		}
-//		
-//	}
+	
+	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		
+		str.append("{\"file\" : \"").append(originNameNoExt()).append("\",\n");
+		str.append("\"meshes\" : [\n");
+		for(int s=0; s < meshes.size(); s++) {
+			str.append(meshes.get(s).toString());
+			if(s < meshes.size() - 1) {
+				str.append(",\n");
+			}
+		}
+		str.append("]}");
+		
+		return str.toString();
+	}
 }

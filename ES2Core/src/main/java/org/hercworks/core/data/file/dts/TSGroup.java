@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.hercworks.core.data.struct.Vec3Short;
 
-public class TSGroup extends TSBasePart implements TSRootObject{
+public class TSGroup extends TSBasePart {
 
 	private short[] indexes;
 	
@@ -12,7 +12,7 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 	
 	private TSSurfaceEntry[] surfaces;
 	
-	private TSObject[] items;
+	private TSObject[] polys;
 	
 	public TSGroup() {
 		super(TSObjectHeader.TS_GROUP);
@@ -46,12 +46,12 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 		this.surfaces = colors;
 	}
 
-	public TSObject[] getItems() {
-		return items;
+	public TSObject[] getPolys() {
+		return polys;
 	}
 
-	public void setItems(TSObject[] items) {
-		this.items = items;
+	public void setPolys(TSObject[] items) {
+		this.polys = items;
 	}
 	
 	@Override
@@ -98,10 +98,10 @@ public class TSGroup extends TSBasePart implements TSRootObject{
 //		str.append("\"colors\" : ").append(Arrays.toString(getColors())).append(",\n");
 		
 		
-		str.append("\"parts\" : [\n");
-		for(int s=0; s < getItems().length; s++) {
-			str.append(getItems()[s].toString());
-			if(s < getItems().length - 1) {
+		str.append("\"polys\" : [\n");
+		for(int s=0; s < getPolys().length; s++) {
+			str.append(getPolys()[s].toString());
+			if(s < getPolys().length - 1) {
 				str.append(",");
 			}
 			str.append("\n");

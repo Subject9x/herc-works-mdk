@@ -1,5 +1,6 @@
 package org.hercworks.core.io.transform.dbsim;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			//TODO - log null
 			return null;
 		}
+		indexTSGroup = 0;
 		setBytes(inputArray);
 		
 		DynamixThreeSpaceModel dts = new DynamixThreeSpaceModel();
@@ -63,21 +65,13 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		dts.setExt(FileType.DTS);
 		dts.setDir(FileType.DTS);
 		
-		System.out.println("[\n");
+//		System.out.println("[\n");
 		
 		List<TSObject> meshes = new ArrayList<TSObject>();
 		
 		while(index < inputArray.length) {
 			meshes.add(loadChunkByType(null));
 		}
-//		System.out.println("{ \"meshes\" : [\n");
-//		for(int s=0; s < meshes.size(); s++) {
-//			System.out.println(meshes.iterator().next().toString());
-//			if(s < meshes.size() - 1) {
-//				System.out.println(",\n");
-//			}
-//		}
-//		System.out.println("]}");
 
 		dts.setMeshes(meshes);
 		return dts;
@@ -96,23 +90,23 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		byte[] marker = Bytes.from(indexSegment(4)).array();
 		
-		if(parent == null) {
-			System.out.println("\n");
-			dbgSpace = "";
-		}
-		else {
-			dbgSpace = "";
-			TSObject p = parent;
-			do {
-				dbgSpace += treeSpace;
-				p = p.getParent();
-			}
-			while(p != null);
-		}
-		
-		System.out.println(dbgSpace + TSObjectHeader.findVal(marker) + " @ " + (markerIndex) + " | "
-									+ Bytes.from((markerIndex)).encodeHex() + " |"
-									+ " len " + Bytes.from(bytes, index, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+//		if(parent == null) {
+//			System.out.println("\n");
+//			dbgSpace = "";
+//		}
+//		else {
+//			dbgSpace = "";
+//			TSObject p = parent;
+//			do {
+//				dbgSpace += treeSpace;
+//				p = p.getParent();
+//			}
+//			while(p != null);
+//		}
+//		
+//		System.out.println(dbgSpace + TSObjectHeader.findVal(marker) + " @ " + (markerIndex) + " | "
+//									+ Bytes.from((markerIndex)).encodeHex() + " |"
+//									+ " len " + Bytes.from(bytes, index, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
 		
 		
 		if(Arrays.equals(TSObjectHeader.TS_BASE_PART.val(), marker)) {
@@ -191,9 +185,9 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			return readTSBSPGroup(null, parent);
 		}
 		
-		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
+//		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
 		int len = indexIntLE();
-		System.out.println("--->len = " + len);
+//		System.out.println("--->len = " + len);
 		skip(len);
 		
 		return null;
@@ -210,7 +204,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			link.setParent(parent);
 		}
 		link.setTransform(indexShortLE());
-		link.setIDNumber(indexShortLE());
+		link.setUID(indexShortLE());
 		link.setRadius(indexShortLE());
 		link.setCenter(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
 
@@ -350,7 +344,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		for(int s=0; s < items.length; s++) {
 			items[s] = loadChunkByType(link);
 		}
-		link.setItems(items);
+		link.setPolys(items);
 		
 		return link;
 	}
@@ -470,7 +464,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		node.setByteLen(index - node.getIndex());
 		node.setData(Bytes.from(bytes, node.getIndex(), node.getByteLen()).array());
 		
-		System.out.println("	BSPPartNode @ " + node.getIndex() + " | " + Bytes.from(node.getIndex()).encodeHex() + " | len" + node.getByteLen());
+//		System.out.println("	BSPPartNode @ " + node.getIndex() + " | " + Bytes.from(node.getIndex()).encodeHex() + " | len" + node.getByteLen());
 		
 		return node;
 	}
@@ -519,9 +513,9 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			len += c.getByteLen();
 		}
 		
-		System.out.println("inital byte len= " + link.getByteLen());
-		System.out.println("branch byte len= " + len);
-		System.out.println("remaining byte len=" + (link.getByteLen() - len));
+//		System.out.println("inital byte len= " + link.getByteLen());
+//		System.out.println("branch byte len= " + len);
+//		System.out.println("remaining byte len=" + (link.getByteLen() - len));
 		
 		//66 remaining bytes in ACHILLES.DTS before adding the AnimationSequnce object, and maybe a counter for num of seq.
 		// @ 32A0
@@ -529,75 +523,25 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		//14 remaining bytes in ROCKET_SPLIT_1 before the next TS SHAPE (in split 2.dts)
 		// @ 982
 		short transformTotal = indexShortLE();
-		System.out.println("TSSHAPE - transfrm ? " + transformTotal + " @" + Bytes.from(index - 2).encodeHex());	
+//		System.out.println("TSSHAPE - transfrm ? " + transformTotal + " @" + Bytes.from(index - 2).encodeHex());	
 		
 		short sequenceTotal = indexShortLE();
-		System.out.println("TSSHAPE - seqeuence ? "+ sequenceTotal + " @" + Bytes.from(index - 2).encodeHex());
+//		System.out.println("TSSHAPE - seqeuence ? "+ sequenceTotal + " @" + Bytes.from(index - 2).encodeHex());
 		
 		short[] sequences = new short[sequenceTotal];
-		System.out.println("		value = " + sequences.length);
+//		System.out.println("		value = " + sequences.length);
 		for(int s=0; s < sequences.length; s++) {
 			sequences[s] = indexShortLE();
 		}
 		link.setSequenceList(sequences);
 		
 		short[] transforms = new short[transformTotal];		
-		System.out.println("		value = " + transforms.length);
+//		System.out.println("		value = " + transforms.length);
 		for(int t=0; t < transforms.length; t++) {
 			transforms[t] = indexShortLE();
 		}
 		link.setTransformList(transforms);
 		
-//		//XXX - OpenSiege source
-//		short[] seq = new short[indexShortLE()];
-//		for(int s=0; s < seq.length; s++) {
-//			seq[s] = indexShortLE();
-//		}
-//		link.setSequenceList(seq);
-//		
-//		for(int t=0; t < transformList.length; t++) {
-//			transformList[t] = indexShortLE();
-//		}
-//		link.setTransformList(transformList);
-		
-//		int remainSize = index - ((link.getIndex() + 8) + link.getByteLen());
-//		int limit = index + remainSize;
-//		
-//		ArrayList<TSChunk> extraParts = new ArrayList<TSChunk>();
-//		do {
-//			extraParts.add(loadChunkByType(link));
-//		}
-//		while(index < limit);
-//		
-//		link.setExtraParts((TSChunk[])extraParts.toArray());
-//		
-		
-		//XXX - based on older python code
-//		short[] transformList = new short[indexShortLE()];
-//		short[] sequenceList = new short[indexShortLE()];
-//
-//		for(int s=0; s < sequenceList.length; s++ ) {
-//			sequenceList[s] = indexShortLE();
-//		}
-//		
-//		for(int t=0; t < transformList.length; t++ ) {
-//			transformList[t] = indexShortLE();
-//		}
-//		
-//		int total = s + (t*16);
-//		short[] sequence1 = new short[total];
-//		for(int seq=0; seq < total; seq++) {
-//			sequence1[seq] = indexShortLE();
-//		}
-//		link.setSeqList1(sequence1);
-//		
-//		short[] sequence2 = new short[s];
-//		Arrays.fill(sequence2, (short)0);
-//		
-//		link.setSeqList2(sequence2);
-		
-		//FIXME - transformList seems unused!?
-
 		return link;
 	}
 	
@@ -684,8 +628,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		ANAnimListTransform transform = new ANAnimListTransform();
 		
 		transform.setIndex(index);
-		transform.setR(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
-		transform.setT(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
+		transform.setRotation(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
+		transform.setTranslation(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
 		
 		return transform;
 	}
@@ -752,25 +696,210 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 	
 	@Override
 	public byte[] objectToBytes(DataFile source) throws ClassCastException, IOException {
-		// TODO Auto-generated method stub
+
+		if(source == null) {
+			return null;
+		}
+		
+		DynamixThreeSpaceModel mdl = (DynamixThreeSpaceModel)source;
+		
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		
+		
+		
 		return null;
 	}
 	
-	private int calcChildBytesLen(TSObject tso, int len) {
+	private TSObject writeTSObject(TSObject parent) {
 		
-		if(tso instanceof TSShape) {
-			TSShape s = (TSShape)tso;
-			
-			for(TSObject c : s.getParts()) {
-				len += calcChildBytesLen(c, len);
-			}
-			return len;
+		int markerIndex = index;
+		
+		byte[] marker = Bytes.from(indexSegment(4)).array();
+		
+		if(parent == null) {
+			System.out.println("\n");
+			dbgSpace = "";
 		}
 		else {
-			return tso.getByteLen() + len;
+			dbgSpace = "";
+			TSObject p = parent;
+			do {
+				dbgSpace += treeSpace;
+				p = p.getParent();
+			}
+			while(p != null);
 		}
+		
+		System.out.println(dbgSpace + TSObjectHeader.findVal(marker) + " @ " + (markerIndex) + " | "
+									+ Bytes.from((markerIndex)).encodeHex() + " |"
+									+ " len " + Bytes.from(bytes, index, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
+		
+		
+		if(Arrays.equals(TSObjectHeader.TS_BASE_PART.val(), marker)) {
+			return readTSBasePart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_PART_LIST.val(), marker)) {
+			return readTSPartList(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SHAPE.val(), marker)) {
+			return readTSShape(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_SHAPE.val(), marker)) {
+			return readANShape(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.BSP_PART.val(), marker)) {
+			return readTSBSPPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_GROUP.val(), marker)) {
+			return readTSGroup(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_POLY.val(), marker)) {
+			return readTSPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
+			return readTSShadedPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
+			return readTSSolidPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_TEXTURE4_POLY.val(), marker)) {
+			return readTSTexture4Poly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_SHADED_POLY.val(), marker)) {
+			return readTSShadedPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_GOURAUD_POLY.val(), marker)) {
+			return readTSGouraudPoly(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_CELL_ANIM_PART.val(), marker)) {
+			return readTSCellAnimPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_ANIM_LIST.val(), marker)) {
+			return readANAnimList(parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_CYCLIC_SEQUENCE.val(), marker)) {
+			return readANCyclicSequence(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.AN_SEQUENCE.val(), marker)) {
+			return readANSequence(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_BITMAP_PART.val(), marker)) {
+			return readTSBitmapPart(null, parent); 
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_DETAIL_PART.val(), marker)) {
+			return readTSDetailPart(null, parent);
+		}
+		
+		if(Arrays.equals(TSObjectHeader.TS_BSP_GROUP.val(), marker)) {
+			return readTSBSPGroup(null, parent);
+		}
+		
+		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
+		int len = indexIntLE();
+		System.out.println("--->len = " + len);
+		skip(len);
+		
+		return null;
 	}
-
+	
+	private int writeTSPoly(TSPoly poly, ByteArrayOutputStream bos) throws IOException {
+		
+		bos.write(poly.getHeader().val());
+		bos.write(writeInt(8));
+		bos.write(writeShort(poly.getNormal()));
+		bos.write(writeShort(poly.getCenter()));
+		bos.write(writeShort(poly.getVertexCount()));
+		bos.write(writeShort(poly.getVertexList()));
+		
+		return 8;	//poly length always 10
+	}
+	
+	private int writeTSSolidPoly(TSSolidPoly solidPoly, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos.write(solidPoly.getHeader().val());
+		bos.write(writeInt(10));
+		bos.write(writeShort(solidPoly.getNormal()));
+		bos.write(writeShort(solidPoly.getCenter()));
+		bos.write(writeShort(solidPoly.getVertexCount()));
+		bos.write(writeShort(solidPoly.getVertexList()));
+		bos.write(writeShort(solidPoly.getColorIndexId()));
+		
+		return 10;	//length always 10
+	}
+	
+	private int writeTSShadedPoly(TSShadedPoly shadedPoly, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos.write(shadedPoly.getHeader().val());
+		bos.write(writeInt(10));
+		bos.write(writeShort(shadedPoly.getNormal()));
+		bos.write(writeShort(shadedPoly.getCenter()));
+		bos.write(writeShort(shadedPoly.getVertexCount()));
+		bos.write(writeShort(shadedPoly.getVertexList()));
+		bos.write(writeShort(shadedPoly.getColorIndexId()));
+		
+		return 10;	//length always 10
+	}
+	
+//	private int writeTSBasePart(TSBasePart basePart, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSPartList(TSPartList partList, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSShape(TSShape shape, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSGouradPoly(TSGouraudPoly gouradPoly, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSBSPGroup(TSBSPGroup bspGroup, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSCellAnimPart(TSCellAnimPart animPart, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSDetailPart(TSDetailPart detailPart, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSTexture4Poly(TSTexture4Poly texturePoly, ByteArrayOutputStream bos) throws IOException  {
+//
+//		bos.write(texturePoly.getHeader().val());
+//		bos.write(writeInt(10));
+//		bos.write(writeShort(texturePoly.getNormal()));
+//		bos.write(writeShort(texturePoly.getCenter()));
+//		bos.write(writeShort(texturePoly.getVertexCount()));
+//		bos.write(writeShort(texturePoly.getVertexList()));
+//		bos.write(writeShort(texturePoly.getColorIndexId()));
+//		
+//		return 10;	//length always 10
+//	}
+//	
+//	private int writeTSGroup(TSGroup group, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeTSBitmapPart(TSBitmapPart bitmapPart, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeBSPPart(TSBSPPart part, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeANSequence(ANSequence anSeq, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeANAnimList(ANAnimList animList, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeANShape(ANShape shape, ByteArrayOutputStream bos) throws IOException  {}
+//	
+//	private int writeANCyclicSequence(ANCyclicSequence cycleSeq, ByteArrayOutputStream bos) throws IOException  {}
+	
+	
+	
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();

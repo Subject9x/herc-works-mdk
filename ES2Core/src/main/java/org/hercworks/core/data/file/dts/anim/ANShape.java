@@ -1,10 +1,9 @@
 package org.hercworks.core.data.file.dts.anim;
 
 import org.hercworks.core.data.file.dts.TSObjectHeader;
-import org.hercworks.core.data.file.dts.TSRootObject;
 import org.hercworks.core.data.file.dts.TSShape;
 
-public class ANShape extends TSShape implements TSRootObject{
+public class ANShape extends TSShape {
 	
 	private ANAnimList animationList;
 	

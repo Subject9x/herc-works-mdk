@@ -63,9 +63,10 @@ public class Vec3Short {
 //		val[1] = getY() / 10;
 //		val[2] = getZ() / 10;
 		
-		val[0] = (double)getX() / 10;
-		val[1] = (double)getY() / 10;
-		val[2] = (double)getZ() / 10;
+		
+		val[0] = (double)getX();// / 10;
+		val[1] = (double)getY();// / 10;
+		val[2] = (double)getZ();// / 10;
 		
 		return val;
 	}

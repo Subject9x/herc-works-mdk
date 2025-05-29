@@ -2,13 +2,13 @@ package org.hercworks.core.data.file.dts;
 
 import org.hercworks.core.data.struct.Vec3Short;
 
-public class TSBasePart extends TSObject implements TSRootObject{
+public class TSBasePart extends TSObject {
 
 	//unsigned
 	private short transform;
 
 	//unsigned
-	private short IDNumber;
+	private short uid;
 	
 	//unsigned
 	private short radius;
@@ -31,12 +31,12 @@ public class TSBasePart extends TSObject implements TSRootObject{
 		this.transform = transform;
 	}
 
-	public short getIDNumber() {
-		return IDNumber;
+	public short getUID() {
+		return uid;
 	}
 
-	public void setIDNumber(short iDNumber) {
-		IDNumber = iDNumber;
+	public void setUID(short iDNumber) {
+		uid = iDNumber;
 	}
 
 	public short getRadius() {
@@ -71,17 +71,12 @@ public class TSBasePart extends TSObject implements TSRootObject{
 
 	@Override
 	public StringBuilder jsonString(StringBuilder str) {
-
+		
 		str.append("\"transform\" : ").append(getTransform()).append(",\n");
-		str.append("\"IDNumber\" : ").append(getIDNumber()).append(",\n");
+		str.append("\"uid\" : \"").append(getUID()).append("\",\n");
 		str.append("\"radius\" : ").append(getRadius()).append(",\n");
 		str.append("\"center\" : ").append(getCenter().toString());
 		
 		return str;
-	}
-
-	@Override
-	public Vec3Short getRootCenter() {
-		return getCenter();
 	}
 }

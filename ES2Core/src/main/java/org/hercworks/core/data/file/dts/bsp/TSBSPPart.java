@@ -1,10 +1,9 @@
 package org.hercworks.core.data.file.dts.bsp;
 
 import org.hercworks.core.data.file.dts.TSObjectHeader;
-import org.hercworks.core.data.file.dts.TSRootObject;
 import org.hercworks.core.data.file.dts.part.TSPartList;
 
-public class TSBSPPart extends TSPartList implements TSRootObject{
+public class TSBSPPart extends TSPartList {
 	
 	private TSBSPPartNode[] nodes;
 	

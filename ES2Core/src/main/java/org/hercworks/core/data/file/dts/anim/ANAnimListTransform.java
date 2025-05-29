@@ -4,27 +4,27 @@ import org.hercworks.core.data.struct.Vec3Short;
 
 public class ANAnimListTransform {
 
-	private Vec3Short r;
-	private Vec3Short t;
+	private Vec3Short rotation;
+	private Vec3Short translation;
 	private int index;
 	
 	
 	public ANAnimListTransform() {}
 
-	public Vec3Short getR() {
-		return r;
+	public Vec3Short getRotation() {
+		return rotation;
 	}
 
-	public void setR(Vec3Short r) {
-		this.r = r;
+	public void setRotation(Vec3Short r) {
+		this.rotation = r;
 	}
 
-	public Vec3Short getT() {
-		return t;
+	public Vec3Short getTranslation() {
+		return translation;
 	}
 
-	public void setT(Vec3Short t) {
-		this.t = t;
+	public void setTranslation(Vec3Short t) {
+		this.translation = t;
 	}
 	
 	public int getIndex() {
@@ -41,8 +41,8 @@ public class ANAnimListTransform {
 		
 		str.append("{ \"class\" : \"").append(getClass().getSimpleName()).append("\",\n");
 		str.append("\"index\" : ").append(getIndex()).append(",\n");
-		str.append("\"r\" : ").append(getR().toString()).append(",\n");
-		str.append("\"t\" : ").append(getT().toString()).append("\n");
+		str.append("\"rotation\" : ").append(getRotation().toString()).append(",\n");
+		str.append("\"translation\" : ").append(getTranslation().toString()).append("\n");
 		str.append("}\n");
 		
 		return str.toString();
