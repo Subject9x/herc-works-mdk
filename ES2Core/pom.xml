@@ -11,7 +11,7 @@
   <name>HercWorksCore</name>
   <description>Core api and data structures for interacting with ES2 assets.</description>
   <packaging>jar</packaging>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
   
   <dependencies>
     <dependency>

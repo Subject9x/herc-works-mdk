@@ -16,6 +16,7 @@ public enum DefaultShapeColors {
 	BROWN_2((short)2, new double[] {0.40, 0.23, 0.15}),
 	GREEN_4((short)4,  new double[] {0.29, 0.28, 0.188}),
 	GREEN_5((short)5,  new double[] {0.28, 0.31, 0.28}),
+	GREEN_6((short)6,  new double[] {0.26, 0.32, 0.26}),
 	GRAY_8((short)8,  new double[] {0.83, 0.83, 0.83}),
 	GRAY_9((short)9,  new double[] {0.9, 0.9, 0.9}),
 	UNK_10((short)10,  new double[] {0.2, 0.5, 2.0}),
