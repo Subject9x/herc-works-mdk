@@ -22,7 +22,7 @@ public class TSBSPGroupNode {
 		this.back = back;
 	}
 
-	public int getCoeff() {
+	public short getCoeff() {
 		return coeff;
 	}
 

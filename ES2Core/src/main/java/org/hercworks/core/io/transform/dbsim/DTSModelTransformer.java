@@ -2,7 +2,6 @@ package org.hercworks.core.io.transform.dbsim;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,6 +73,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 
 		dts.setMeshes(meshes);
+		
 		return dts;
 	}
 	
@@ -86,7 +86,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 	 */
 	private TSObject loadChunkByType(TSObject parent) {
 		
-		int markerIndex = index;
+//		int markerIndex = index;
 		
 		byte[] marker = Bytes.from(indexSegment(4)).array();
 		
@@ -135,10 +135,6 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		if(Arrays.equals(TSObjectHeader.TS_POLY.val(), marker)) {
 			return readTSPoly(null, parent);
-		}
-		
-		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
-			return readTSShadedPoly(null, parent);
 		}
 		
 		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
@@ -293,7 +289,6 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		return link;
 	}
 	
-
 	private TSGroup readTSGroup(TSGroup link, TSObject parent) {
 		
 		if(link == null) {
@@ -508,10 +503,10 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		}
 		link = (TSShape) readTSPartList(link, parent);
 		
-		int len = 0;
-		for(TSObject c : link.getParts()) {
-			len += c.getByteLen();
-		}
+//		int len = 0;
+//		for(TSObject c : link.getParts()) {
+//			len += c.getByteLen();
+//		}
 		
 //		System.out.println("inital byte len= " + link.getByteLen());
 //		System.out.println("branch byte len= " + len);
@@ -595,7 +590,6 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		return seq;
 	}
-	
 	
 	private ANCyclicSequence readANCyclicSequence(ANCyclicSequence link, TSObject parent) {
 		
@@ -705,199 +699,410 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		
+		for(TSObject o : mdl.getMeshes()) {
+			byte[]  data = writeTSObject(null, o);
+			bytes.write(data);
+		}
 		
 		
-		return null;
+		return bytes.toByteArray();
 	}
 	
-	private TSObject writeTSObject(TSObject parent) {
+	private byte[] writeTSObject(TSObject parent, TSObject object) throws IOException {
+
 		
-		int markerIndex = index;
+		ByteArrayOutputStream objectData = new ByteArrayOutputStream();
+		ByteArrayOutputStream objectBytes = new ByteArrayOutputStream();
 		
-		byte[] marker = Bytes.from(indexSegment(4)).array();
 		
-		if(parent == null) {
-			System.out.println("\n");
-			dbgSpace = "";
-		}
-		else {
-			dbgSpace = "";
-			TSObject p = parent;
-			do {
-				dbgSpace += treeSpace;
-				p = p.getParent();
-			}
-			while(p != null);
+		if(Arrays.equals(TSObjectHeader.TS_BASE_PART.val(), object.getHeader().val())) {
+			objectBytes = writeTSBasePart((TSBasePart)object, objectBytes);
 		}
 		
-		System.out.println(dbgSpace + TSObjectHeader.findVal(marker) + " @ " + (markerIndex) + " | "
-									+ Bytes.from((markerIndex)).encodeHex() + " |"
-									+ " len " + Bytes.from(bytes, index, 4).byteOrder(ByteOrder.LITTLE_ENDIAN).toInt());
-		
-		
-		if(Arrays.equals(TSObjectHeader.TS_BASE_PART.val(), marker)) {
-			return readTSBasePart(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_PART_LIST.val(), object.getHeader().val())) {
+			objectBytes = writeTSPartList((TSPartList)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_PART_LIST.val(), marker)) {
-			return readTSPartList(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_SHAPE.val(), object.getHeader().val())) {
+			objectBytes = writeTSShape((TSShape)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_SHAPE.val(), marker)) {
-			return readTSShape(null, parent);
+		if(Arrays.equals(TSObjectHeader.AN_SHAPE.val(), object.getHeader().val())) {
+			objectBytes = writeANShape((ANShape)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.AN_SHAPE.val(), marker)) {
-			return readANShape(null, parent);
+		if(Arrays.equals(TSObjectHeader.BSP_PART.val(), object.getHeader().val())) {
+			objectBytes = writeTSBSPPart((TSBSPPart)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.BSP_PART.val(), marker)) {
-			return readTSBSPPart(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_GROUP.val(), object.getHeader().val())) {
+			objectBytes = writeTSGroup((TSGroup)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_GROUP.val(), marker)) {
-			return readTSGroup(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_POLY.val(), object.getHeader().val())) {
+			objectBytes = writeTSPoly((TSPoly)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_POLY.val(), marker)) {
-			return readTSPoly(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), object.getHeader().val())) {
+			objectBytes = writeTSSolidPoly((TSSolidPoly)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
-			return readTSShadedPoly(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_TEXTURE4_POLY.val(), object.getHeader().val())) {
+			objectBytes = writeTSTexture4Poly((TSTexture4Poly)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_SOLID_POLY.val(), marker)) {
-			return readTSSolidPoly(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_SHADED_POLY.val(), object.getHeader().val())) {
+			objectBytes = writeTSShadedPoly((TSShadedPoly)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_TEXTURE4_POLY.val(), marker)) {
-			return readTSTexture4Poly(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_GOURAUD_POLY.val(), object.getHeader().val())) {
+			objectBytes = writeTSGouradPoly((TSGouraudPoly)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_SHADED_POLY.val(), marker)) {
-			return readTSShadedPoly(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_CELL_ANIM_PART.val(), object.getHeader().val())) {
+			objectBytes = writeTSCellAnimPart((TSCellAnimPart)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_GOURAUD_POLY.val(), marker)) {
-			return readTSGouraudPoly(null, parent);
+		if(Arrays.equals(TSObjectHeader.AN_ANIM_LIST.val(), object.getHeader().val())) {
+			objectBytes = writeANAnimList((ANAnimList)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_CELL_ANIM_PART.val(), marker)) {
-			return readTSCellAnimPart(null, parent);
+		if(Arrays.equals(TSObjectHeader.AN_CYCLIC_SEQUENCE.val(), object.getHeader().val())) {
+			objectBytes = writeANCyclicSequence((ANCyclicSequence)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.AN_ANIM_LIST.val(), marker)) {
-			return readANAnimList(parent);
+		if(Arrays.equals(TSObjectHeader.AN_SEQUENCE.val(), object.getHeader().val())) {
+			objectBytes = writeANSequence((ANSequence)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.AN_CYCLIC_SEQUENCE.val(), marker)) {
-			return readANCyclicSequence(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_BITMAP_PART.val(), object.getHeader().val())) {
+			objectBytes = writeTSBitmapPart((TSBitmapPart)object, objectBytes); 
 		}
 		
-		if(Arrays.equals(TSObjectHeader.AN_SEQUENCE.val(), marker)) {
-			return readANSequence(null, parent);
+		if(Arrays.equals(TSObjectHeader.TS_DETAIL_PART.val(), object.getHeader().val())) {
+			objectBytes = writeTSDetailPart((TSDetailPart)object, objectBytes);
 		}
 		
-		if(Arrays.equals(TSObjectHeader.TS_BITMAP_PART.val(), marker)) {
-			return readTSBitmapPart(null, parent); 
+		if(Arrays.equals(TSObjectHeader.TS_BSP_GROUP.val(), object.getHeader().val())) {
+			objectBytes = writeTSBSPGroup((TSBSPGroup)object, objectBytes);
 		}
+
+		System.out.println("Write " + object.getHeader());
+		objectData.write(object.getHeader().val());
+		byte[] data = objectBytes.toByteArray();;
+		objectData.write(writeIntLE(data.length));
+		objectData.write(data);
 		
-		if(Arrays.equals(TSObjectHeader.TS_DETAIL_PART.val(), marker)) {
-			return readTSDetailPart(null, parent);
-		}
-		
-		if(Arrays.equals(TSObjectHeader.TS_BSP_GROUP.val(), marker)) {
-			return readTSBSPGroup(null, parent);
-		}
-		
-		System.out.println("->Unknown chunk = " + Arrays.toString(marker));
-		int len = indexIntLE();
-		System.out.println("--->len = " + len);
-		skip(len);
-		
-		return null;
+		byte[] arr = objectData.toByteArray(); 
+		return arr;
 	}
 	
-	private int writeTSPoly(TSPoly poly, ByteArrayOutputStream bos) throws IOException {
+	private ByteArrayOutputStream writeTSBasePart(TSBasePart basePart, ByteArrayOutputStream bos) throws IOException  {
+
+		bos.write(writeShortLE(basePart.getTransform()));
+		bos.write(writeShortLE(basePart.getUID()));
+		bos.write(writeShortLE(basePart.getRadius()));
+		bos.write(writeShortLE(basePart.getCenter().getX()));
+		bos.write(writeShortLE(basePart.getCenter().getY()));
+		bos.write(writeShortLE(basePart.getCenter().getZ()));
 		
-		bos.write(poly.getHeader().val());
-		bos.write(writeInt(8));
-		bos.write(writeShort(poly.getNormal()));
-		bos.write(writeShort(poly.getCenter()));
-		bos.write(writeShort(poly.getVertexCount()));
-		bos.write(writeShort(poly.getVertexList()));
-		
-		return 8;	//poly length always 10
+		return bos;	
 	}
 	
-	private int writeTSSolidPoly(TSSolidPoly solidPoly, ByteArrayOutputStream bos) throws IOException  {
+	private ByteArrayOutputStream writeTSBitmapPart(TSBitmapPart bitmapPart, ByteArrayOutputStream bos) throws IOException  {
 		
-		bos.write(solidPoly.getHeader().val());
-		bos.write(writeInt(10));
-		bos.write(writeShort(solidPoly.getNormal()));
-		bos.write(writeShort(solidPoly.getCenter()));
-		bos.write(writeShort(solidPoly.getVertexCount()));
-		bos.write(writeShort(solidPoly.getVertexList()));
-		bos.write(writeShort(solidPoly.getColorIndexId()));
+		bos = writeTSBasePart((TSBasePart)bitmapPart, bos);
 		
-		return 10;	//length always 10
+		bos.write(writeShortLE(bitmapPart.getBmpTag()));
+		bos.write(bitmapPart.getOfsX());
+		bos.write(bitmapPart.getOfsY());
+		
+		return bos;
+	}
+
+	private ByteArrayOutputStream writeTSDetailPart(TSDetailPart detailPart, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSPartList(detailPart, bos);
+		
+		for(int d=0; d < detailPart.getDetails().length; d++) {
+			bos.write(writeShortLE(detailPart.getDetails()[d]));
+		}
+		
+		return bos;
 	}
 	
-	private int writeTSShadedPoly(TSShadedPoly shadedPoly, ByteArrayOutputStream bos) throws IOException  {
+	private ByteArrayOutputStream writeTSPartList(TSPartList partList, ByteArrayOutputStream bos) throws IOException  {
 		
-		bos.write(shadedPoly.getHeader().val());
-		bos.write(writeInt(10));
-		bos.write(writeShort(shadedPoly.getNormal()));
-		bos.write(writeShort(shadedPoly.getCenter()));
-		bos.write(writeShort(shadedPoly.getVertexCount()));
-		bos.write(writeShort(shadedPoly.getVertexList()));
-		bos.write(writeShort(shadedPoly.getColorIndexId()));
+		bos = writeTSBasePart((TSBasePart)partList, bos);
 		
-		return 10;	//length always 10
+		bos.write(writeShortLE((short)partList.getParts().length));
+		for(int i=0; i < partList.getParts().length; i++) {
+			byte[] data = writeTSObject(partList, partList.getParts()[i]);
+			
+			bos.write(data);
+			bos.flush();
+		}
+		
+		return bos;
 	}
 	
-//	private int writeTSBasePart(TSBasePart basePart, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSPartList(TSPartList partList, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSShape(TSShape shape, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSGouradPoly(TSGouraudPoly gouradPoly, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSBSPGroup(TSBSPGroup bspGroup, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSCellAnimPart(TSCellAnimPart animPart, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSDetailPart(TSDetailPart detailPart, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSTexture4Poly(TSTexture4Poly texturePoly, ByteArrayOutputStream bos) throws IOException  {
-//
-//		bos.write(texturePoly.getHeader().val());
-//		bos.write(writeInt(10));
-//		bos.write(writeShort(texturePoly.getNormal()));
-//		bos.write(writeShort(texturePoly.getCenter()));
-//		bos.write(writeShort(texturePoly.getVertexCount()));
-//		bos.write(writeShort(texturePoly.getVertexList()));
-//		bos.write(writeShort(texturePoly.getColorIndexId()));
-//		
-//		return 10;	//length always 10
-//	}
-//	
-//	private int writeTSGroup(TSGroup group, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeTSBitmapPart(TSBitmapPart bitmapPart, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeBSPPart(TSBSPPart part, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeANSequence(ANSequence anSeq, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeANAnimList(ANAnimList animList, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeANShape(ANShape shape, ByteArrayOutputStream bos) throws IOException  {}
-//	
-//	private int writeANCyclicSequence(ANCyclicSequence cycleSeq, ByteArrayOutputStream bos) throws IOException  {}
+	private ByteArrayOutputStream writeTSCellAnimPart(TSCellAnimPart animPart, ByteArrayOutputStream bos) throws IOException  {
+
+		bos = writeTSPartList(animPart, bos);
+		
+		bos.write(writeShortLE(animPart.getAnimSequence()));
+		
+		return bos;		
+	}
 	
+	private ByteArrayOutputStream writeTSGroup(TSGroup group, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSBasePart(group, bos);
+		
+		bos.write(writeShortLE((short)group.getIndexes().length));
+		bos.write(writeShortLE((short)group.getPoints().length));
+		bos.write(writeShortLE((short)(group.getSurfaces().length * 4)));
+		bos.write(writeShortLE((short)group.getPolys().length));
+		
+		for(int i=0; i < group.getIndexes().length; i++) {
+			bos.write(writeShortLE(group.getIndexes()[i]));
+		}
+		
+		for(int p=0; p < group.getPoints().length; p++) {
+			bos.write(writeShortLE(group.getPoints()[p].getX()));
+			bos.write(writeShortLE(group.getPoints()[p].getY()));
+			bos.write(writeShortLE(group.getPoints()[p].getZ()));
+		}
+
+		for(int srf=0; srf < group.getSurfaces().length; srf++) {
+			TSSurfaceEntry surface = group.getSurfaces()[srf];
+
+			bos.write(writeShortLE(surface.getFrontColor()));
+			bos.write(writeShortLE(surface.getFrontFlag()));
+			bos.write(writeShortLE(surface.getFrontLineColor()));
+			bos.write(writeShortLE(surface.getFrontLineFlag()));
+			bos.write(writeShortLE(surface.getBackColor()));
+			bos.write(writeShortLE(surface.getBackColorFlag()));
+			bos.write(writeShortLE(surface.getBackLineColor()));
+			bos.write(writeShortLE(surface.getBackLineFlag()));
+		}
+
+		for(int ply=0; ply < group.getPolys().length; ply++) {
+			byte[] data = writeTSObject(group, group.getPolys()[ply]);
+			bos.write(data);
+		}
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSBSPGroup(TSBSPGroup bspGroup, ByteArrayOutputStream bos) throws IOException  {
+	
+		bos = writeTSGroup(bspGroup, bos);
+		
+		bos.write(writeShortLE((short)bspGroup.getGroupNodes().length));
+		
+		for(int n=0; n < bspGroup.getGroupNodes().length; n++) {
+			
+			TSBSPGroupNode node = bspGroup.getGroupNodes()[n];
+			
+			bos.write(writeShortLE(node.getCoeff()));
+			bos.write(writeShortLE(node.getPoly()));
+			bos.write(writeShortLE(node.getFront()));
+			bos.write(writeShortLE(node.getBack()));
+		}
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSPoly(TSPoly poly, ByteArrayOutputStream bos) throws IOException {
+		
+		bos.write(writeShortLE(poly.getNormal()));
+		bos.write(writeShortLE(poly.getCenter()));
+		bos.write(writeShortLE(poly.getVertexCount()));
+		bos.write(writeShortLE(poly.getVertexList()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSSolidPoly(TSSolidPoly solidPoly, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSPoly(solidPoly, bos);
+		bos.write(writeShortLE(solidPoly.getColorIndexId()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSShadedPoly(TSShadedPoly shadedPoly, ByteArrayOutputStream bos) throws IOException  {
+		
+		return writeTSSolidPoly(shadedPoly, bos);
+	}
+	
+	private ByteArrayOutputStream writeTSTexture4Poly(TSTexture4Poly texture4Poly, ByteArrayOutputStream bos) throws IOException  {
+		
+		return writeTSSolidPoly(texture4Poly, bos);
+	}
+	
+	private ByteArrayOutputStream writeTSGouradPoly(TSGouraudPoly gouradPoly, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSSolidPoly(gouradPoly, bos);
+		bos.write(writeShortLE(gouradPoly.getNormalList()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSShape(TSShape shape, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSPartList(shape, bos);
+		
+		bos.write(writeShortLE((short)shape.getTransformList().length));
+		
+		bos.write(writeShortLE((short)shape.getSequenceList().length));
+
+		for(int s=0; s < shape.getSequenceList().length; s++) {
+			bos.write(writeShortLE(shape.getSequenceList()[s]));
+		}
+		
+		for(int t=0; t < shape.getTransformList().length; t++) {
+			bos.write(writeShortLE(shape.getTransformList()[t]));
+		}
+		
+		return bos;
+	}
+
+	private ByteArrayOutputStream writeTSBSPPartNode(TSBSPPartNode node, ByteArrayOutputStream bos) throws IOException{
+		
+		bos.write(writeShortLE(node.getNormal().getX()));
+		bos.write(writeShortLE(node.getNormal().getY()));
+		bos.write(writeShortLE(node.getNormal().getZ()));
+		
+		bos.write(writeIntLE(node.getCoeff()));
+		bos.write(writeShortLE(node.getFront()));
+		bos.write(writeShortLE(node.getBack()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeTSBSPPart(TSBSPPart part, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSPartList(part, bos);
+		
+		bos.write(writeShortLE((short)part.getNodes().length));
+		for(int n=0; n < part.getNodes().length; n++) {
+			bos = writeTSBSPPartNode(part.getNodes()[n], bos);
+		}
+		
+		for(int p=0; p < part.getNodes().length; p++) {
+			bos.write(writeShortLE(part.getTransforms()[p]));
+		}
+		
+		return bos;
+	}
+	
+	
+	private ByteArrayOutputStream writeANAnimListTransition(ANAnimListTransition transition, ByteArrayOutputStream bos) throws IOException{
+		
+		bos.write(writeShortLE(transition.getTick()));
+		bos.write(writeShortLE(transition.getDestSequence()));
+		bos.write(writeShortLE(transition.getDestFrame()));
+		bos.write(writeShortLE(transition.getGroundMovement()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeANAnimListTransform(ANAnimListTransform transform, ByteArrayOutputStream bos) throws IOException{
+		
+		bos.write(writeShortLE(transform.getRotation().getX()));
+		bos.write(writeShortLE(transform.getRotation().getY()));
+		bos.write(writeShortLE(transform.getRotation().getZ()));
+		
+		bos.write(writeShortLE(transform.getTranslation().getX()));
+		bos.write(writeShortLE(transform.getTranslation().getY()));
+		bos.write(writeShortLE(transform.getTranslation().getZ()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeANAnimList(ANAnimList animList, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos.write(writeShortLE((short)animList.getSequences().length));
+		for(int s=0; s < animList.getSequences().length; s++) {
+			byte[] data = writeTSObject(animList, animList.getSequences()[s]);
+			bos.write(data);
+		}
+		
+		bos.write(writeShortLE((short)animList.getTransitions().length));
+		for(int t=0; t < animList.getTransitions().length; t++) {
+			bos = writeANAnimListTransition(animList.getTransitions()[t], bos);
+		}
+		
+		bos.write(writeShortLE((short)animList.getTransforms().length));
+		for(int t=0; t < animList.getTransforms().length; t++) {
+			bos = writeANAnimListTransform(animList.getTransforms()[t], bos);
+		}
+
+		bos.write(writeShortLE((short)animList.getDefaultTransforms().length));
+		for(int d=0; d < animList.getDefaultTransforms().length; d++) {
+			bos.write(writeShortLE(animList.getDefaultTransforms()[d]));
+		}
+		
+		bos.write(writeShortLE((short)animList.getRelations().length));
+		for(int r=0; r < animList.getRelations().length; r++) {
+			bos.write(writeShortLE(animList.getRelations()[r].getX()));
+			bos.write(writeShortLE(animList.getRelations()[r].getY()));
+		}
+		
+		return bos;
+		
+	}
+	
+	private ByteArrayOutputStream writeANSequenceFrame(ANSequenceFrame frame, ByteArrayOutputStream bos) throws IOException{
+		
+		bos.write(writeShortLE(frame.getTick()));
+		bos.write(writeShortLE(frame.getFirstTransition()));
+		bos.write(writeShortLE(frame.getNumTransitions()));
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeANSequence(ANSequence seq, ByteArrayOutputStream bos) throws IOException {
+		
+		bos.write(writeShortLE(seq.getTick()));
+		bos.write(writeShortLE(seq.getPriority()));
+		bos.write(writeShortLE(seq.getGroundMovement()));
+		
+		bos.write(writeShortLE((short)seq.getFrames().length));
+		for(int f=0; f < seq.getFrames().length; f++) {
+			bos = writeANSequenceFrame(seq.getFrames()[f], bos);
+		}
+		
+		bos.write(writeShortLE((short)seq.getPartIds().length));
+		for(int p=0; p < seq.getPartIds().length; p++) {
+			bos.write(writeShortLE(seq.getPartIds()[p]));
+		}
+		
+		for(int t=0; t < seq.getTransformIndices().length; t++) {
+			bos.write(writeShortLE(seq.getTransformIndices()[t]));
+		}
+		
+		return bos;
+	}
+	
+	private ByteArrayOutputStream writeANCyclicSequence(ANCyclicSequence seq, ByteArrayOutputStream bos) throws IOException {
+		
+		bos = writeANSequence(seq, bos);
+		
+		return bos;
+	}
+		
+	private ByteArrayOutputStream writeANShape(ANShape shape, ByteArrayOutputStream bos) throws IOException  {
+		
+		bos = writeTSShape(shape, bos);
+		
+		byte[] data = writeTSObject(shape, shape.getAnimationList());
+		bos.write(data);
+		
+		return bos;
+	}
 	
 	
 	@Override

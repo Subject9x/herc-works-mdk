@@ -3,8 +3,11 @@ package org.hercworks.core.dyn;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
+import org.hercworks.core.data.file.dyn.DynamixThreeSpaceModel;
 import org.hercworks.core.io.transform.dbsim.DTSModelTransformer;
 import org.junit.Test;
 
@@ -27,7 +30,17 @@ public class TestDTS {
 			
 			byte[] fileData = fizz.readAllBytes();
 			fizz.close();
-			transform.bytesToObject(fileData);
+			DynamixThreeSpaceModel dts = (DynamixThreeSpaceModel)transform.bytesToObject(fileData);
+			
+			
+			if(dts != null) {
+				byte[] exportData = transform.objectToBytes(dts);
+				
+				FileOutputStream fos = new FileOutputStream(new File("E:\\ES2_OS\\dev\\earthsiege2\\unpack\\dts\\SMUGSON.DTS"));
+				fos.write(exportData);
+				fos.close();
+				
+			}
 			
 			
 		} catch (FileNotFoundException e) {
