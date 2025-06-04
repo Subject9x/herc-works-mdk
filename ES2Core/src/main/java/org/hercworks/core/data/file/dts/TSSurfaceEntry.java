@@ -1,7 +1,5 @@
 package org.hercworks.core.data.file.dts;
 
-import java.util.Arrays;
-
 /**
  * UTILITY
  * 
@@ -17,6 +15,7 @@ public class TSSurfaceEntry {
 
 	private short frontColor;
 	private short frontFlag;
+	
 	private short frontLineColor;
 	private short frontLineFlag;
 	

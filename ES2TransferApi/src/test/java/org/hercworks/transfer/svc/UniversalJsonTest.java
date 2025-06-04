@@ -14,12 +14,16 @@ import java.nio.file.Paths;
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
+import org.hercworks.core.data.file.dyn.DynamixThreeSpaceModel;
+import org.hercworks.core.io.transform.dbsim.DTSModelTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
+import org.hercworks.transfer.dto.file.sim.dts.DTSRootDTO;
+import org.hercworks.transfer.svc.impl.dbsim.DTSServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.WeaponsDatShellDTOServiceImpl;
@@ -197,5 +201,48 @@ public class UniversalJsonTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Test
+	public void testDTStoDTO() {
+		
+		try(FileInputStream fizz = new FileInputStream(new File("e://es2_os//dev//earthsiege2//unpack//simvol0//dts//samson.dts"))){
+			
+			byte[] data = fizz.readAllBytes();
+			fizz.close();
+			DTSModelTransformer convert = new DTSModelTransformer();
+			DynamixThreeSpaceModel dts = (DynamixThreeSpaceModel)convert.bytesToObject(data);
+			dts.setFileName("SAMSON.DTS");
+//
+			DTSServiceImpl dtoSvc = new DTSServiceImpl();
+			DTSRootDTO dto = (DTSRootDTO) dtoSvc.convertToDTO(dts);
+//			
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+//			
+			File export = new File("e://es2_os/dev/earthsiege2/unpack/dts/smugson.json");
+			objectMapper.writeValue(export, dto);
+			
+			DTSRootDTO readDTO = (DTSRootDTO)objectMapper.readValue(export, DTSRootDTO.class);
+			
+			dts = (DynamixThreeSpaceModel)dtoSvc.fromDTO(readDTO);
+			
+			FileOutputStream foss = new FileOutputStream(new File("e://es2_os//dev//earthsiege2//dts//samson.dts"));
+			foss.write(convert.objectToBytes(dts));
+			foss.close();
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

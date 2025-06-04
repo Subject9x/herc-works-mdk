@@ -20,6 +20,7 @@ import org.hercworks.transfer.dto.file.sim.MissileDatDTO;
 import org.hercworks.transfer.dto.file.sim.PaperDollDTO;
 import org.hercworks.transfer.dto.file.sim.ProjectileDataDTO;
 import org.hercworks.transfer.dto.file.sim.WpnPDGDTO;
+import org.hercworks.transfer.dto.file.sim.dts.DTSRootDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -51,12 +52,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @Type(value = MissileDatDTO.class, name = "MissileDatFile"),
   @Type(value = PaperDollDTO.class, name = "PaperDollGraphic"),
   @Type(value = ProjectileDataDTO.class, name = "ProjectileData"),
-  @Type(value = WpnPDGDTO.class, name = "WeaponPaperDiagram")
+  @Type(value = WpnPDGDTO.class, name = "WeaponPaperDiagram"),
+  
+  @Type(value = DTSRootDTO.class, name = "DTSModel"),
 })
 public abstract class TransferObject {
 	//meta class for generics.
 
-	@JsonProperty(value = "fileName")
+	@JsonProperty(value = "fileName", index = 0)
 	private String fileName;
 	
 	public String getFileName() {

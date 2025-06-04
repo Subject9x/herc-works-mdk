@@ -304,7 +304,8 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 		
 		short[] indexes = new short[indexShortLE()];
 		Vec3Short[] points = new Vec3Short[indexShortLE()];
-		int colorCount = indexShortLE() / 4;
+		int colorCount = indexShortLE();
+		colorCount = colorCount / 4;
 		TSObject[] items = new TSObject[indexShortLE()];
 		
 		
