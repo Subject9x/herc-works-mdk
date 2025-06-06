@@ -6,6 +6,7 @@ import java.util.List;
 import org.hercworks.core.data.file.dts.TSBasePart;
 import org.hercworks.core.data.file.dts.TSGroup;
 import org.hercworks.core.data.file.dts.TSObject;
+import org.hercworks.core.data.file.dts.TSObjectHeader;
 import org.hercworks.core.data.file.dts.TSPoly;
 import org.hercworks.core.data.file.dts.TSShape;
 import org.hercworks.core.data.file.dts.TSSurfaceEntry;
@@ -83,81 +84,88 @@ public class DTSServiceImpl implements GeneralDTOService {
 		
 		return exportDTO;
 	}
-
 	
+	/**
+	 * most DTS are a collection of shapes, and sometimes we just need 1 of the sub objects printed out.
+	 * @param o
+	 * @return
+	 */
+	public TSObjectDTO convertSingleTSObject(TSObject o) {
+		return buildTSObject(o);
+	}
 	
 	private TSObjectDTO buildTSObject(TSObject o) {
 		
 		System.out.println(o.getClass().getSimpleName());
-		if(o.getClass().getSimpleName().equals("TSBasePart")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_BASE_PART.id())) {
 			return expTSBasePart((TSBasePart)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSPartList")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_PART_LIST.id())) {
 			return expTSPartList((TSPartList)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSShape")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_SHAPE.id())) {
 			return expTSShape((TSShape)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("ANShape")) {
+		if(o.getHeader().id().equals(TSObjectHeader.AN_SHAPE.id())) {
 			return expANShape((ANShape)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSBSPPart")) {
+		if(o.getHeader().id().equals(TSObjectHeader.BSP_PART.id())) {
 			return expTSBSPPart((TSBSPPart)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSGroup")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_GROUP.id())) {
 			return expTSGroup((TSGroup)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSPoly")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_POLY.id())) {
 			return expTSPoly((TSPoly)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSSolidPoly")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_SOLID_POLY.id())) {
 			return expTSSolidPoly((TSSolidPoly)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSTexture4Poly")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_TEXTURE4_POLY.id())) {
 			return expTSTexture4Poly((TSTexture4Poly)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSShadedPoly")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_SHADED_POLY.id())) {
 			return expTSShadedPoly((TSShadedPoly)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSGouraudPoly")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_GOURAUD_POLY.id())) {
 			return expTSGouradPoly((TSGouraudPoly)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSCellAnimPart")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_CELL_ANIM_PART.id())) {
 			return expTSCellAnimPart((TSCellAnimPart)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("ANAnimList")) {
+		if(o.getHeader().id().equals(TSObjectHeader.AN_ANIM_LIST.id())) {
 			return expANAnimList((ANAnimList)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("ANCyclicSequence")) {
+		if(o.getHeader().id().equals(TSObjectHeader.AN_CYCLIC_SEQUENCE.id())) {
 			return expANCylicSequence((ANCyclicSequence)o);
 		}
 		
-		if(o.getClass().getSimpleName().equals("ANSequence")) {
+		if(o.getHeader().id().equals(TSObjectHeader.AN_SEQUENCE.id())) {
 			return expANSequence((ANSequence)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSBitmapPart")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_BITMAP_PART.id())) {
 			return expTSBitmapPart((TSBitmapPart)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSDetailPart")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_DETAIL_PART.id())) {
 			return expTSDetailPart((TSDetailPart)o, null);
 		}
 		
-		if(o.getClass().getSimpleName().equals("TSBSPGroup")) {
+		if(o.getHeader().id().equals(TSObjectHeader.TS_BSP_GROUP.id())) {
 			return expTSBSPGroup((TSBSPGroup)o, null);
 		}
 		
@@ -172,7 +180,7 @@ public class DTSServiceImpl implements GeneralDTOService {
 		
 		link.setTransform(o.getTransform());
 		
-		link.setTransformId(o.getUID());
+		link.setIdNumber(o.getIdNumber());
 		
 		link.setRadius((float)o.getRadius());
 		
@@ -373,6 +381,8 @@ public class DTSServiceImpl implements GeneralDTOService {
 		TSGouraudPolyDTO t = new TSGouraudPolyDTO();
 		
 		t = (TSGouraudPolyDTO) expTSSolidPoly(p, t);
+		
+		t.setNormalList(p.getNormalList());
 		
 		return t;
 	}
@@ -660,7 +670,7 @@ public class DTSServiceImpl implements GeneralDTOService {
 		
 		link.setTransform((short)dto.getTransform());
 		
-		link.setUID((short)dto.getTransformId());
+		link.setIdNumber((short)dto.getIdNumber());
 		
 		link.setRadius((short)Math.round(dto.getRadius()));
 		
@@ -1040,9 +1050,9 @@ public class DTSServiceImpl implements GeneralDTOService {
 	private float[] vec3ToFloat(Vec3Short v) {
 		
 		float[] f = new float[3];
-		f[0] = (float)v.getX();
-		f[1] = (float)v.getY();
-		f[2] = (float)v.getZ();
+		f[0] = (float)v.getX() / 10;
+		f[1] = (float)v.getY() / 10;
+		f[2] = (float)v.getZ() / 10;
 		
 		return f;
 	}
@@ -1051,9 +1061,9 @@ public class DTSServiceImpl implements GeneralDTOService {
 		
 		Vec3Short vec3 = new Vec3Short();
 		
-		vec3.setX((short)Math.round(vec[0]));
-		vec3.setY((short)Math.round(vec[1]));
-		vec3.setZ((short)Math.round(vec[2]));
+		vec3.setX((short)Math.round(vec[0] * 10));
+		vec3.setY((short)Math.round(vec[1] * 10));
+		vec3.setZ((short)Math.round(vec[2] * 10));
 		
 		return vec3;
 	}

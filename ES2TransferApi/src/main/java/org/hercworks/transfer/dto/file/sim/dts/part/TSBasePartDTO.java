@@ -21,7 +21,7 @@ public class TSBasePartDTO extends TSObjectDTO {
 
 	private int transform;
 	
-	private int transformId;
+	private int idNumber;
 	
 	private float radius;
 	
@@ -38,12 +38,12 @@ public class TSBasePartDTO extends TSObjectDTO {
 		this.transform = transform;
 	}
 
-	public int getTransformId() {
-		return transformId;
+	public int getIdNumber() {
+		return idNumber;
 	}
 
-	public void setTransformId(int transformId) {
-		this.transformId = transformId;
+	public void setIdNumber(int transformId) {
+		this.idNumber = transformId;
 	}
 
 	public float getRadius() {

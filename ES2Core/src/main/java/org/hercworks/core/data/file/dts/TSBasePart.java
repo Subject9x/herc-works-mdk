@@ -8,7 +8,7 @@ public class TSBasePart extends TSObject {
 	private short transform;
 
 	//unsigned
-	private short uid;
+	private short idNumber;
 	
 	//unsigned
 	private short radius;
@@ -31,12 +31,12 @@ public class TSBasePart extends TSObject {
 		this.transform = transform;
 	}
 
-	public short getUID() {
-		return uid;
+	public short getIdNumber() {
+		return idNumber;
 	}
 
-	public void setUID(short iDNumber) {
-		uid = iDNumber;
+	public void setIdNumber(short iDNumber) {
+		idNumber = iDNumber;
 	}
 
 	public short getRadius() {
@@ -73,7 +73,7 @@ public class TSBasePart extends TSObject {
 	public StringBuilder jsonString(StringBuilder str) {
 		
 		str.append("\"transform\" : ").append(getTransform()).append(",\n");
-		str.append("\"uid\" : \"").append(getUID()).append("\",\n");
+		str.append("\"uid\" : \"").append(getIdNumber()).append("\",\n");
 		str.append("\"radius\" : ").append(getRadius()).append(",\n");
 		str.append("\"center\" : ").append(getCenter().toString());
 		

@@ -200,7 +200,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 			link.setParent(parent);
 		}
 		link.setTransform(indexShortLE());
-		link.setUID(indexShortLE());
+		link.setIdNumber(indexShortLE());
 		link.setRadius(indexShortLE());
 		link.setCenter(new Vec3Short(indexShortLE(), indexShortLE(), indexShortLE()));
 
@@ -801,7 +801,7 @@ public class DTSModelTransformer extends ThreeSpaceByteTransformer {
 	private ByteArrayOutputStream writeTSBasePart(TSBasePart basePart, ByteArrayOutputStream bos) throws IOException  {
 
 		bos.write(writeShortLE(basePart.getTransform()));
-		bos.write(writeShortLE(basePart.getUID()));
+		bos.write(writeShortLE(basePart.getIdNumber()));
 		bos.write(writeShortLE(basePart.getRadius()));
 		bos.write(writeShortLE(basePart.getCenter().getX()));
 		bos.write(writeShortLE(basePart.getCenter().getY()));
