@@ -203,6 +203,48 @@ public class TestDBAandDPL {
 		
 	}
 	
+	@Test
+	public void loadAndExportDBAHeightmap(){
+		
+		String targURL = "E:\\ES2_OS\\dev\\earthsiege2\\unpack\\zones\\DBA\\zone7000.DBA";
+		
+		
+		File targDir = new File("E:\\ES2_OS\\dev\\earthsiege2\\unpack\\zones\\DBA\\");
+		
+		for(File f : targDir.listFiles()) {
+			if(!f.isDirectory()) {
+				if(f.getName().toLowerCase().contains(".dba")) {
+					DynamixBitmapArray loadedDBA = null;
+					try {
+						loadedDBA = DynFileReader.loadDBA(f.getAbsolutePath());
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getMessage());
+					}
+					
+					assertNotNull(loadedDBA);
+					
+					File dbaExportdir = new File(loadedDBA.getFilePath()+"\\"+loadedDBA.originNameNoExt());
+					if(!dbaExportdir.exists()) {
+						dbaExportdir.mkdir();
+					}
+					
+					for(DynamixBitmap dbm : loadedDBA.getImages()) {
+						
+						
+						dbm.setFileName(loadedDBA.originNameNoExt() + dbm.getFileName());
+						dbm.assignDir(dbaExportdir.getPath()+"\\");
+
+						DynFileWriter.writeDBMToHeightmap(dbm, dbm.getFilePath());
+						
+					}
+				}
+			}
+		}
+		
+			
+	}
+	
 	
 	public void loadAndExport(String dplPath, String targDB) {
 		

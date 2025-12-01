@@ -106,6 +106,66 @@ public final class DynFileWriter {
 		
 	}
 	
+	/**
+	 * example: ZONES.VOL/DBA/ZONE_X.DBA
+	 * These are assumed to be grayscale heightmaps, thus they have no corresponding DPL files, and instead use an implicit, derived grayscale palette.
+	 * @param dbm
+	 * @param filePath
+	 */
+	public static void writeDBMToHeightmap(DynamixBitmap dbm, String filePath) {
+		
+		File file = new File(filePath + dbm.getFileName() + ".png");
+		BufferedImage imageOut = null;
+		//TYPE_USHORT_555_RGB almost has it
+		//XXX: TYPE_INT_ARGB - DOES NOT WORK WITH IMAGEIO on .BMP!
+		
+		try {
+			imageOut = new BufferedImage(dbm.getCols(), dbm.getRows(), BufferedImage.TYPE_BYTE_GRAY);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		WritableRaster rast = (WritableRaster)imageOut.getRaster();
+		byte[] rasterData = new byte[dbm.getCols() * dbm.getRows() * 4];
+		
+		int i = 0;
+		for(int r=0; r < dbm.getRows(); r++) {
+			for(int c=0; c < dbm.getCols(); c++) {
+				if(i >= dbm.getImageData().length()) {
+					break;
+				}
+				int cell = (r * dbm.getCols()) + c;
+				int idx = Byte.toUnsignedInt(dbm.getImageData().array()[cell]);
+				
+				try {
+					//convert to basic grayscale value
+					byte clr = (byte) (idx / 255.0 * 200);
+					rasterData[i] = clr;
+				}
+				catch(NullPointerException nope) {
+					System.out.println("PIXEL("+c+","+r+")=" + (byte)idx + "~MISSING"); 
+				}
+				catch(Exception e) {
+					System.out.println("ERROR - " + e.getMessage());
+				}
+				i++;
+			}
+		}
+		rast.setDataElements(0, 0, dbm.getCols(), dbm.getRows(), rasterData);
+		
+		boolean wrote = false;
+		try {
+			wrote = ImageIO.write(imageOut, "png", file);
+		} catch (Throwable t) {
+			System.out.println(t.getMessage());
+		}
+		System.out.println("write file" + wrote);
+		
+		
+	}
+	
 	public static void writeDBMToFileNoPalette(DynamixBitmap dbm, String filePath) {
 		
 		
