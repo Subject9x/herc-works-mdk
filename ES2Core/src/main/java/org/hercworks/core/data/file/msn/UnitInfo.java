@@ -1,5 +1,8 @@
 package org.hercworks.core.data.file.msn;
 
+import java.util.Arrays;
+
+import org.hercworks.core.data.struct.WeaponLUT;
 import org.hercworks.core.data.struct.herc.HercLUT;
 
 /**
@@ -9,7 +12,6 @@ import org.hercworks.core.data.struct.herc.HercLUT;
  */
 public class UnitInfo {
 
-	
 	
 	private short indexId;
 	
@@ -83,5 +85,38 @@ public class UnitInfo {
 
 	public void setTerminalFlag(short terminalFlag) {
 		this.terminalFlag = terminalFlag;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		
+		
+		str.append("{\n");
+		str.append("	map uuid? = ").append(getIndexId()).append("\n");
+		str.append("	flags = \n");
+		str.append("		").append(Arrays.toString(getHeaderFlags())).append("\n");
+		if(getUnitId() == null) {
+			str.append("	No unit id!?\n");
+		}
+		else {
+			str.append("	").append(getUnitId().getName()).append("\n");
+		}
+		str.append(" 	weapons = [");
+		for(short s : getWeapons()) {
+			if(s == -1) {
+				str.append(WeaponLUT.NONE.getName()).append(", ");
+			}
+			else {
+				str.append(WeaponLUT.getById((int)s).getName()).append(", ");
+			}
+		}
+		str.append("]\n		");
+		str.append(Arrays.toString(getUnkFlags())).append("\n");
+		str.append("	hp mod = ").append(getHealthModAdjust()).append("\n");
+		str.append("	terminal = ").append(getTerminalFlag()).append("\n");
+		str.append("}\n");
+		
+		return str.toString();
 	}
 }

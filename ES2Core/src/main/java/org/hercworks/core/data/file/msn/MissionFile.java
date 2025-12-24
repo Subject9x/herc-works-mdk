@@ -4,7 +4,7 @@ import org.hercworks.voln.DataFile;
 
 /**
  * 	FILE
- * 		/ZONES.VOL/MSN/ZONE.DAT
+ * 		/ZONES.VOL/MSN/MSN_FILE.MSN
  * 		
  */
 
@@ -23,7 +23,11 @@ public class MissionFile extends DataFile {
 	
 	private short zoneNumber;
 	
+	private short[] unknown4ByteOr2ByteVals;
+	
 	private MapCoord[] mapCoordHeader;
+	
+	//some unknown, variable-length block of data.
 	
 	private UnitInfo[] mapUnits;
 	
@@ -34,5 +38,11 @@ public class MissionFile extends DataFile {
 	private UnkEntity22Byte[] unk22ByteEnts;
 	
 	private UnkEntity164Bytes[] unk164ByteEnts;
+	
+	
+	public MissionFile() {}
+	
+	
+	
 	
 }

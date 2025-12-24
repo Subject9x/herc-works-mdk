@@ -44,29 +44,29 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		save.setDir(FileType.SAV);
 		
 		//INVENTORY SEGMENT - 33 entries, matches total weapons in game, ERROR/cut weapon id's ARE included here, but zeroed out.
-		System.out.println("Parsing Inventory Segment----------------" + index);
+//		System.out.println("Parsing Inventory Segment----------------" + index);
 		Inventory inventory = new Inventory();
 		inventory.setItems(new Inventory.InventoryItem[WeaponLUT.values().length]);
 		for(int i=0; i < WeaponLUT.values().length; i++) {
-			System.out.println("	weapon at @" + index);
+//			System.out.println("	weapon at @" + index);
 			byte flag = indexByte();
 			short quant = indexShortLE();
 			Inventory.InventoryItem entry = inventory.newEntry();
 			entry.setId(WeaponLUT.getById((short)(i)));
 			entry.setUnlockFlag(flag);
 			entry.setQuantity(quant);
-			System.out.println("		["+entry.getId().getName()+"]=" + entry.getQuantity());
+//			System.out.println("		["+entry.getId().getName()+"]=" + entry.getQuantity());
 
 			ShellWeaponEntry[] items = new ShellWeaponEntry[quant];
 			for(int q=0; q < (int)quant; q++) {
 				ShellWeaponEntry weapon = new ShellWeaponEntry();
 				weapon.setId(WeaponLUT.getById(indexShortLE()));
-				System.out.println("			id@" + index + " = " + weapon.getId());
+//				System.out.println("			id@" + index + " = " + weapon.getId());
 				weapon.setNameId(indexShortLE());
 				weapon.setHealthArmor(indexShortLE());
 				weapon.setHealthInternal(indexShortLE());
 				weapon.setMissileType(MissileType.getById(indexShortLE()));
-				System.out.println("					missileType@" + index);
+//				System.out.println("					missileType@" + index);
 				items[q] = weapon;
 			}
 			entry.setData(items);
@@ -75,23 +75,24 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 			inventory.getItems()[i] = entry;
 		}
 		save.setInventory(inventory);
-		System.out.println("->Invetory loaded, byte index:=" + index);
+//		System.out.println("->Invetory loaded, byte index:=" + index);
 		
 		//Workshop state
- 		System.out.println("Parsing Workshop Segment----------------" + index);
+// 		System.out.println("Parsing Workshop Segment----------------" + index);
 		save.setWorkshopSpace(indexShortLE());
-		System.out.println("			workspaces@" + index + " = " + save.getWorkshopSpace());
+//		System.out.println("			workspaces@" + index + " = " + save.getWorkshopSpace());
 		for(int w=0; w < save.getWorkshopSlots().length; w++) {
 			indexShortLE();	//why would these ever be out of order?
 			save.getWorkshopSlots()[w] = WeaponLUT.getById((int)indexShortLE());
 		}
-		System.out.println("->Workshop loaded, byte index:=" + index);
+//		System.out.println("->Workshop loaded, byte index:=" + index);
 		
 		//Campaign flags, series of IN16's
 		System.out.println("Parsing Campaign Flags Segment----------------" + index);
 		int marker = index;
 		for(int f=0; f < save.getUnk4_stateFlags().length; f++) {
 			save.getUnk4_stateFlags()[f] = indexShortLE();
+			System.out.println("    Flag["+f+"] @" + (index-4) + " = " + save.getUnk4_stateFlags()[f]);
 		}
 		System.out.println("->Campaign flags loaded, byte index:=" + index +", size = " + (index  - marker) + " bytes");
 		
@@ -129,7 +130,7 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		//Herc Unlock Flags 9 bytes
 		System.out.println("Parsing Herc Unlocks Segment----------------" + index);
 		int l = 0;
-		while(l < HercLUT.ACHILLES.getId()) {
+		while(l < HercLUT.MONGOOSE.getId()) {
 			short val = indexShortLE();
 			save.getUnlockedHercs().put(HercLUT.getById((short)l), val);
 			System.out.println("		"+ HercLUT.getById((short)l).getName() +"=" +val);
@@ -146,8 +147,11 @@ public class PlayerSaveTransform extends ThreeSpaceByteTransformer{
 		//Total available salvage
 		System.out.println("Parsing unknown bytes   ----------------" + index);
 		ByteArrayOutputStream fragmentFlags = new ByteArrayOutputStream();
+		int f = 0;
 		while(index < getBytes().length) {
-			fragmentFlags.write(indexByte());
+			byte b = indexByte();
+			System.out.println("    Frag["+f+"] @" + (index-2) + " = " + b);
+			fragmentFlags.write(b);
 		}
 		save.setUnknownSaveValues(fragmentFlags.toByteArray());
 		System.out.println("->parsed unknown bytes "+ save.getUnknownSaveValues().length);

@@ -5,7 +5,10 @@ package org.hercworks.core.data.file.msn;
  * there's a chunk of data for map coordinates, and the pre-processed MSN file
  * has option flags and ID's before each coordinate listed.
  * 
+ * size: 22 BYTES
+ * 
  * XXX- map coords are INT32 but represent fixed-point integers!
+ * 
  */
 public class MapCoord {
 
@@ -19,7 +22,19 @@ public class MapCoord {
 	private int y;
 	private int z;
 	
+	
 	public MapCoord() {}
+	
+	public MapCoord(short id, short f1, short f2, short f3, short f4, int vx, int vy, int vz) {
+		this.id = id;
+		this.unkFlag1 = f1;
+		this.unkFlag2 = f2;
+		this.unkFlag3 = f3;
+		this.unkFlag4 = f4;
+		this.x = vx;
+		this.y = vy;
+		this.z = vz;
+	}
 
 	public short getId() {
 		return id;
@@ -85,4 +100,19 @@ public class MapCoord {
 		this.z = z;
 	}
 	
+	public static double fixedInt(int f) {
+		return f/1000;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder b =new StringBuilder();
+		b.append(getId()).append("=[ ").append(getUnkFlag1()).append(", ")
+						.append(getUnkFlag2()).append(", ").append(getUnkFlag3()).append(", ")
+						.append(getUnkFlag4()).append(", (")
+						.append(fixedInt(getX())).append(", ").append(fixedInt(getY())).append(", ").append(fixedInt(getX()))
+						.append(")]");
+		
+		return b.toString();
+	}
 }

@@ -23,6 +23,15 @@ public class UnkHeaderEntry {
 	
 	
 	public UnkHeaderEntry() {}
+	
+	public UnkHeaderEntry(short f1, short v1, short v2, short f2, short v3, short f3) {
+		this.unkFlag1 = f1;
+		this.unkValue1 = v1;
+		this.unkValue2 = v2;
+		this.unkFlag2 = f2;
+		this.unkValue3 = v3;
+		this.unkFlag3 = f3;
+	}
 
 
 	public short getUnkFlag1() {
@@ -75,5 +84,15 @@ public class UnkHeaderEntry {
 		this.unkFlag3 = unkFlag3;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder b =new StringBuilder();
+		b.append("[ ").append(getUnkFlag1()).append(", ").append(getUnkValue1()).append(", ")
+						.append(getUnkValue2()).append(", ").append(getUnkFlag2()).append(", ")
+						.append(", ").append(getUnkValue3()).append(", ").append(getUnkFlag3())
+						.append("]");
+		
+		return b.toString();
+	}
 	
 }
