@@ -1,5 +1,6 @@
 package org.hercworks.core.data.file.msn;
 
+import java.util.Arrays;
 
 /**
  * 
@@ -36,5 +37,19 @@ public class UnkEntity22Byte {
 
 	public void setValues(short[] values) {
 		this.values = values;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\n");
+		sb.append("		entity = ").append(getEntityId()).append("\n");
+		sb.append("		flags = ").append(Arrays.toString(getFlags())).append("\n");
+		sb.append("		vals = ").append(Arrays.toString(getValues())).append("\n");
+		
+		
+		sb.append("}\n");
+		return sb.toString();
+		
 	}
 }

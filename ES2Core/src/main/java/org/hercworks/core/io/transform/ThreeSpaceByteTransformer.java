@@ -71,6 +71,26 @@ public abstract class ThreeSpaceByteTransformer {
 		return new String(Bytes.from(indexSegment(len)).toCharArray());
 	}
 	
+	protected short[] indexShortLEArray(int len) {
+		short[] arr = new short[len];
+		
+		for(int i=0; i < len; i++) {
+			arr[i] = indexShortLE();
+		}
+		
+		return arr;
+	}
+	
+	protected int[] indexIntLEArray(int len) {
+		int[] arr = new int[len];
+		
+		for(int i=0; i < len; i++) {
+			arr[i] = indexIntLE();
+		}
+		
+		return arr;
+	}
+	
 	protected byte[] writeInt(int i) {
 		return Bytes.from(i).array();
 	}

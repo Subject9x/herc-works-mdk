@@ -1,5 +1,7 @@
 package org.hercworks.core.data.file.msn;
 
+import java.util.Arrays;
+
 /**
  * Seen towards end of map script
  * TRAIN5 has 13 of these.
@@ -57,6 +59,21 @@ public class UnkEntity164Bytes {
 
 	public void setValues(short[] values) {
 		this.values = values;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("{\n");
+		sb.append("		entId = ").append(getEntityId()).append("\n");
+		sb.append("		f1 = ").append(getUnkFlag1()).append("\n");
+		sb.append("		f2 = ").append(getUnkFlag2()).append("\n");
+		sb.append("		f3 = ").append(getUnkFlag3()).append("\n");
+		sb.append("		vals = ").append(Arrays.toString(getValues())).append("\n");
+		
+		sb.append("}\n");
+		return sb.toString();
 	}
 	
 }

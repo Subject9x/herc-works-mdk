@@ -12,6 +12,9 @@ import org.hercworks.core.data.struct.herc.HercLUT;
  */
 public class UnitInfo {
 
+	//I think this is terminal, instead its some leading flag Most entries have this, and the
+	//bytes dont fully line up to the following counter after this segment IF this is terminal
+	private short terminalFlag;
 	
 	private short indexId;
 	
@@ -24,8 +27,6 @@ public class UnitInfo {
 	private short[] unkFlags = new short[36];
 	
 	private short healthModAdjust;
-	
-	private short terminalFlag;
 	
 	
 	public UnitInfo() {}

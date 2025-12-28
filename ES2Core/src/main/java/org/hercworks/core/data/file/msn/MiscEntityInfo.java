@@ -1,5 +1,7 @@
 package org.hercworks.core.data.file.msn;
 
+import java.util.Arrays;
+
 import org.hercworks.core.data.struct.herc.MiscEntityLUT;
 
 /**
@@ -59,5 +61,20 @@ public class MiscEntityInfo {
 
 	public void setHealthModAdjust(short healthModAdjust) {
 		this.healthModAdjust = healthModAdjust;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\n");
+		sb.append("		indxId = ").append(getIndexId()).append("\n");
+		sb.append("		hdr flags =").append(Arrays.toString(getHeaderFlags())).append("\n");
+		sb.append("		entity = ").append(getId() == null ? "null" : getId()).append("\n");
+		sb.append("		flags = ").append(Arrays.toString(getSpawnflags())).append("\n");
+		sb.append("		hp mod = ").append(getHealthModAdjust()).append("\n");
+		sb.append("}\n");
+		return sb.toString();
+		
+		
 	}
 }
