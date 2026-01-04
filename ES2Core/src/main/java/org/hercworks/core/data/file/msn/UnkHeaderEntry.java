@@ -9,6 +9,8 @@ package org.hercworks.core.data.file.msn;
  */
 public class UnkHeaderEntry {
 
+	private short indexId;
+	
 	private short unkFlag1;
 	
 	private short unkValue1;
@@ -24,7 +26,8 @@ public class UnkHeaderEntry {
 	
 	public UnkHeaderEntry() {}
 	
-	public UnkHeaderEntry(short f1, short v1, short v2, short f2, short v3, short f3) {
+	public UnkHeaderEntry(short indexId, short f1, short v1, short v2, short f2, short v3, short f3) {
+		this.indexId = indexId;
 		this.unkFlag1 = f1;
 		this.unkValue1 = v1;
 		this.unkValue2 = v2;
@@ -74,23 +77,34 @@ public class UnkHeaderEntry {
 		this.unkValue3 = unkValue3;
 	}
 
-
 	public short getUnkFlag3() {
 		return unkFlag3;
 	}
-
 
 	public void setUnkFlag3(short unkFlag3) {
 		this.unkFlag3 = unkFlag3;
 	}
 	
+	public short getIndexId() {
+		return indexId;
+	}
+
+	public void setIndexId(short indexId) {
+		this.indexId = indexId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder b =new StringBuilder();
-		b.append("[ ").append(getUnkFlag1()).append(", ").append(getUnkValue1()).append(", ")
-						.append(getUnkValue2()).append(", ").append(getUnkFlag2()).append(", ")
-						.append(", ").append(getUnkValue3()).append(", ").append(getUnkFlag3())
-						.append("]");
+		b.append("[")
+			.append(getIndexId()).append(", ")
+			.append(getUnkFlag1()).append(", ")
+			.append(getUnkValue1()).append(", ")
+			.append(getUnkValue2()).append(", ")
+			.append(getUnkFlag2()).append(", ")
+			.append(getUnkValue3()).append(", ")
+			.append(getUnkFlag3())
+			.append("]");
 		
 		return b.toString();
 	}

@@ -9,9 +9,7 @@ import org.hercworks.core.data.struct.herc.MiscEntityLUT;
  * 
  * This seems to include Buildings and Vehicles only, so far.
  */
-public class MiscEntityInfo {
-
-	private short indexId;
+public class MiscEntityInfo extends MapObject{
 	
 	private short[] headerFlags = new short[3];
 	
@@ -22,10 +20,6 @@ public class MiscEntityInfo {
 	private short healthModAdjust;
 	
 	public MiscEntityInfo() {}
-
-	public short getIndexId() {
-		return indexId;
-	}
 
 	public short[] getHeaderFlags() {
 		return headerFlags;
@@ -41,10 +35,6 @@ public class MiscEntityInfo {
 
 	public short getHealthModAdjust() {
 		return healthModAdjust;
-	}
-
-	public void setIndexId(short indexId) {
-		this.indexId = indexId;
 	}
 
 	public void setHeaderFlags(short[] headerFlags) {
@@ -66,15 +56,15 @@ public class MiscEntityInfo {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("{\n");
-		sb.append("		indxId = ").append(getIndexId()).append("\n");
-		sb.append("		hdr flags =").append(Arrays.toString(getHeaderFlags())).append("\n");
-		sb.append("		entity = ").append(getId() == null ? "null" : getId()).append("\n");
-		sb.append("		flags = ").append(Arrays.toString(getSpawnflags())).append("\n");
-		sb.append("		hp mod = ").append(getHealthModAdjust()).append("\n");
+		
+		sb.append("\n{\n");
+		sb.append("	indxId = ").append(getGUID()).append("\n");
+		sb.append("	hdr flags =").append(Arrays.toString(getHeaderFlags())).append("\n");
+		sb.append("	entity = ").append(getId() == null ? "null" : getId()).append("\n");
+		sb.append("	flags = ").append(Arrays.toString(getSpawnflags())).append("\n");
+		sb.append("	hp mod = ").append(getHealthModAdjust()).append("\n");
 		sb.append("}\n");
+		
 		return sb.toString();
-		
-		
 	}
 }

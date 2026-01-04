@@ -1,5 +1,8 @@
 package org.hercworks.core.data.file.msn;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.hercworks.voln.DataFile;
 
 /**
@@ -10,10 +13,14 @@ import org.hercworks.voln.DataFile;
  *	The script.dat file in /DATA/ seems to be a parsed or excised snippet of the MSN file.
  *	
  *	Discovered so far:
- *		Spawn data for hercs, and buildings.
- *		Zone heightmap file id, world id,
+ *		+ Zone heightmap file id, world id (Sector, then day/night)
+ *		+ Global table of map coords, unclear how they're mapped to entities just yet.
+ *		+ Spawn data for hercs, buildings (including misc stuff like ruins).
+ *		
  *		
  *	What's expected:
+ *		+ probably a file-global object / entry UUID for ents linking to each other.
+ *		+ nav point entities, my guess is they're more than special map coords.
  *		+ entity definitions for objectives.
  *		+ pointer ID's for strings within .STR files.
  *			+ intel section
@@ -21,6 +28,10 @@ import org.hercworks.voln.DataFile;
  *		+ possible campaign flags or some flag system to track campaign events.
  *			+ check / compare blocks 
  *			+ example: mission that unlocks the Raptor II
+ *				+ there's 10 playable vehicles, I assume script spec then has 10 unlock slots somewhere
+ *				+ same with weapon unlocks - 33 total iirc
+ *		+ trigger logic and callbacks.
+ *			+ probably not a concise as DooM or Quake's callbacks, but I assume something close to it.
  */
 
 
@@ -41,6 +52,12 @@ public class MissionFile extends DataFile {
 	private short[] unknown4ByteOr2ByteVals;
 	
 	private MapCoord[] mapCoordHeader;
+	
+	private UnkEntity10Byte[] unk10ByteEnts;
+	
+	private UnkEntity16Byte[] unk16ByteEnts;
+
+	private List<MapObject> markedObjects;
 	
 	//some unknown, variable-length block of data.
 	
@@ -197,5 +214,50 @@ public class MissionFile extends DataFile {
 
 	public void setUnk58ByteEnts(UnkEntity58Byte[] unk58ByteEnts) {
 		this.unk58ByteEnts = unk58ByteEnts;
+	}
+
+
+	public List<MapObject> getMarkedObjects() {
+		return markedObjects;
+	}
+
+
+	public void setMarkedObjects(List<MapObject> markedObjects) {
+		this.markedObjects = markedObjects;
+	}
+
+
+	public UnkEntity10Byte[] getUnk10ByteEnts() {
+		return unk10ByteEnts;
+	}
+
+
+	public void setUnk10ByteEnts(UnkEntity10Byte[] unk10ByteEnts) {
+		this.unk10ByteEnts = unk10ByteEnts;
+	}
+	
+
+	
+	public UnkEntity16Byte[] getUnk16ByteEnts() {
+		return unk16ByteEnts;
+	}
+
+
+	public void setUnk16ByteEnts(UnkEntity16Byte[] unk16ByteEnts) {
+		this.unk16ByteEnts = unk16ByteEnts;
+	}
+	
+	public MapObject findMarkedObjectById(short guid) {
+		
+		Optional<MapObject> o = getMarkedObjects().stream().filter(t -> t.getGUID() == guid).findFirst();
+		
+		return o.orElse(null);
+	}
+	
+	public MapCoord getMapCoordById(short id) {
+		if(id == -1) {
+			return null;
+		}
+		return getMapCoordHeader()[id];
 	}
 }

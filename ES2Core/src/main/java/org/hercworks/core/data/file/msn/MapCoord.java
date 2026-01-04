@@ -107,11 +107,11 @@ public class MapCoord {
 	@Override
 	public String toString() {
 		StringBuilder b =new StringBuilder();
-		b.append(getId()).append("=[ ").append(getUnkFlag1()).append(", ")
+		b.append(getId()).append(" = { ").append(getUnkFlag1()).append(", ")
 						.append(getUnkFlag2()).append(", ").append(getUnkFlag3()).append(", ")
 						.append(getUnkFlag4()).append(", (")
-						.append(fixedInt(getX())).append(", ").append(fixedInt(getY())).append(", ").append(fixedInt(getX()))
-						.append(")]");
+						.append(fixedInt(getX())).append(", ").append(fixedInt(getY())).append(", ").append(fixedInt(getZ()))
+						.append(")}");
 		
 		return b.toString();
 	}

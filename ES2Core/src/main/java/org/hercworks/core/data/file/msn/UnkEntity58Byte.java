@@ -6,32 +6,12 @@ import java.util.Arrays;
  * observed at end of TRAIN5.MSN, may or may not exist!
  * 
  */
-public class UnkEntity58Byte {
+public class UnkEntity58Byte extends MapObject {
 	
-	private short prefix;
-	
-	private short id;
-	
-	private short[] flags = new short[27];
+	private short[] flags = new short[28];
 	
 	public UnkEntity58Byte() {}
-
-	public short getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(short prefix) {
-		this.prefix = prefix;
-	}
-
-	public short getId() {
-		return id;
-	}
-
-	public void setId(short id) {
-		this.id = id;
-	}
-
+	
 	public short[] getFlags() {
 		return flags;
 	}
@@ -44,11 +24,10 @@ public class UnkEntity58Byte {
 	public String toString() {
 		StringBuilder sb = new  StringBuilder();
 		
-		sb.append("{\n");
+		sb.append("\n{\n");
 		
-		sb.append("		prefix = ").append(getPrefix()).append("\n");
-		sb.append("		id = ").append(getId()).append("\n");
-		sb.append("		flags = ").append(Arrays.toString(getFlags())).append("\n");
+		sb.append(" guid = ").append(getGUID()).append("\n");
+		sb.append(" flags = ").append(Arrays.toString(getFlags())).append("\n");
 		
 		sb.append("}\n");
 		

@@ -2,13 +2,17 @@ package org.hercworks.core.io.transform.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.hercworks.core.data.file.msn.MapCoord;
+import org.hercworks.core.data.file.msn.MapObject;
 import org.hercworks.core.data.file.msn.MiscEntityInfo;
 import org.hercworks.core.data.file.msn.MissionFile;
 import org.hercworks.core.data.file.msn.UnitInfo;
 import org.hercworks.core.data.file.msn.UnkEntity102Bytes;
+import org.hercworks.core.data.file.msn.UnkEntity10Byte;
 import org.hercworks.core.data.file.msn.UnkEntity164Bytes;
+import org.hercworks.core.data.file.msn.UnkEntity16Byte;
 import org.hercworks.core.data.file.msn.UnkEntity22Byte;
 import org.hercworks.core.data.file.msn.UnkEntity58Byte;
 import org.hercworks.core.data.file.msn.UnkHeaderEntry;
@@ -35,101 +39,169 @@ public class MissionFileTransformer extends ThreeSpaceByteTransformer {
 		
 		setBytes(inputArray);
 		
+		data.setMarkedObjects(new ArrayList<MapObject>());
 		
-		System.out.println("Unk short 1 - " + indexShortLE() + " @" + (index-2) );
+		data.setUnknownFileId(indexShortLE());
+//		System.out.println("Unk short 1 - " + data.getUnknownFileId() + " @" + (index-2) );
 		
-		int entryCount = indexShortLE();
-		System.out.println("header entry count: " + entryCount + " @" + (index-2) );
 		
-		for(int i=0; i < entryCount; i++) {
-			System.out.println("    Header Entry" + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-//			System.out.println("        " + indexShortLE() + " @" + (index-2) );
-			UnkHeaderEntry entry = new UnkHeaderEntry(indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE());
-			System.out.println("   		" + entry.toString());
-			
-			
+		UnkHeaderEntry[] headerEntries = new UnkHeaderEntry[(int)indexShortLE()];
+		
+//		System.out.println("header entry count: " + headerEntries.length + " @" + (index-2) );
+		
+		
+		for(int i=0; i < headerEntries.length; i++) {
+			headerEntries[i] = new UnkHeaderEntry(indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE());
+//			System.out.println(headerEntries[i].toString());
 		}
+		data.setHeaderEntries(headerEntries);
 		
-		System.out.println("is 2 or not: " + indexShortLE() + " @" + (index-2) );
 		
-		System.out.println("-1 or 1?  " + indexShortLE() + " @" + (index-2) );
 		
-		System.out.println("world Id? " + indexShortLE() + " @" + (index-2) );
+		data.setUnkVal_is2(indexShortLE());
+//		System.out.println("is 2 or not: " + data.getUnkVal_is2() + " @" + (index-2) );
 		
-		System.out.println("zone file id= " + indexShortLE() + " @" + (index-2) );
+		data.setUnkFlag_isFFFF(indexShortLE());
+//		System.out.println("-1 or 1?  " + data.getUnkFlag_isFFFF() + " @" + (index-2) );
+		
+		data.setWorldId(indexShortLE());
+//		System.out.println("world Id? " + data.getWorldId() + " @" + (index-2) );
+		
+		data.setZoneNumber(indexShortLE());
+//		System.out.println("zone file id= " + data.getZoneNumber() + " @" + (index-2) );
+		
 		
 		//XXX - hard coded test for TRAIN5.MSN, this block is variable length in scripts, and I don't know yet where the
 		// the size is accounted for.
 		//	tried: header entry count - no divisible match
-//		int count = indexShortLE();
 		for(int i=0; i < (308 / 2); i++) {
 			System.out.println("	unk chunk shorts by 4: @" + index + ", " + indexShortLE() );
 		}
 		
 		//map coords
-		int mapCoords = indexShortLE();	//total count of 'static map coords' - these seem pre-compiled in the script, probably for fast reference
-		System.out.println("map coords count: " + mapCoords + " @" + (index-2) + ", using fixed int * 1000 to generate floats" );
-		for(int m=0; m < mapCoords; m++) {
+		//total count of 'static map coords' - these seem pre-compiled in the script, probably for fast reference
+		MapCoord[] coords = new MapCoord[(int)indexShortLE()];
+		System.out.println("map coords count: " + coords.length + " @" + (index-2) + ", using fixed int * 1000 to generate floats" );
+		
+		for(int m=0; m < coords.length; m++) {
 			int midx = index + 2;
-			MapCoord mc = new MapCoord(indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexIntLE(), indexIntLE(), indexIntLE());
-			System.out.println("	coord @ "+ midx + ": " + mc.toString());
+			coords[m] = new MapCoord(indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexShortLE(), indexIntLE(), indexIntLE(), indexIntLE());
+//			System.out.println("	coord @ "+ midx + ": " + coords[m].toString());
 		}
+		data.setMapCoordHeader(coords);
 		
-		System.out.println("skipping unknown segment @" + index +" 394 bytes");
-		index+=394;
-		
-		int unitCount = indexShortLE();
-		System.out.println("possible unit entry count " + unitCount + " @ " + (index-2));
-		
-		for(int u=0; u < unitCount; u++) {
-			System.out.println("count=" + u + "\n");
-			parseUnitInfo();
+		UnkEntity10Byte[] unk10s = new UnkEntity10Byte[indexShortLE()];
+		for(int u=0; u < unk10s.length; u++) {
+			UnkEntity10Byte ent = new UnkEntity10Byte();
+			
+			ent.setGUID(indexShortLE());
+			ent.setValues(indexShortLEArray(4));
+			
+			unk10s[u] = ent;
+			data.getMarkedObjects().add(unk10s[u]);
+			
 		}
+		data.setUnk10ByteEnts(unk10s);
 		
-		int unk102Cnt = indexShortLE();
-		System.out.println("unk obj counter? " +  unk102Cnt + " @ " + (index-2));
 		
-		for(int o=0; o < unk102Cnt; o++) {
-			System.out.println("count=" + o + "\n");
-			parseUnk102();
+		UnkEntity16Byte[] unk16s = new UnkEntity16Byte[indexShortLE()];
+		for(int u=0; u < unk16s.length; u++) {
+			UnkEntity16Byte ent = new UnkEntity16Byte();
+			
+			ent.setGUID(indexShortLE());
+			ent.setValues(indexShortLEArray(7));
+			
+			unk16s[u] = ent;
+			data.getMarkedObjects().add(unk16s[u]);
 		}
+		data.setUnk16ByteEnts(unk16s);
 		
-		int miscInfoCnt = indexShortLE();
-		System.out.println("unk obj counter? " +  miscInfoCnt + " @ " + (index-2));
-		for(int m=0; m < miscInfoCnt; m++) {
-			System.out.println("count=" + m + "\n");
-			parseMiscEntity();
+		
+		System.out.println("skipping unknown segment @" + index +" 306 bytes");
+		index += 306;
+
+		//-------------------------------------------------------------------
+		UnitInfo[] units = new UnitInfo[(int)indexShortLE()];
+		System.out.println("possible unit entry count " + units.length + " @ " + (index-2));		
+		
+		for(int u=0; u < units.length; u++) {
+			int udx = index + 2;
+			units[u] = parseUnitInfo();
+			if(units[u].getGUID() != (short)-1) {
+				data.getMarkedObjects().add(units[u]);
+			}
+//			System.out.println(u + " @ " + udx + " = UnitInfo" + units[u].toString());
 		}
+		data.setMapUnits(units);
 		
-		int unkEnt22Cnt = indexShortLE();
-		System.out.println("unkEnt22Cntcounter? " +  unkEnt22Cnt + " @ " + (index-2));
+		//-------------------------------------------------------------------
+		UnkEntity102Bytes[] unkEntity102s = new UnkEntity102Bytes[(int)indexShortLE()];
+		System.out.println("UnknownEntity102Bytes " +  unkEntity102s.length + " @ " + (index-2));
 		
-		for(int e=0; e < unkEnt22Cnt; e++) {
-			System.out.println("count=" + e + "\n");
-			parseUnkEntity22();
+		for(int o=0; o < unkEntity102s.length; o++) {
+			unkEntity102s[o] = parseUnk102();
+//			System.out.println(o + " @ " + index + " = UnkEntity102Bytes" + unkEntity102s[o].toString());
+
+			if(unkEntity102s[o].getGUID() != (short)-1) {
+				data.getMarkedObjects().add(unkEntity102s[o]);
+			}
 		}
+		data.setUnk102ByteEnts(unkEntity102s);
 		
-		int unkEnt164Cnt = indexShortLE();
-		System.out.println("unkEnt164Cntcounter? " +  unkEnt164Cnt + " @ " + (index-2));
 		
-		for(int e=0; e < unkEnt164Cnt; e++) {
-			System.out.println("count=" + e + "\n");
-			parseUnkEntity164Bytes();
+		//-------------------------------------------------------------------
+		MiscEntityInfo[] miscEnts = new MiscEntityInfo[(int)indexShortLE()];
+		System.out.println("Misc Building / Objects = " +  miscEnts.length + " @ " + (index-2));
+		for(int m=0; m < miscEnts.length; m++) {
+			int mark = index;
+			miscEnts[m] = parseMiscEntity();
+//			System.out.println(m + " @ " + mark + " = MiscEntityInfo" + miscEnts[m].toString());
+
+			if(miscEnts[m].getGUID() != (short)-1) {
+				data.getMarkedObjects().add(miscEnts[m]);
+			}
 		}
+		data.setMapMiscEntities(miscEnts);
 		
-		int unkEnt58cnt = indexShortLE();
-		System.out.println("unkEnt58cnt? " +  unkEnt58cnt + " @ " + (index-2));
 		
-		for(int e=0; e < unkEnt58cnt; e++) {
-			System.out.println("count=" + e + "\n");
-			parseUnkEntity58Byte();
+		//-------------------------------------------------------------------
+		UnkEntity22Byte[] unkEntity22s = new UnkEntity22Byte[(int)indexShortLE()];
+		System.out.println("unkEnt22 count = " +  unkEntity22s.length + " @ " + (index-2));
+		for(int e=0; e < unkEntity22s.length; e++) {
+			int eidx = index;
+			unkEntity22s[e] = parseUnkEntity22();
+//			System.out.println(e + " @ " + eidx + " = UnkEntity22Byte" + unkEntity22s[e].toString());
+
+			if(unkEntity22s[e].getGUID() != (short)-1) {
+				data.getMarkedObjects().add(unkEntity22s[e]);
+			}
 		}
+		data.setUnk22ByteEnts(unkEntity22s);
 		
+		//-------------------------------------------------------------------
+		UnkEntity164Bytes[] unkEntity164s = new UnkEntity164Bytes[(int)indexShortLE()];
+		System.out.println("UnkEntity164Bytes count = " + unkEntity164s.length + " @ " + (index-2));
+		
+		for(int e=0; e < unkEntity164s.length; e++) {
+			int edx = index;
+			unkEntity164s[e] = parseUnkEntity164Bytes(data);
+//			System.out.println(e + " @ " + edx + " = UnkEntity164Bytes" + unkEntity164s[e].toString());
+			if(unkEntity164s[e].getGUID() != (short)-1) {
+				data.getMarkedObjects().add(unkEntity164s[e]);
+			}
+		}
+		data.setUnk164ByteEnts(unkEntity164s);
+		
+		
+		//-------------------------------------------------------------------
+		UnkEntity58Byte[] unkEntity58s = new UnkEntity58Byte[(int)indexShortLE()];
+		System.out.println("UnkEntity58Byte count = " +  unkEntity58s.length + " @ " + (index-2));
+		for(int e=0; e < unkEntity58s.length; e++) {
+			int eindex = index;
+			unkEntity58s[e] = parseUnkEntity58Byte();
+//			System.out.println(e + " @ " + eindex + " = UnkEntity58Byte" + unkEntity58s[e].toString());
+		}
+		data.setUnk58ByteEnts(unkEntity58s);
 		
 		return data;
 	}
@@ -138,10 +210,9 @@ public class MissionFileTransformer extends ThreeSpaceByteTransformer {
 	private UnitInfo parseUnitInfo() {
 
 		UnitInfo unit = new UnitInfo();
-
-		System.out.println("-----unit entry @"+index);
-		unit.setTerminalFlag(indexShortLE());
-		unit.setIndexId(indexShortLE());
+		
+		unit.setGUID(indexShortLE());
+		unit.setMapCoordId(indexShortLE());
 		for(int i=0; i < 22; i++) {
 			unit.getHeaderFlags()[i] = indexShortLE();
 		}
@@ -161,34 +232,25 @@ public class MissionFileTransformer extends ThreeSpaceByteTransformer {
 		
 		unit.setHealthModAdjust(indexShortLE());
 		
-	
-		System.out.println(unit.toString());
-		
 		return unit;
 	}
 	
 	private UnkEntity102Bytes parseUnk102() {
 		UnkEntity102Bytes unk = new UnkEntity102Bytes();
 		
-		System.out.println("-----object102 entry @"+index);
-		
-		unk.setEntityId(indexShortLE());
+		unk.setGUID(indexShortLE());
 
 		unk.setFlags(indexShortLEArray(49));
 		
 		unk.setUnkVal_100(indexShortLE());
-		
-		System.out.println(unk.toString());
 		
 		return unk;
 	}
 	
 	private MiscEntityInfo parseMiscEntity() {
 		MiscEntityInfo misc = new MiscEntityInfo();
-
-		System.out.println("-----misc map object entry @"+index);
 		
-		misc.setIndexId(indexShortLE());
+		misc.setGUID(indexShortLE());
 		
 		misc.setHeaderFlags(indexShortLEArray(3));
 		
@@ -199,36 +261,38 @@ public class MissionFileTransformer extends ThreeSpaceByteTransformer {
 		
 		misc.setHealthModAdjust(indexShortLE());
 		
-		System.out.println(misc.toString());
-		
 		return misc;
 	}
 	
 	private UnkEntity22Byte parseUnkEntity22() {
 		UnkEntity22Byte ent = new UnkEntity22Byte();
 		
-		System.out.println("-----UnkEntity22Byte @"+index);
-		
-		ent.setEntityId(indexShortLE());
-		ent.setFlags(indexShortLEArray(6));
-		ent.setValues(indexShortLEArray(4));
-		System.out.println(ent.toString());
+		ent.setGUID(indexShortLE());
+		ent.setFlags(indexShortLEArray(10));
 		
 		return ent;
 		
 	}
 
-	private UnkEntity164Bytes parseUnkEntity164Bytes() {
+	private UnkEntity164Bytes parseUnkEntity164Bytes(MissionFile msn) {
 		UnkEntity164Bytes unk = new UnkEntity164Bytes();
 		
-		unk.setEntityId(indexShortLE());
-		unk.setUnkFlag1(indexShortLE());
-		unk.setUnkFlag2(indexShortLE());
-		unk.setUnkFlag3(indexShortLE());
+		unk.setGUID(indexShortLE());
+		unk.setFlags(indexShortLEArray(24));
+		unk.setMapCoord(msn.getMapCoordById(indexShortLE()));
+		unk.setUnkEntity10Byte((UnkEntity10Byte)msn.findMarkedObjectById(indexShortLE()));
+		unk.setUnkEntity16Byte((UnkEntity16Byte)msn.findMarkedObjectById(indexShortLE()));
 		
-		unk.setValues(indexShortLEArray(78));
+		short[] guids = indexShortLEArray(20);
+		MapObject[] obs = new MapObject[20];
+		for(int i=0; i < guids.length; i++) {
+			obs[i] = msn.findMarkedObjectById(guids[i]);
+		}
 		
-		System.out.println(unk.toString());
+		unk.setMapEntities(obs);
+		
+		unk.setUnkEntity22Byte((UnkEntity22Byte)msn.findMarkedObjectById(indexShortLE()));
+		unk.setValues(indexShortLEArray(33));
 		
 		return unk;
 	}
@@ -236,11 +300,8 @@ public class MissionFileTransformer extends ThreeSpaceByteTransformer {
 	private UnkEntity58Byte parseUnkEntity58Byte() {
 		UnkEntity58Byte unk = new UnkEntity58Byte();
 		
-		unk.setPrefix(indexShortLE());
-		unk.setId(indexShortLE());
-		unk.setFlags(indexShortLEArray(27));
-		
-		System.out.println(unk.toString());
+		unk.setGUID(indexShortLE());
+		unk.setFlags(indexShortLEArray(28));
 		
 		return unk;
 	}

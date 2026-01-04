@@ -31,7 +31,7 @@ public enum HercLUT {
 	HEADHUNTER((short)18, "HEADHUNTER", (short)9, "HEADHUNT"),
 	SCARAB((short)19, "SCARAB", (short)4, "SCARAB"),
 	CERBERUS((short)20, "CERBERUS", (short)9, "CERBERUS"),
-	SKIMMER((short)20, "SKIMMER", (short)3, "SKIMMER");
+	SKIMMER((short)21, "SKIMMER", (short)3, "SKIMMER");
 
 	private static final Map<Short,HercLUT> ENUM_MAP;
 	private String name;

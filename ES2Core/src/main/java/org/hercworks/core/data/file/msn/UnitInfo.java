@@ -10,13 +10,13 @@ import org.hercworks.core.data.struct.herc.HercLUT;
  * 
  * defines Herc unit spawn info.
  */
-public class UnitInfo {
+public class UnitInfo extends MapObject{
 
 	//I think this is terminal, instead its some leading flag Most entries have this, and the
 	//bytes dont fully line up to the following counter after this segment IF this is terminal
-	private short terminalFlag;
+//	private short guid;
 	
-	private short indexId;
+	private short mapCoordId;
 	
 	private short headerFlags[] = new short[22];
 	
@@ -32,8 +32,8 @@ public class UnitInfo {
 	public UnitInfo() {}
 
 
-	public short getIndexId() {
-		return indexId;
+	public short getMapCoordId() {
+		return mapCoordId;
 	}
 
 	public short[] getHeaderFlags() {
@@ -56,12 +56,12 @@ public class UnitInfo {
 		return healthModAdjust;
 	}
 
-	public short getTerminalFlag() {
-		return terminalFlag;
-	}
+//	public short getGUID() {
+//		return guid;
+//	}
 
-	public void setIndexId(short indexId) {
-		this.indexId = indexId;
+	public void setMapCoordId(short indexId) {
+		this.mapCoordId = indexId;
 	}
 
 	public void setHeaderFlags(short[] headerFlags) {
@@ -84,24 +84,27 @@ public class UnitInfo {
 		this.healthModAdjust = healthModAdjust;
 	}
 
-	public void setTerminalFlag(short terminalFlag) {
-		this.terminalFlag = terminalFlag;
-	}
-	
+//	public void setGUID(short terminalFlag) {
+//		this.guid = terminalFlag;
+//	}
+//	
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		
 		
-		str.append("{\n");
-		str.append("	map uuid? = ").append(getIndexId()).append("\n");
+		str.append("\n{\n");
+		str.append("	guid = ").append(getGUID()).append("\n");
+		str.append("	map coord = ").append(getMapCoordId()).append("\n");
 		str.append("	flags = \n");
 		str.append("		").append(Arrays.toString(getHeaderFlags())).append("\n");
 		if(getUnitId() == null) {
 			str.append("	No unit id!?\n");
 		}
 		else {
-			str.append("	").append(getUnitId().getName()).append("\n");
+			str.append("	").append(getUnitId().getName())
+			.append("(").append(getUnitId().getId()).append(")")
+			.append("\n");
 		}
 		str.append(" 	weapons = [");
 		for(short s : getWeapons()) {
@@ -109,13 +112,14 @@ public class UnitInfo {
 				str.append(WeaponLUT.NONE.getName()).append(", ");
 			}
 			else {
-				str.append(WeaponLUT.getById((int)s).getName()).append(", ");
+				str.append(WeaponLUT.getById((int)s).getName())
+				.append("(").append(WeaponLUT.getById((int)s).getId()).append(")")
+				.append(", ");
 			}
 		}
 		str.append("]\n		");
 		str.append(Arrays.toString(getUnkFlags())).append("\n");
 		str.append("	hp mod = ").append(getHealthModAdjust()).append("\n");
-		str.append("	terminal = ").append(getTerminalFlag()).append("\n");
 		str.append("}\n");
 		
 		return str.toString();
