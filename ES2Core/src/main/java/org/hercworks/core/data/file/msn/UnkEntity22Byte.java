@@ -9,6 +9,9 @@ public class UnkEntity22Byte extends MapObject{
 	
 	private short[] flags = new short[10];
 	
+	
+	private UnkEntity164Bytes unkEntity164;
+	
 	public UnkEntity22Byte() {}
 
 

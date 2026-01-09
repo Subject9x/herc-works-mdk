@@ -49,6 +49,10 @@ public class MissionFile extends DataFile {
 	
 	private short zoneNumber;
 	
+	private short[] unkSeg1;
+	
+	private short[] unkSTRFileLinks;
+	
 	private short[] unknown4ByteOr2ByteVals;
 	
 	private MapCoord[] mapCoordHeader;
@@ -56,10 +60,12 @@ public class MissionFile extends DataFile {
 	private UnkEntity10Byte[] unk10ByteEnts;
 	
 	private UnkEntity16Byte[] unk16ByteEnts;
-
+	
 	private List<MapObject> markedObjects;
 	
 	//some unknown, variable-length block of data.
+	
+	private short[] unkVariableLengthSeg;
 	
 	private UnitInfo[] mapUnits;
 	
@@ -247,6 +253,35 @@ public class MissionFile extends DataFile {
 		this.unk16ByteEnts = unk16ByteEnts;
 	}
 	
+	
+	public short[] getUnkSeg1() {
+		return unkSeg1;
+	}
+
+
+	public void setUnkSeg1(short[] unkSeg1) {
+		this.unkSeg1 = unkSeg1;
+	}
+	
+	public short[] getUnkSTRFileLinks() {
+		return unkSTRFileLinks;
+	}
+
+
+	public void setUnkSTRFileLinks(short[] unkSTRFileLinks) {
+		this.unkSTRFileLinks = unkSTRFileLinks;
+	}
+	
+	public short[] getUnkVariableLengthSeg() {
+		return unkVariableLengthSeg;
+	}
+
+
+	public void setUnkVariableLengthSeg(short[] unkVariableLengthSeg) {
+		this.unkVariableLengthSeg = unkVariableLengthSeg;
+	}
+
+
 	public MapObject findMarkedObjectById(short guid) {
 		
 		Optional<MapObject> o = getMarkedObjects().stream().filter(t -> t.getGUID() == guid).findFirst();
@@ -260,4 +295,6 @@ public class MissionFile extends DataFile {
 		}
 		return getMapCoordHeader()[id];
 	}
+	
+	
 }

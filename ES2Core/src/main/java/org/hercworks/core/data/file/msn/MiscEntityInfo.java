@@ -13,7 +13,7 @@ public class MiscEntityInfo extends MapObject{
 	
 	private short[] headerFlags = new short[3];
 	
-	private MiscEntityLUT id;
+	private MiscEntityLUT miscEntityId;
 	
 	private short[] spawnflags = new short[25];
 	
@@ -25,8 +25,8 @@ public class MiscEntityInfo extends MapObject{
 		return headerFlags;
 	}
 
-	public MiscEntityLUT getId() {
-		return id;
+	public MiscEntityLUT getMiscEntityId() {
+		return miscEntityId;
 	}
 
 	public short[] getSpawnflags() {
@@ -41,8 +41,8 @@ public class MiscEntityInfo extends MapObject{
 		this.headerFlags = headerFlags;
 	}
 
-	public void setId(MiscEntityLUT id) {
-		this.id = id;
+	public void setMiscEntityId(MiscEntityLUT miscEntityId) {
+		this.miscEntityId = miscEntityId;
 	}
 
 	public void setSpawnflags(short[] spawnflags) {
@@ -60,7 +60,7 @@ public class MiscEntityInfo extends MapObject{
 		sb.append("\n{\n");
 		sb.append("	indxId = ").append(getGUID()).append("\n");
 		sb.append("	hdr flags =").append(Arrays.toString(getHeaderFlags())).append("\n");
-		sb.append("	entity = ").append(getId() == null ? "null" : getId()).append("\n");
+		sb.append("	entity = ").append(getMiscEntityId() == null ? "null" : getMiscEntityId()).append("\n");
 		sb.append("	flags = ").append(Arrays.toString(getSpawnflags())).append("\n");
 		sb.append("	hp mod = ").append(getHealthModAdjust()).append("\n");
 		sb.append("}\n");
