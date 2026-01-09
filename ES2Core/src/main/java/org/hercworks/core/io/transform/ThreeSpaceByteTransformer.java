@@ -107,6 +107,20 @@ public abstract class ThreeSpaceByteTransformer {
 		return Bytes.from(s).reverse().array();
 	}
 	
+	protected byte[] writeShortLESegment(short[] s) {
+		byte[] arr = new byte[s.length * 2];
+		
+		int t=0;
+		for(int b=0; b < s.length; b++) {
+			byte[] shortVal = writeShortLE(s[b]);
+			arr[t] = shortVal[0];
+			arr[t+1] = shortVal[1];
+			t+=2;
+		}
+		
+		return arr;
+	}
+	
 	public void jumpTo(int jump) {
 		if(jump < bytes.length) {
 			index = jump;	
