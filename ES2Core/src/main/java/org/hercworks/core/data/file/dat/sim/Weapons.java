@@ -53,4 +53,14 @@ public class Weapons extends DataFile{
 	public Weapons(short total) {
 		this.total = total;
 	}
+	
+	
+	
+	public class WeaponDatEntry {
+		
+	}
+	
+	public WeaponDatEntry newEntry() {
+		return new WeaponDatEntry();
+	}
 }

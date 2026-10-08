@@ -1,6 +1,6 @@
 package org.hercworks.core.data.file.msn.script;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.hercworks.core.data.file.msn.MiscEntityInfo;
 import org.hercworks.voln.DataFile;
 
 /**
@@ -9,6 +9,13 @@ import org.hercworks.voln.DataFile;
  * 			somehow this is a parsed version of the MSN file found in
  * 				/zone.vol/msn/
  * 	
+ * 	NOTE: it seems VSHELL is doing some kind of processing / parsing of the .MSN file, and the script.dat
+ * 	is not simply chunks of MSN file extracted!
+ * 
+ * 	ex: MSN MapCoord objects are cut down to just a list of points in script.dat!
+ * 
+ * 	NOTE2: script.dat is LONGER than the source MSN file, yikes.
+ * 
  * 0 - UINT16 - World Id num
  * 2 - UINT16 - ZonesXXX.dat number
  * 4 - UINT16 - unknown value
@@ -19,18 +26,6 @@ import org.hercworks.voln.DataFile;
  * 14 - UINT16 - unknown value
  * 16 - UINT16 - unknown value
  * 18 - UINT16 - unknown value
- * 20 - UINT16 - Counter
- * SEQ_0 - possible UINT32 coords?
- * 	SEQ_0_0 - UINT32 - Player Spawn coord X
- *  SEQ_0_4 - UINT32 - Player Spawn coord Y
- *  SEQ_0_8 - UINT32 - Player Spawn coord Z
- * 	SEQ_0_12 - UINT32 - Waypoint 1 coord X
- * 	SEQ_0_16 - UINT32 - Waypoint 1 coord Y
- * 	SEQ_0_20 - UINT32 - Waypoint 1 coord Z
- *  ----------
- *  SEQ_0_XX - UINT32 - Waypoint 0 coord X
- *  SEQ_0_XX - UINT32 - Waypoint 0 coord Y
- *  SEQ_0_XX - UINT32 - Waypoint 0 coord Z
  * 	
  * 
  * 		
@@ -41,19 +36,16 @@ public class ScriptDat extends DataFile {
 	private short worldId;
 	
 	private short zoneId;
+
+	private ScriptCoord[]  mapCoords;
 	
-	private short unk1;
-	private short unk2;
-	private short unk3;
-	private short unk4;
-	private short unk5;
-	private short unk6;
-	private short unk7;
-	private short unk8;
+	private ScriptUnitEntry[] units;	// these are 10bytes SHORTER than MSN file versions, TBD which bytes are removed.
 	
-	//with uint16 counter
-	private Vector3D[] entityOrigins;
+	private MiscEntityInfo[] miscEnts; 	//probably also truncated.
 	
+	
+	
+	public ScriptDat() {}
 	
 	
 }

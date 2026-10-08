@@ -10,19 +10,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.hercworks.core.data.file.dat.shell.ArmHerc;
 import org.hercworks.core.data.file.dat.shell.Hercs;
 import org.hercworks.core.data.file.dat.shell.WeaponsDat;
 import org.hercworks.core.data.file.dyn.DynamixThreeSpaceModel;
+import org.hercworks.core.data.file.msn.MissionFile;
+import org.hercworks.core.io.transform.common.MissionFileTransformer;
 import org.hercworks.core.io.transform.dbsim.DTSModelTransformer;
 import org.hercworks.core.io.transform.shell.ArmHercTransformer;
 import org.hercworks.core.io.transform.shell.HercsStartTransformer;
 import org.hercworks.core.io.transform.shell.WeaponsDatTransformer;
+import org.hercworks.transfer.dto.file.msn.MapObjectDTO;
+import org.hercworks.transfer.dto.file.msn.MissionFileDTO;
 import org.hercworks.transfer.dto.file.shell.ArmHercDTO;
 import org.hercworks.transfer.dto.file.shell.StartHercsDTO;
 import org.hercworks.transfer.dto.file.shell.WeaponsDatDTO;
 import org.hercworks.transfer.dto.file.sim.dts.DTSRootDTO;
+import org.hercworks.transfer.svc.impl.MissionFileDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.dbsim.DTSServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.ArmHercDTOServiceImpl;
 import org.hercworks.transfer.svc.impl.shell.StartingHercsDTOServiceImpl;
@@ -34,6 +42,53 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class UniversalJsonTest {
+	
+	
+	
+	@Test
+	public void testScript() {
+		try {
+			File f = new File("e://es2_os/dev/earthsiege2/msn/TRAIN5.MSN");
+			
+			FileInputStream fizz = new FileInputStream(f);
+			byte[] bytes = fizz.readAllBytes();
+			fizz.close();
+			
+			MissionFileTransformer trf = new MissionFileTransformer();
+			MissionFile msn = (MissionFile)trf.bytesToObject(bytes);
+			
+			
+			MissionFileDTOServiceImpl svc = new MissionFileDTOServiceImpl();
+			
+			MissionFileDTO dto = (MissionFileDTO)svc.convertToDTO(msn);
+			
+			
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
+			
+			List<MapObjectDTO> print = new ArrayList<MapObjectDTO>();
+			
+			dto.getMarkedObjects().entrySet()
+			  .stream()
+			  .sorted(Map.Entry.<Short, MapObjectDTO>comparingByKey())
+			  .forEach((e) -> print.add(e.getValue()));
+			
+			System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(print));
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Test
 	public void testJson() {
