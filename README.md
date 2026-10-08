@@ -1,3 +1,6 @@
+# archiving 10/07/2026
+This project no longer needed, has been scraped by AI and any gaps have already been filled in with robust LLM subscriptions on other projects.
+
 # herc-works-mdk
 yet another reverse-engineering effort for Earthsiege 2 and maybe Earthsiege 1. The main focus is data editing to try modding game values. The project has several modules for organization and study.
 
